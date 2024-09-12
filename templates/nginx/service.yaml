@@ -4,7 +4,7 @@ kind: Service
 metadata:
 {{- if eq .Values.expose.type "clusterIP" }}
 {{- $clusterIP := .Values.expose.clusterIP }}
-  name: {{ $clusterIP.name }}
+  name: {{ template "harbor.fullname" .}}-{{ $clusterIP.name }}
   labels:
 {{ include "harbor.labels" . | indent 4 }}
 {{- if .Values.expose.clusterIP.labels }}
@@ -30,7 +30,7 @@ spec:
     {{- end }}
 {{- else if eq .Values.expose.type "nodePort" }}
 {{- $nodePort := .Values.expose.nodePort }}
-  name: {{ $nodePort.name }}
+  name: {{ template "harbor.fullname" .}}-{{ $nodePort.name }}
   labels:
 {{ include "harbor.labels" . | indent 4 }}
 {{- if .Values.expose.nodePort.labels }}
@@ -59,7 +59,7 @@ spec:
     {{- end }}
 {{- else if eq .Values.expose.type "loadBalancer" }}
 {{- $loadBalancer := .Values.expose.loadBalancer }}
-  name: {{ $loadBalancer.name }}
+  name: {{ template "harbor.fullname" .}}-{{ $loadBalancer.name }}
   labels:
 {{ include "harbor.labels" . | indent 4 }}
 {{- if .Values.expose.loadBalancer.labels }}

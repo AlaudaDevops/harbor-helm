@@ -11,6 +11,9 @@ metadata:
 spec:
   replicas: {{ .Values.trivy.replicas }}
   serviceName: {{  template "harbor.trivy" . }}
+  {{- if .Values.global.statefulset.trivy.podManagementPolicy }}
+  podManagementPolicy: {{ .Values.global.statefulset.trivy.podManagementPolicy }}
+  {{- end }}
   selector:
     matchLabels:
 {{ include "harbor.matchLabels" . | indent 6 }}
@@ -35,6 +38,62 @@ spec:
 {{ toYaml .Values.trivy.podAnnotations | indent 8 }}
 {{- end }}
     spec:
+      initContainers:
+      - name: prepare-env-files
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.initContainer.repository }}:{{ .Values.global.images.initContainer.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+{{- if .Values.trivy.resources }}
+        resources:
+{{ toYaml .Values.trivy.resources | indent 10 }}
+{{- end }}
+        command:
+          - sh
+          - -c
+          - |
+            set -e
+            cp -v /etc/trivy-secret/* /etc/env-files/
+        volumeMounts:
+          - mountPath: /etc/env-files
+            name: env-files
+          - mountPath: /etc/trivy-secret
+            name: trivy-secret
+      - name: "change-permission"
+        resources:
+{{ toYaml .Values.trivy.resources | indent 10 }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.initContainer.repository }}:{{ .Values.global.images.initContainer.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command: ["/bin/sh"]
+        args: ["-c", "mkdir -p /home/scanner/.cache && if ! stat -c '%u:%g' /home/scanner/.cache | grep -q '10000:10000'; then chown -R 10000:10000 /home/scanner/.cache; fi"]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: data
+          mountPath: /home/scanner/.cache
+          subPath: {{ .Values.persistence.persistentVolumeClaim.trivy.subPath }}
+{{- if .Values.trivy.offline }}
+      - name: "init-offline-db"
+        resources:
+{{ toYaml .Values.trivy.resources | indent 10 }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.trivyOfflineDB.repository }}:{{ .Values.global.images.trivyOfflineDB.tag }}
+        imagePullPolicy: Always
+        command: ["/bin/sh"]
+        args:
+          - '-c'
+          - >-
+            if [[ ! -f '/home/scanner/.cache/trivy/db/metadata.json' || "$(jq .Version /home/scanner/.cache/trivy/db/metadata.json)" != "2" ]]; then
+                echo 'Install offline db'
+                rm -rf /home/scanner/.cache/trivy/db
+                mkdir -p /home/scanner/.cache/trivy/db
+                tar -zxf trivy-offline.db.tgz -C /home/scanner/.cache/trivy/db
+            fi;
+            chown -R 10000:10000 /home/scanner/.cache
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: data
+          mountPath: /home/scanner/.cache
+          subPath: {{ .Values.persistence.persistentVolumeClaim.trivy.subPath }}
+{{- end }}
 {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -62,7 +121,7 @@ spec:
       {{- end }}
       containers:
         - name: trivy
-          image: {{ .Values.trivy.image.repository }}:{{ .Values.trivy.image.tag }}
+          image: {{ .Values.global.registry.address }}/{{ .Values.global.images.trivy.repository }}:{{ .Values.global.images.trivy.tag }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           {{- if not (empty .Values.containerSecurityContext) }}
           securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 12 }}
@@ -139,6 +198,8 @@ spec:
             - name: api-server
               containerPort: {{ template "harbor.trivy.containerPort" . }}
           volumeMounts:
+          - name: env-files
+            mountPath: /etc/env-files
           - name: data
             mountPath: /home/scanner/.cache
             subPath: {{ .Values.persistence.persistentVolumeClaim.trivy.subPath }}
@@ -170,8 +231,13 @@ spec:
             failureThreshold: 3
           resources:
 {{ toYaml .Values.trivy.resources | indent 12 }}
-      {{- if or (or .Values.internalTLS.enabled .Values.caBundleSecretName) (or (not .Values.persistence.enabled) $trivy.existingClaim) }}
       volumes:
+      - emptyDir: {}
+        name: env-files
+      - name: trivy-secret
+        secret:
+          secretName: "{{ template "harbor.trivy" . }}"
+      {{- if or (or .Values.internalTLS.enabled .Values.caBundleSecretName) (or (not .Values.persistence.enabled) $trivy.existingClaim) }}
       {{- if .Values.internalTLS.enabled }}
       - name: trivy-internal-certs
         secret:
@@ -181,16 +247,38 @@ spec:
 {{ include "harbor.caBundleVolume" . | indent 6 }}
       {{- end }}
       {{- if not .Values.persistence.enabled }}
+      {{- if and (.Values.persistence.hostPath.trivy.host.nodeName) (.Values.persistence.hostPath.trivy.host.path) }}
+      - name: "data"
+        hostPath:
+          path: {{ .Values.persistence.hostPath.trivy.host.path }}
+          type: DirectoryOrCreate
+      {{- else }}
       - name: "data"
         emptyDir: {}
+      {{- end }}
       {{- else if $trivy.existingClaim }}
       - name: "data"
         persistentVolumeClaim:
           claimName: {{ $trivy.existingClaim }}
       {{- end }}
       {{- end }}
+    {{- if .Values.trivy.nodeSelector }}
     {{- with .Values.trivy.nodeSelector }}
       nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- else }}
+    {{- if .Values.persistence.hostPath.trivy.host.nodeName }}
+      nodeSelector:
+        kubernetes.io/hostname: {{ .Values.persistence.hostPath.trivy.host.nodeName }}
+    {{- end }}
+    {{- end }}
+    {{- with .Values.trivy.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.trivy.tolerations }}
+      tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
     {{- with .Values.trivy.affinity }}

@@ -1,3 +1,126 @@
+global:
+  registry:
+    address: harbor-harbor.alauda.cn
+  images:
+    portal:
+      repository: devops/goharbor-harbor-portal
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    core:
+      repository: devops/goharbor-harbor-core
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    jobservice:
+      repository: devops/goharbor-harbor-jobservice
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    registryRegistry:
+      repository: devops/goharbor-registry-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    registryController:
+      repository: devops/goharbor-harbor-registryctl
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    chartmuseum:
+      repository: devops/goharbor-chartmuseum-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    trivy:
+      repository: devops/goharbor-trivy-adapter-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    trivyOfflineDB:
+      repository: devops/goharbor-trivy-offline-db
+      tag: alauda-v2.6.4-de49900e
+      support_arm: true
+      thirdparty: true
+    notaryServer:
+      repository: devops/goharbor-notary-server-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    notarySigner:
+      repository: devops/goharbor-notary-signer-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    nginx:
+      repository: devops/goharbor-nginx-photon
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    db:
+      repository: middleware/spilo
+      tag: v3.11.0-devops.5
+      support_arm: true
+      thirdparty: true
+    exporter:
+      repository: devops/goharbor-harbor-exporter
+      tag: 2.6.4-39c6d5dd
+      support_arm: true
+      thirdparty: true
+    redis:
+      repository: middleware/redis
+      tag: 5.0-alpine.fa3fcceb
+      support_arm: true
+      thirdparty: true
+    devopsCLI:
+      repository: devops/devops-cli
+      tag: v3.18.0-beta.13.gb775f9e3
+      support_arm: true
+      thirdparty: true
+      code: gitlab-ce.alauda.cn/devops/devops-apiserver
+    initContainer:
+      repository: ops/busybox
+      tag: stable
+      support_arm: true
+      thirdparty: true
+
+  statefulset:
+    db:
+      podManagementPolicy: Parallel
+    redis:
+      podManagementPolicy: Parallel
+    trivy:
+      podManagementPolicy: Parallel
+
+resources: &resources
+  limits:
+    cpu: 2
+    memory: 4Gi
+  requests:
+    cpu: 256m
+    memory: 256Mi
+initContainerResources: &initContainerResources
+  limits:
+    cpu: 200m
+    memory: 200Mi
+  requests:
+    cpu: 50m
+    memory: 50Mi
+
+oidc:
+  enable: false
+  clientID: ""
+  clientSecret: ""
+  issuer: ""
+  scope: ""
+  verifyCert: false
+  harbor:
+    mode: ""
+    oidcName: ""
+
+# High available
+highAvailability:
+  enable: false
 expose:
   # Set how to expose the service. Set the type as "ingress", "clusterIP", "nodePort" or "loadBalancer"
   # and fill the information in the corresponding section
@@ -125,6 +248,31 @@ persistence:
   # (this does not apply for PVCs that are created for internal database
   # and redis components, i.e. they are never deleted automatically)
   resourcePolicy: "keep"
+  hostPath:
+    registry:
+      host:
+        nodeName: null
+        path: /tmp/harbor/registry
+    chartmuseum:
+      host:
+        nodeName: null
+        path: /tmp/harbor/chartmuseum
+    jobservice:
+      host:
+        nodeName: null
+        path: /tmp/harbor/jobservice
+    database:
+      host:
+        nodeName: null
+        path: /tmp/harbor/database
+    redis:
+      host:
+        nodeName: null
+        path: /tmp/harbor/redis
+    trivy:
+      host:
+        nodeName: null
+        path: /tmp/harbor/trivy
   persistentVolumeClaim:
     registry:
       # Use the existing PVC which must be created manually before bound,
@@ -193,7 +341,7 @@ persistence:
     # must be "filesystem" if you want to use persistent volumes for registry
     type: filesystem
     filesystem:
-      rootdirectory: /storage
+      rootdirectory: /var/lib/registry
       #maxthreads: 100
     azure:
       accountname: accountname
@@ -481,9 +629,6 @@ containerSecurityContext:
 
 # If service exposed via "ingress", the Nginx will not be used
 nginx:
-  image:
-    repository: goharbor/nginx-photon
-    tag: v2.11.1
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -512,9 +657,8 @@ nginx:
   priorityClassName:
 
 portal:
-  image:
-    repository: goharbor/harbor-portal
-    tag: v2.11.1
+  swagger:
+    enabled: true
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -552,9 +696,6 @@ portal:
   #   command: [ 'sh', '-c', "sleep 20" ]
 
 core:
-  image:
-    repository: goharbor/harbor-core
-    tag: v2.11.1
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -565,6 +706,8 @@ core:
   startupProbe:
     enabled: true
     initialDelaySeconds: 10
+  livenessProbe:
+    initialDelaySeconds: 300
   # resources:
   #  requests:
   #    memory: 256Mi
@@ -639,9 +782,6 @@ core:
     auditLogsCompliant: false
 
 jobservice:
-  image:
-    repository: goharbor/harbor-jobservice
-    tag: v2.11.1
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -702,18 +842,12 @@ jobservice:
 
 registry:
   registry:
-    image:
-      repository: goharbor/registry-photon
-      tag: v2.11.1
     # resources:
     #  requests:
     #    memory: 256Mi
     #    cpu: 100m
     extraEnvVars: []
   controller:
-    image:
-      repository: goharbor/harbor-registryctl
-      tag: v2.11.1
     # resources:
     #  requests:
     #    memory: 256Mi
@@ -790,11 +924,6 @@ registry:
 trivy:
   # enabled the flag to enable Trivy scanner
   enabled: true
-  image:
-    # repository the repository for Trivy adapter image
-    repository: goharbor/trivy-adapter-photon
-    # tag the tag for Trivy adapter image
-    tag: v2.11.1
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -954,7 +1083,7 @@ database:
   # The maximum number of open connections to the database per pod (core+exporter).
   # If it <= 0, then there is no limit on the number of open connections.
   # Note: the default number of connections is 1024 for harbor's postgres.
-  maxOpenConns: 900
+  maxOpenConns: 3000
   ## Additional deployment annotations
   podAnnotations: {}
   ## Additional deployment labels
@@ -970,6 +1099,9 @@ redis:
       tag: v2.11.1
     # set the service account to be used, default if left empty
     serviceAccountName: ""
+    usePassword: true
+    usePasswordFile: true
+    password: "5u^!6yiVwLiB#Q"
     # mount the service account token
     automountServiceAccountToken: false
     # resources:

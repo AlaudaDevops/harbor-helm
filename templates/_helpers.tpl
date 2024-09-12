@@ -190,7 +190,13 @@ app: "{{ template "harbor.name" . }}"
 {{- define "harbor.redis.url" -}}
   {{- with .Values.redis }}
     {{- $path := ternary "" (printf "/%s" (include "harbor.redis.masterSet" $)) (not (include "harbor.redis.masterSet" $)) }}
-    {{- printf "%s://%s%s%s" (include "harbor.redis.scheme" $) (include "harbor.redis.cred" $) (include "harbor.redis.addr" $) $path -}}
+    {{- if eq .type "internal" }}
+    {{- $cred := ternary (printf ":%s@" (.internal.password | urlquery)) "" .internal.usePassword }}
+    {{- printf "%s://%s%s%s" (include "harbor.redis.scheme" $) $cred (include "harbor.redis.addr" $) $path -}}
+    {{- else }}
+    {{- $cred := ternary (printf ":%s@" (.external.password | urlquery)) "" (and (eq .type "external" ) (not (not .external.password))) }}
+    {{- printf "%s://%s%s%s" (include "harbor.redis.scheme" $) $cred (include "harbor.redis.addr" $) $path -}}
+    {{- end }}
   {{- end }}
 {{- end -}}
 
