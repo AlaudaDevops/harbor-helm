@@ -37,7 +37,7 @@ spec:
       automountServiceAccountToken: {{ .Values.notary.server.automountServiceAccountToken | default false }}
       containers:
       - name: notary-server
-        image: {{ .Values.notary.server.image.repository }}:{{ .Values.notary.server.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.notaryServer.repository }}:{{ .Values.global.images.notaryServer.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -45,14 +45,18 @@ spec:
             scheme: "HTTP"
             port: 4443
           initialDelaySeconds: 300
-          periodSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /_notary_server/health
             scheme: "HTTP"
             port: 4443
           initialDelaySeconds: 20
-          periodSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 3
 {{- if .Values.notary.server.resources }}
         resources:
 {{ toYaml .Values.notary.server.resources | indent 10 }}

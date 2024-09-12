@@ -36,7 +36,7 @@ spec:
       automountServiceAccountToken: {{ .Values.exporter.automountServiceAccountToken | default false }}
       containers:
       - name: exporter
-        image: {{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.exporter.repository }}:{{ .Values.global.images.exporter.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -56,6 +56,10 @@ spec:
             name: "{{ template "harbor.exporter" . }}-env"
         - secretRef:
             name: "{{ template "harbor.exporter" . }}"
+        {{- if .Values.harborAdminPasswordRef }}
+        - secretRef:
+            name: {{ .Values.harborAdminPasswordRef | quote }}
+        {{- end }}
         env:
         {{- if .Values.database.external.existingSecret }}
         - name: HARBOR_DATABASE_PASSWORD

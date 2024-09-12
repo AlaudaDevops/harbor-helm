@@ -38,6 +38,43 @@ spec:
 {{ toYaml .Values.registry.podAnnotations | indent 8 }}
 {{- end }}
     spec:
+      initContainers:
+      - name: prepare-env-files
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.initContainer.repository }}:{{ .Values.global.images.initContainer.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+{{- if .Values.registry.resources }}
+        resources:
+{{ toYaml .Values.registry.resources | indent 10 }}
+{{- end }}
+        command:
+          - sh
+          - -c
+          - |
+            set -e
+            cp -v /etc/registry-secret/* /etc/env-files-registry/
+            cp -v /etc/registry-secret/* /etc/env-files-registryctl/
+        volumeMounts:
+          - mountPath: /etc/env-files-registry
+            name: env-files-registry
+          - mountPath: /etc/env-files-registryctl
+            name: env-files-registryctl
+          - mountPath: /etc/registry-secret
+            name: registry-secret
+      - name: "change-permission"
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.initContainer.repository }}:{{ .Values.global.images.initContainer.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+{{- if .Values.registry.registry.resources }}
+        resources:
+{{ toYaml .Values.registry.registry.resources | indent 10 }}
+{{- end }}
+        command: ["/bin/sh"]
+        args: ["-c", "if ! stat -c '%u:%g' /var/lib/registry |grep -q '10000:10000'; then chown -R 10000:10000 /var/lib/registry; fi"]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: registry-data
+          mountPath: {{ .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
+          subPath: {{ .Values.persistence.persistentVolumeClaim.registry.subPath }}
       securityContext:
         runAsUser: 10000
         fsGroup: 10000
@@ -53,7 +90,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: registry
-        image: {{ .Values.registry.registry.image.repository }}:{{ .Values.registry.registry.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.registryRegistry.repository }}:{{ .Values.global.images.registryRegistry.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -75,8 +112,6 @@ spec:
 {{- end }}
         args: ["serve", "/etc/registry/config.yml"]
         envFrom:
-        - secretRef:
-            name: "{{ template "harbor.registry" . }}"
         {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
         - secretRef:
             name: {{ .Values.persistence.imageChartStorage.s3.existingSecret }}
@@ -111,6 +146,8 @@ spec:
         - containerPort: {{ template "harbor.registry.containerPort" . }}
         - containerPort: 5001
         volumeMounts:
+        - name: env-files-registry
+          mountPath: /etc/env-files
         - name: registry-data
           mountPath: {{ .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
           subPath: {{ .Values.persistence.persistentVolumeClaim.registry.subPath }}
@@ -145,7 +182,7 @@ spec:
 {{ include "harbor.caBundleVolumeMount" . | indent 8 }}
         {{- end }}
       - name: registryctl
-        image: {{ .Values.registry.controller.image.repository }}:{{ .Values.registry.controller.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.registryController.repository }}:{{ .Values.global.images.registryController.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -168,8 +205,6 @@ spec:
         envFrom:
         - configMapRef:
             name: "{{ template "harbor.registryCtl" . }}"
-        - secretRef:
-            name: "{{ template "harbor.registry" . }}"
         - secretRef:
             name: "{{ template "harbor.registryCtl" . }}"
         env:
@@ -218,6 +253,8 @@ spec:
         ports:
         - containerPort: {{ template "harbor.registryctl.containerPort" . }}
         volumeMounts:
+        - name: env-files-registryctl
+          mountPath: /etc/env-files
         - name: registry-data
           mountPath: {{ .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
           subPath: {{ .Values.persistence.persistentVolumeClaim.registry.subPath }}
@@ -245,6 +282,13 @@ spec:
 {{ include "harbor.caBundleVolumeMount" . | indent 8 }}
         {{- end }}
       volumes:
+      - emptyDir: {}
+        name: env-files-registry
+      - emptyDir: {}
+        name: env-files-registryctl
+      - name: registry-secret
+        secret:
+          secretName: "{{ template "harbor.registry" . }}"
       - name: registry-htpasswd
         secret:
           {{- if not .Values.registry.credentials.existingSecret }}
@@ -263,7 +307,13 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.persistentVolumeClaim.registry.existingClaim | default (include "harbor.registry" .) }}
       {{- else }}
+      {{- if and (.Values.persistence.hostPath.registry.host.nodeName) (.Values.persistence.hostPath.registry.host.path)}}
+        hostPath:
+          path: {{ .Values.persistence.hostPath.registry.host.path }}
+          type: DirectoryOrCreate
+      {{- else }}
         emptyDir: {}
+      {{- end }}
       {{- end }}
       {{- if .Values.internalTLS.enabled }}
       - name: registry-internal-certs
@@ -300,9 +350,16 @@ spec:
       {{- if .Values.caBundleSecretName }}
 {{ include "harbor.caBundleVolume" . | indent 6 }}
       {{- end }}
+    {{- if .Values.registry.nodeSelector }}
     {{- with .Values.registry.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- else }}
+    {{- if .Values.persistence.hostPath.registry.host.nodeName }}
+      nodeSelector:
+        kubernetes.io/hostname: {{ .Values.persistence.hostPath.registry.host.nodeName }}
+    {{- end }}
     {{- end }}
     {{- with .Values.registry.affinity }}
       affinity:

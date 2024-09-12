@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: migration-job
+  name: {{ template "harbor.core" . }}-migration-job
   labels:
 {{ include "harbor.labels" . | indent 4 }}
     component: migrator
@@ -12,6 +12,7 @@ metadata:
     "helm.sh/hook": pre-upgrade
     "helm.sh/hook-weight": "-5"
 spec:
+  ttlSecondsAfterFinished: 300
   template:
     metadata:
       labels:
@@ -32,7 +33,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: core-job
-        image: {{ .Values.core.image.repository }}:{{ .Values.core.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.core.repository }}:{{ .Values.global.images.core.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         command: ["/harbor/harbor_core", "-mode=migrate"]
         envFrom:

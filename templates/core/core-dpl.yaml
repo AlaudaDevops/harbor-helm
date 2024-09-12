@@ -42,9 +42,35 @@ spec:
       {{- end }}
       automountServiceAccountToken: {{ .Values.core.automountServiceAccountToken | default false }}
       terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: prepare-env-files
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.initContainer.repository }}:{{ .Values.global.images.initContainer.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+{{- if .Values.core.resources }}
+        resources:
+{{ toYaml .Values.core.resources | indent 12 }}
+{{- end }}
+        command:
+          - sh
+          - -c
+          - |
+            set -e
+            cp -v /etc/core-secret/* /etc/env-files/
+            if [ -d /etc/core-admin-secret ]; then
+              cp -v /etc/core-admin-secret/* /etc/env-files/
+            fi
+        volumeMounts:
+          - mountPath: /etc/env-files
+            name: env-files
+          - mountPath: /etc/core-secret
+            name: core-secret
+{{- if .Values.harborAdminPasswordRef }}
+          - mountPath: /etc/core-admin-secret
+            name: core-admin-secret
+{{- end }}
       containers:
       - name: core
-        image: {{ .Values.core.image.repository }}:{{ .Values.core.image.tag }}
+        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.core.repository }}:{{ .Values.global.images.core.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         {{- if .Values.core.startupProbe.enabled }}
         startupProbe:
@@ -72,8 +98,6 @@ spec:
           periodSeconds: 10
         envFrom:
         - configMapRef:
-            name: "{{ template "harbor.core" . }}"
-        - secretRef:
             name: "{{ template "harbor.core" . }}"
         env:
           - name: CORE_SECRET
@@ -113,6 +137,8 @@ spec:
         ports:
         - containerPort: {{ template "harbor.core.containerPort" . }}
         volumeMounts:
+        - name: env-files
+          mountPath: /etc/env-files
         - name: config
           mountPath: /etc/core/app.conf
           subPath: app.conf
@@ -145,6 +171,16 @@ spec:
 {{ toYaml .Values.core.resources | indent 10 }}
 {{- end }}
       volumes:
+      - emptyDir: {}
+        name: env-files
+      - name: core-secret
+        secret:
+          secretName: "{{ template "harbor.core" . }}"
+      {{- if .Values.harborAdminPasswordRef }}
+      - name: core-admin-secret
+        secret:
+          secretName: {{ .Values.harborAdminPasswordRef | quote }}
+      {{- end }}
       - name: config
         configMap:
           name: {{ template "harbor.core" . }}

@@ -172,8 +172,13 @@ postgres://{{ template "harbor.database.username" . }}:{{ template "harbor.datab
 {{- define "harbor.redis.url" -}}
   {{- with .Values.redis }}
     {{- $path := ternary "" (printf "/%s" (include "harbor.redis.masterSet" $)) (not (include "harbor.redis.masterSet" $)) }}
+    {{- if eq .type "internal" }}
+    {{- $cred := ternary (printf ":%s@" (.internal.password | urlquery)) "" .internal.usePassword }}
+    {{- printf "%s://%s%s%s" (include "harbor.redis.scheme" $) $cred (include "harbor.redis.addr" $) $path -}}
+    {{- else }}
     {{- $cred := ternary (printf ":%s@" (.external.password | urlquery)) "" (and (eq .type "external" ) (not (not .external.password))) }}
     {{- printf "%s://%s%s%s" (include "harbor.redis.scheme" $) $cred (include "harbor.redis.addr" $) $path -}}
+    {{- end }}
   {{- end }}
 {{- end -}}
 
