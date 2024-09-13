@@ -1,4 +1,4 @@
-# Helm Chart for Harbor
+# Helm Chart for Harbor ABC
 
 **Notes:** The master branch is in heavy development, please use the other stable versions instead. A highly available solution for Harbor based on chart can be found [here](docs/High%20Availability.md). And refer to the [guide](docs/Upgrade.md) to upgrade the existing deployment.
 
