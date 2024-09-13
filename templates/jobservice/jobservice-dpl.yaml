@@ -103,7 +103,7 @@ spec:
       {{- end }}
       containers:
       - name: jobservice
-        image: {{ .Values.global.registry.address }}/{{ .Values.global.images.jobservice.repository }}:{{ .Values.global.images.jobservice.tag }}
+        image: {{ .Values.global.dockerMirror.address }}/{{ .Values.global.images.jobservice.repository }}:{{ .Values.global.images.jobservice.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
@@ -162,6 +162,8 @@ spec:
         envFrom:
         - configMapRef:
             name: "{{ template "harbor.jobservice" . }}-env"
+        - secretRef:
+            name: "{{ template "harbor.jobservice" . }}"
         ports:
         - containerPort: {{ template "harbor.jobservice.containerPort" . }}
         volumeMounts:

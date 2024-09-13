@@ -121,7 +121,7 @@ spec:
       {{- end }}
       containers:
         - name: trivy
-          image: {{ .Values.global.registry.address }}/{{ .Values.global.images.trivy.repository }}:{{ .Values.global.images.trivy.tag }}
+          image: {{ .Values.global.dockerMirror.address }}/{{ .Values.global.images.trivy.repository }}:{{ .Values.global.images.trivy.tag }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           {{- if not (empty .Values.containerSecurityContext) }}
           securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 12 }}
