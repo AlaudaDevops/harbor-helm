@@ -3,7 +3,6 @@
 @e2e
 功能: 支持高可用模式部署 harbor
 
-    @test
     @smoke
     @automated
     @priority-high

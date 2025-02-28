@@ -8,38 +8,39 @@ persistence:
     database:
       storageClass: <storage-class>
 core:
+  gcTimeWindowHours: 0
   resources:
-    request:
+    requests:
       cpu: 100m
       memory: 256Mi
-    limit:
+    limits:
       cpu: 100m
       memory: 256Mi
 
 jobservice:
   resources:
-    request:
+    requests:
       cpu: 100m
       memory: 256Mi
-    limit:
+    limits:
       cpu: 100m
       memory: 256Mi
 
 registry:
   registry:
     resources:
-      request:
+      requests:
         cpu: 100m
         memory: 256Mi
-      limit:
+      limits:
         cpu: 100m
         memory: 256Mi
   controller:
     resources:
-      request:
+      requests:
         cpu: 100m
         memory: 256Mi
-      limit:
+      limits:
         cpu: 100m
         memory: 256Mi
 
@@ -47,10 +48,10 @@ trivy:
   skipUpdate: true
   offlineScan: true
   resources:
-    request:
+    requests:
       cpu: 200m
       memory: 512Mi
-    limit:
+    limits:
       cpu: 200m
       memory: 512Mi
 
@@ -60,10 +61,10 @@ database:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
       tag: 2.12.0-074c4593
   resources:
-    request:
+    requests:
       cpu: 100m
       memory: 256Mi
-    limit:
+    limits:
       cpu: 100m
       memory: 256Mi
 
@@ -75,10 +76,10 @@ redis:
     extraEnvVars:
       - name: ALLOW_EMPTY_PASSWORD
         value: "yes"
-  request:
+  requests:
     cpu: 100m
     memory: 256Mi
-  limit:
+  limits:
     cpu: 100m
     memory: 256Mi
 
