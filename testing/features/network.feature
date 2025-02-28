@@ -28,6 +28,9 @@
       url: http://test-ingress-http.example.com
       timeout: 10m
       """
+    并且 执行 "harbor 官方 e2e" 脚本成功
+      | command                                                                                                                                       |
+      | bash ./testdata/script/run-harbor-e2e.sh http test-ingress-http.example.com Harbor12345 --add-host=test-ingress-http.example.com:<ingress-ip> |
 
   @automated
   @priority-high
@@ -55,6 +58,9 @@
       url: https://test-ingress-https.example.com
       timeout: 10m
       """
+    并且 执行 "harbor 官方 e2e" 脚本成功
+       | command                                                                                                                                         |
+       | bash ./testdata/script/run-harbor-e2e.sh https test-ingress-https.example.com Harbor12345 --add-host=test-ingress-https.example.com=<ingress-ip> |
 
   @smoke
   @automated
@@ -78,3 +84,6 @@
       url: http://<node.ip.first>:<nodeport.http>
       timeout: 10m
       """
+    并且 执行 "harbor 官方 e2e" 脚本成功
+      | command                                                                                   |
+      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 |

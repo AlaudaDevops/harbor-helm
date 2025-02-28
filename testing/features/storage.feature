@@ -31,6 +31,9 @@
       | harbor-sc-registry   | $.spec.volumes[?(@.name == 'registry-data')][0].persistentVolumeClaim.claimName | harbor-sc-registry     |
       | harbor-sc-jobservice | $.spec.volumes[?(@.name == 'job-logs')][0].persistentVolumeClaim.claimName      | harbor-sc-jobservice   |
       | harbor-sc-trivy      | $.spec.volumes[?(@.name == 'data')][0].persistentVolumeClaim.claimName          | data-harbor-sc-trivy-0 |
+    并且 执行 "harbor 官方 e2e" 脚本成功
+       | command                                                                                   |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 |
 
   @smoke
   @automated
@@ -59,6 +62,9 @@
       | harbor-hostpath-registry   | $.status.hostIP | <node.ip.first> |
       | harbor-hostpath-jobservice | $.status.hostIP | <node.ip.first> |
       | harbor-hostpath-trivy      | $.status.hostIP | <node.ip.first> |
+    并且 执行 "harbor 官方 e2e" 脚本成功
+       | command                                                                                   |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 |
 
   @automated
   @priority-high
@@ -87,3 +93,6 @@
       | harbor-pvc-registry   | $.spec.volumes[?(@.name == 'registry-data')][0].persistentVolumeClaim.claimName | pvc-registry   |
       | harbor-pvc-jobservice | $.spec.volumes[?(@.name == 'job-logs')][0].persistentVolumeClaim.claimName      | pvc-jobservice |
       | harbor-pvc-trivy      | $.spec.volumes[?(@.name == 'data')][0].persistentVolumeClaim.claimName          | pvc-trivy      |
+    并且 执行 "harbor 官方 e2e" 脚本成功
+      | command                                                                                   |
+      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 |
