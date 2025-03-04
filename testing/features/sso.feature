@@ -1,14 +1,12 @@
 # language: zh-CN
 @harbor-chart-deploy
 @e2e
-功能: 支持高可用模式部署 harbor
+功能: 支持 SSO 模式部署 harbor
 
-    @test
-    @smoke
     @automated
     @priority-high
     @harbor-chart-deploy-sso
-    场景: 使用高可用模式部署 harbor
+    场景: 使用 SSO 模式部署 harbor
         假定 集群已存在存储类
         并且 命名空间 "harbor-sso" 已存在
         并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
