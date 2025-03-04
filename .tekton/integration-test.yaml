@@ -16,24 +16,18 @@ spec:
               cpu: "4"
               memory: 4Gi
   pipelineRef:
-    resolver: git
+    resolver: hub
     params:
-      - name: serverURL
-        value: https://gitlab-ce.alauda.cn
-      - name: scmType
-        value: gitlab
-      - name: org
-        value: devops
-      - name: repo
-        value: edge
-      - name: revision
-        value: master
-      - name: pathInRepo
-        value: pipelines/vcluster-integration-test/0.1/vcluster-integration-test.yaml
-      - name: token
-        value: gitlab-ce.kauto
-      - name: tokenKey
-        value: password
+      - name: catalog
+        value: alauda
+      - name: type
+        value: tekton
+      - name: kind
+        value: pipeline
+      - name: name
+        value: vcluster-integration-test
+      - name: version
+        value: "0.1"
 
   params:
     - name: git-revision

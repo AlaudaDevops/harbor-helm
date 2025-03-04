@@ -32,6 +32,7 @@
       | command                                                                                                                                       |
       | bash ./testdata/script/run-harbor-e2e.sh http test-ingress-http.example.com Harbor12345 --add-host=test-ingress-http.example.com:<ingress-ip> |
 
+  @smoke
   @automated
   @priority-high
   @harbor-chart-deploy-network-https
@@ -62,7 +63,6 @@
        | command                                                                                                                                         |
        | bash ./testdata/script/run-harbor-e2e.sh https test-ingress-https.example.com Harbor12345 --add-host=test-ingress-https.example.com=<ingress-ip> |
 
-  @smoke
   @automated
   @priority-high
   @harbor-chart-deploy-network-nodeport
