@@ -39,7 +39,7 @@ OUTPUT_DIR=$(realpath "${OUTPUT_DIR}")
 EXCLUDE_TAGS_ARRAY=()
 case "${TEST_SUITE}" in
     "daily")
-        EXCLUDE_TAGS_ARRAY=("proxy_cache" "gc" "replic_rule" "referrers" "retain_image_last_pull_time" "robot_account" "scan_all" "job_service_dashboard" "security_hub" "tag_immutability" "tag_retention")
+        EXCLUDE_TAGS_ARRAY=("proxy_cache" "gc" "replic_rule" "referrers" "retain_image_last_pull_time" "robot_account" "scan_all" "job_service_dashboard" "security_hub" "tag_immutability" "tag_retention" "scan_data_export")
         ;;
     "full")
         EXCLUDE_TAGS_ARRAY=("proxy_cache")
