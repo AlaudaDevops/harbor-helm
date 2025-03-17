@@ -130,12 +130,22 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 		return err
 	}
 
-	log.Info("等待登录表单出现...")
-	if _, err := page.WaitForSelector(".login-form", playwright.PageWaitForSelectorOptions{
-		State:   playwright.WaitForSelectorStateVisible,
-		Timeout: playwright.Float(30000),
-	}); err != nil {
-		return fmt.Errorf("等待登录表单: %v", err)
+	// 检查是否在第三方登录页面
+	buttonLocator := page.Locator(".dex-page-title:has-text(\"第三方用户登录\")")
+	isVisible, err := buttonLocator.IsVisible()
+	if err != nil {
+		return fmt.Errorf("检查第三方登录页面失败: %v", err)
+	}
+
+	if isVisible {
+		log.Info("当前在第三方登录页面，切换到本地登录...")
+		if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
+			Name: "切换本地用户登录",
+		}).Click(); err != nil {
+			return fmt.Errorf("点击切换本地用户登录按钮失败: %v", err)
+		}
+	} else {
+		log.Info("已是本地用户登录页")
 	}
 
 	// 填写登录表单
@@ -148,7 +158,10 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 	}
 
 	// 点击登录按钮
-	if err := page.GetByRole("button", playwright.PageGetByRoleOptions{}).Click(); err != nil {
+	if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
+		Name:  "登录",
+		Exact: playwright.Bool(true),
+	}).Click(); err != nil {
 		return fmt.Errorf("点击登录按钮失败: %v", err)
 	}
 
@@ -176,7 +189,7 @@ func loginHarbor(ctx context.Context, page playwright.Page, params ssoParams) er
 	for !found {
 		select {
 		case <-timeout:
-			return fmt.Errorf("等待 Dex 按钮超时")
+			return fmt.Errorf("等待 OIDC 按钮超时")
 		default:
 			// 等待页面加载完成
 			if err := page.WaitForLoadState(playwright.PageWaitForLoadStateOptions{
@@ -185,7 +198,7 @@ func loginHarbor(ctx context.Context, page playwright.Page, params ssoParams) er
 				return err
 			}
 			// 等待登录页面元素加载
-			log.Info("等待 Dex 按钮出现...")
+			log.Info("等待 OIDC 按钮出现...")
 			if _, err := page.WaitForSelector("#log_oidc", playwright.PageWaitForSelectorOptions{
 				State:   playwright.WaitForSelectorStateVisible,
 				Timeout: playwright.Float(30000),
@@ -200,9 +213,9 @@ func loginHarbor(ctx context.Context, page playwright.Page, params ssoParams) er
 		}
 	}
 
-	log.Info("点击 Dex 按钮...")
+	log.Info("点击 OIDC 按钮...")
 	if err := page.Click("#log_oidc"); err != nil {
-		return fmt.Errorf("点击 Dex 按钮失败: %v", err)
+		return fmt.Errorf("点击 OIDC 按钮失败: %v", err)
 	}
 
 	// 等待页面加载完成

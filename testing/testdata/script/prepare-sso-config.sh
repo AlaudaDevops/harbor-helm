@@ -16,6 +16,7 @@ prepare_sso_config() {
   echo "acp_host: $acp_host"
   echo "acp_token: ******"
   echo "cluster: $cluster"
+  echo "harbor_base_url: $harbor_base_url"
 
   if [ -z "$acp_host" ] || [ -z "$acp_token" ] || [ -z "$cluster" ]; then
     echo "请指定 acp_host, acp_token 和 cluster 参数"
