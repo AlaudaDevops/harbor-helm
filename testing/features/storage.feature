@@ -6,7 +6,7 @@
 
   @automated
   @priority-high
-  @harbor-chart-deploy-storage-sc
+  @allure.label.case_id:harbor-chart-deploy-storage-sc
   场景: 使用存储类方式部署 harbor
     假定 集群已存在存储类
     并且 命名空间 "harbor-storage-sc" 已存在
@@ -38,7 +38,7 @@
   @smoke
   @automated
   @priority-high
-  @harbor-chart-deploy-storage-hostpath
+  @allure.label.case_id:harbor-chart-deploy-storage-hostpath
   场景: 使用 hostpath 方式部署 harbor
     假定 命名空间 "harbor-storage-hostpath" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
@@ -68,7 +68,7 @@
 
   @automated
   @priority-high
-  @harbor-chart-deploy-storage-pvc
+  @allure.label.case_id:harbor-chart-deploy-storage-pvc
   场景: 使用指定 pvc 的方式部署 harbor
     假定 命名空间 "harbor-storage-pvc" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"

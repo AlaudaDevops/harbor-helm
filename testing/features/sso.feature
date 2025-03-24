@@ -6,7 +6,7 @@
     @e2e
     @automated
     @priority-high
-    @harbor-chart-deploy-sso
+    @allure.label.case_id:harbor-chart-deploy-sso
     场景: 使用 SSO 模式部署 harbor
         假定 集群已存在存储类
         并且 命名空间 "harbor-sso" 已存在

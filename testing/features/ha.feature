@@ -5,7 +5,7 @@
     @smoke
     @automated
     @priority-high
-    @harbor-chart-deploy-ha
+    @allure.label.case_id:harbor-chart-deploy-ha
     场景: 使用高可用模式部署 harbor
         假定 集群已安装 ingress controller
         并且 已添加域名解析
