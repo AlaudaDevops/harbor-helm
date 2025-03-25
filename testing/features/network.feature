@@ -5,6 +5,7 @@
 
   @automated
   @priority-high
+  @harbor-chart-deploy-network-http
   @allure.label.case_id:harbor-chart-deploy-network-http
   场景: 使用 http 方式部署 harbor
     假定 集群已安装 ingress controller
@@ -34,6 +35,7 @@
 
   @automated
   @priority-high
+  @harbor-chart-deploy-network-https
   @allure.label.case_id:harbor-chart-deploy-network-https
   场景: 使用 https 方式部署 harbor
     假定 集群已安装 ingress controller
@@ -64,6 +66,7 @@
 
   @automated
   @priority-high
+  @harbor-chart-deploy-network-nodeport
   @allure.label.case_id:harbor-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 harbor
     假定 命名空间 "harbor-network-nodeport" 已存在
