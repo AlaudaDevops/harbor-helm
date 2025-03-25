@@ -6,6 +6,7 @@
   @automated
   @priority-high
   @harbor-chart-deploy-network-http
+  @allure.label.case_id:harbor-chart-deploy-network-http
   场景: 使用 http 方式部署 harbor
     假定 集群已安装 ingress controller
     并且 已添加域名解析
@@ -35,6 +36,7 @@
   @automated
   @priority-high
   @harbor-chart-deploy-network-https
+  @allure.label.case_id:harbor-chart-deploy-network-https
   场景: 使用 https 方式部署 harbor
     假定 集群已安装 ingress controller
     并且 已添加域名解析
@@ -65,6 +67,7 @@
   @automated
   @priority-high
   @harbor-chart-deploy-network-nodeport
+  @allure.label.case_id:harbor-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 harbor
     假定 命名空间 "harbor-network-nodeport" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
