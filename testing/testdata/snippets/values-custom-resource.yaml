@@ -40,8 +40,8 @@ trivy:
       cpu: 200m
       memory: 512Mi
     limits:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 400m
+      memory: 1Gi
 
 database:
   resources:
