@@ -29,12 +29,12 @@
         那么 "harbor-sso" 组件检查通过
         并且 "harbor" 可以正常访问
             """
-            url: http://<node.ip.first>:<nodeport.http>
+            url: http://<node.ip.random.readable>:<nodeport.http>
             timeout: 10m
             """
         并且 SSO 测试通过
             """
-            url: http://<node.ip.first>:<nodeport.http>
+            url: http://<node.ip.random.readable>:<nodeport.http>
             acpURL: <config.{{.acp.baseUrl}}>
             acpUser: <config.{{.acp.username}}>
             acpPassword: <config.{{.acp.password}}>

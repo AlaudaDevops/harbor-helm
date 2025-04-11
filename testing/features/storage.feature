@@ -61,9 +61,9 @@
       """
     并且 Pod 资源检查通过
       | name                       | path            | value           |
-      | harbor-hostpath-registry   | $.status.hostIP | <node.ip.first> |
-      | harbor-hostpath-jobservice | $.status.hostIP | <node.ip.first> |
-      | harbor-hostpath-trivy      | $.status.hostIP | <node.ip.first> |
+      | harbor-hostpath-registry   | $.spec.nodeName | <node.name.first> |
+      | harbor-hostpath-jobservice | $.spec.nodeName | <node.name.first> |
+      | harbor-hostpath-trivy      | $.spec.nodeName | <node.name.first> |
     并且 执行 "harbor 官方 e2e" 脚本成功
        | command                                                                                                   |
        | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 harbor-hostpath |
