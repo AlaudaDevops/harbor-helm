@@ -39,14 +39,5 @@
             acpUser: <config.{{.acp.username}}>
             acpPassword: <config.{{.acp.password}}>
             timeout: 10m
-            headless: false
+            headless: true
             """
-        # 并且 SSO 测试通过
-        #     """
-        #     url: http://192.168.170.104:30055
-        #     acpURL: https://devops-daily-build-ufxky5--idp.alaudatech.net:45443
-        #     acpUser: admin@cpaas.io
-        #     acpPassword: 07Apples@
-        #     timeout: 10m
-        #     headless: false
-        #     """

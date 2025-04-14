@@ -222,11 +222,11 @@ func loginHarbor(ctx context.Context, page playwright.Page, params ssoParams) er
 	}
 
 	// 等待页面加载完成
-	// if err := page.WaitForLoadState(playwright.PageWaitForLoadStateOptions{
-	// 	State: playwright.LoadStateNetworkidle,
-	// }); err != nil {
-	// 	return err
-	// }
+	if err := page.WaitForLoadState(playwright.PageWaitForLoadStateOptions{
+		State: playwright.LoadStateNetworkidle,
+	}); err != nil {
+		return err
+	}
 
 	// 等待 OIDC 表单
 	if _, err := page.WaitForSelector(`input[name="oidcUsername"]`, playwright.PageWaitForSelectorOptions{
