@@ -166,7 +166,10 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 	}
 
 	// 等待 Devops 文本出现
-	if err := page.Locator(fmt.Sprintf("//acl-page-header//div[text()='%v']", params.ACPUser)).WaitFor(); err != nil {
+	if err := page.Locator(fmt.Sprintf("//acl-page-header//div[text()='%v']", params.ACPUser)).WaitFor(
+		playwright.LocatorWaitForOptions{
+			Timeout: playwright.Float(60000),
+		}); err != nil {
 		return fmt.Errorf("等待 登录用户 文本出现失败: %v", err)
 	}
 
@@ -219,11 +222,11 @@ func loginHarbor(ctx context.Context, page playwright.Page, params ssoParams) er
 	}
 
 	// 等待页面加载完成
-	if err := page.WaitForLoadState(playwright.PageWaitForLoadStateOptions{
-		State: playwright.LoadStateNetworkidle,
-	}); err != nil {
-		return err
-	}
+	// if err := page.WaitForLoadState(playwright.PageWaitForLoadStateOptions{
+	// 	State: playwright.LoadStateNetworkidle,
+	// }); err != nil {
+	// 	return err
+	// }
 
 	// 等待 OIDC 表单
 	if _, err := page.WaitForSelector(`input[name="oidcUsername"]`, playwright.PageWaitForSelectorOptions{
