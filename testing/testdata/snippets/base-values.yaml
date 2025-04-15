@@ -69,7 +69,7 @@ database:
       memory: 256Mi
   persistence:
     enabled: true
-    storageClass: <storage-class.rwm>
+    storageClass: <storage-class>
 
 redis:
   internal:
@@ -87,7 +87,7 @@ redis:
     memory: 256Mi
   persistence:
       enabled: true
-      storageClass: <storage-class.rwm>
+      storageClass: <storage-class>
 
 existingSecretAdminPassword: "harbor-password"
 existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
