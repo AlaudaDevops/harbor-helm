@@ -67,6 +67,9 @@ database:
     limits:
       cpu: 100m
       memory: 256Mi
+  persistence:
+    enabled: true
+    storageClass: <storage-class>
 
 redis:
   internal:
@@ -82,6 +85,9 @@ redis:
   limits:
     cpu: 100m
     memory: 256Mi
+  persistence:
+      enabled: true
+      storageClass: <storage-class>
 
 existingSecretAdminPassword: "harbor-password"
 existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
