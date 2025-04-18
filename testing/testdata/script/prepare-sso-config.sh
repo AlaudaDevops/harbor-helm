@@ -30,8 +30,15 @@ prepare_sso_config() {
   gen_kubeconfig "${acp_host}" "${acp_token}" "global" "${global_kubeconfig}"
 
   # 创建 Oauth2Client 资源
-  echo "creating Oauth2Client resource ..."
-  KUBECONFIG=${global_kubeconfig} kubectl apply -f - <<EOF
+  redirect_uri=${harbor_base_url}/c/oidc/callback
+  current_resources=$(KUBECONFIG=${global_kubeconfig} kubectl get oauth2client.dex.coreos.com orsxg5bnmrsxqllimfzge33szpzjzzeeeirsk \
+    -n cpaas-system \
+    --ignore-not-found \
+    -o jsonpath='{.redirectURIs}')
+
+  if [ -z "$current_resources" ]; then
+    echo "creating Oauth2Client resource ..."
+    KUBECONFIG=${global_kubeconfig} kubectl apply -f - <<EOF
 apiVersion: dex.coreos.com/v1
 kind: OAuth2Client
 name: OIDC
@@ -46,6 +53,15 @@ redirectURIs:
 secret: Z2l0bGFiLW9mZmljaWFsLTAK
 spec: {}
 EOF
+  else
+    if [[ ! " $current_resources " =~ $redirect_uri ]]; then
+      echo "patching Oauth2Client resource ..."
+      KUBECONFIG=${global_kubeconfig} kubectl patch oauth2client.dex.coreos.com orsxg5bnmrsxqllimfzge33szpzjzzeeeirsk \
+        -n cpaas-system \
+        --type=json \
+        -p "[{\"op\": \"add\",\"path\": \"/redirectURIs/-\",\"value\": \"$redirect_uri\"}]"
+    fi
+  fi
 
   echo "SSO configuration preparation completed."
 }
