@@ -83,9 +83,9 @@
     那么 "harbor-nodeport" 组件检查通过
     并且 "harbor" 可以正常访问
       """
-      url: http://<node.ip.first>:<nodeport.http>
+      url: http://<node.ip.random.readable>:<nodeport.http>
       timeout: 10m
       """
     并且 执行 "harbor 官方 e2e" 脚本成功
       | command                                                                                                   |
-      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 harbor-nodeport |
+      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-nodeport |

@@ -24,7 +24,7 @@
     那么 "harbor-sc" 组件检查通过
     并且 "harbor" 可以正常访问
       """
-      url: http://<node.ip.first>:<nodeport.http>
+      url: http://<node.ip.random.readable>:<nodeport.http>
       timeout: 10m
       """
     并且 Pod 资源检查通过
@@ -34,7 +34,7 @@
       | harbor-sc-trivy      | $.spec.volumes[?(@.name == 'data')][0].persistentVolumeClaim.claimName          | data-harbor-sc-trivy-0 |
     并且 执行 "harbor 官方 e2e" 脚本成功
        | command                                                                                             |
-       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 harbor-sc |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-sc |
 
   @smoke
   @automated
@@ -56,17 +56,17 @@
     那么 "harbor-hostpath" 组件检查通过
     并且 "harbor" 可以正常访问
       """
-      url: http://<node.ip.first>:<nodeport.http>
+      url: http://<node.ip.random.readable>:<nodeport.http>
       timeout: 10m
       """
     并且 Pod 资源检查通过
       | name                       | path            | value           |
-      | harbor-hostpath-registry   | $.spec.nodeName | <node.name.first> |
-      | harbor-hostpath-jobservice | $.spec.nodeName | <node.name.first> |
-      | harbor-hostpath-trivy      | $.spec.nodeName | <node.name.first> |
+      | harbor-hostpath-registry   | $.spec.nodeName | <node.name.random> |
+      | harbor-hostpath-jobservice | $.spec.nodeName | <node.name.random> |
+      | harbor-hostpath-trivy      | $.spec.nodeName | <node.name.random> |
     并且 执行 "harbor 官方 e2e" 脚本成功
        | command                                                                                                   |
-       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 harbor-hostpath |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-hostpath |
 
   @automated
   @priority-high
@@ -88,7 +88,7 @@
     那么 "harbor-pvc" 组件检查通过
     并且 "harbor" 可以正常访问
       """
-      url: http://<node.ip.first>:<nodeport.http>
+      url: http://<node.ip.random.readable>:<nodeport.http>
       timeout: 10m
       """
     并且 Pod 资源检查通过
@@ -98,4 +98,4 @@
       | harbor-pvc-trivy      | $.spec.volumes[?(@.name == 'data')][0].persistentVolumeClaim.claimName          | pvc-trivy      |
     并且 执行 "harbor 官方 e2e" 脚本成功
       | command                                                                                              |
-      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.first>:<nodeport.http> Harbor12345 harbor-pvc |
+      | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-pvc |
