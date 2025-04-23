@@ -85,7 +85,7 @@ spec:
           exec:
             command:
             - /docker-healthcheck.sh
-          initialDelaySeconds: 1
+          initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: {{ .Values.database.internal.readinessProbe.timeoutSeconds }}
 {{- if .Values.database.internal.resources }}
