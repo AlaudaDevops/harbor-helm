@@ -14,7 +14,16 @@ if [ "${RUN_E2E_TEST}" != "true" ]; then
     exit 0
 fi
 
-TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api
+# 判断IP地址是否为IPv6格式
+is_ipv6() {
+    if [[ "$1" == \[*\]* ]]; then
+        return 0  # 是IPv6
+    else
+        return 1  # 不是IPv6
+    fi
+}
+
+TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api-docker-28
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}
@@ -56,6 +65,12 @@ case "${TEST_SUITE}" in
         EXCLUDE_TAGS_ARRAY=("proxy_cache" "replic_rule")
         ;;
 esac
+
+# 检查HARBOR_HOST是否为IPv6地址，如果是则添加podman_pull_push到排除标签
+if is_ipv6 "${HARBOR_HOST}"; then
+    echo "Detected IPv6 address, adding podman_pull_push to exclude tags"
+    EXCLUDE_TAGS_ARRAY+=("podman_pull_push")
+fi
 
 EXCLUDE_TAGS=""
 if [ ${#EXCLUDE_TAGS_ARRAY[@]} -gt 0 ]; then
