@@ -47,6 +47,8 @@ github.com/AlaudaDevops/bdd v0.0.0-20250409104818-4b7bd5894b28 h1:xZ7tMCbI6PhTKJ
 github.com/AlaudaDevops/bdd v0.0.0-20250409104818-4b7bd5894b28/go.mod h1:D/hT8ue4CVnaY/aT6m0w1rYsm9Y4faay2gqT8wF5oIk=
 github.com/AlaudaDevops/bdd v0.0.0-20250425030807-48b6cd70657a h1:MrzD9QCAUHwQQAWrAaq+LO49/rJJQXLrP8bLQOK4K0U=
 github.com/AlaudaDevops/bdd v0.0.0-20250425030807-48b6cd70657a/go.mod h1:PYUsFiMQDbNZckpTRbCBbCbbk8WmQXFm/MAh5c0qakY=
+github.com/AlaudaDevops/bdd v0.0.0-20250425034214-ea28065efb02 h1:RKzPHR6oDBQN1fOAfndIjk5gBsEXflTtyyq/A+M8S2Q=
+github.com/AlaudaDevops/bdd v0.0.0-20250425034214-ea28065efb02/go.mod h1:PYUsFiMQDbNZckpTRbCBbCbbk8WmQXFm/MAh5c0qakY=
 github.com/AlaudaDevops/pkg v0.13.1-0.20250211060527-40c23b251945 h1:+LY4jM5ieroA2RqSgOx5DruEI/TcxdLbo+1pVJqRcd8=
 github.com/AlaudaDevops/pkg v0.13.1-0.20250211060527-40c23b251945/go.mod h1:PXbacpZSG3+8L0lkX0nivpHkVCaciZN0sdeC66LegKw=
 github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 h1:UQHMgLO+TxOElx5B5HZ4hJQsoJ/PvUvKRhJHDQXO8P8=
