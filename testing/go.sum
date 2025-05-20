@@ -51,6 +51,8 @@ github.com/AlaudaDevops/bdd v0.0.0-20250425034214-ea28065efb02 h1:RKzPHR6oDBQN1f
 github.com/AlaudaDevops/bdd v0.0.0-20250425034214-ea28065efb02/go.mod h1:PYUsFiMQDbNZckpTRbCBbCbbk8WmQXFm/MAh5c0qakY=
 github.com/AlaudaDevops/bdd v0.0.0-20250520081629-3e26f4adfa5c h1:bbR3dC+kEco/YfmUYRqf9F0+BEYnduZRRkm5YhXns4E=
 github.com/AlaudaDevops/bdd v0.0.0-20250520081629-3e26f4adfa5c/go.mod h1:Paqu3/jWNknxJqAXQkCKw8PGL7ZpHhHr0OyWPVn96LI=
+github.com/AlaudaDevops/bdd v0.0.0-20250520092225-08e5f21c96bc h1:H4jw8+8aHYtbVuE5245Nx+FlhiDfgQut7f0+uX/HDu8=
+github.com/AlaudaDevops/bdd v0.0.0-20250520092225-08e5f21c96bc/go.mod h1:Paqu3/jWNknxJqAXQkCKw8PGL7ZpHhHr0OyWPVn96LI=
 github.com/AlaudaDevops/pkg v0.13.1-0.20250211060527-40c23b251945 h1:+LY4jM5ieroA2RqSgOx5DruEI/TcxdLbo+1pVJqRcd8=
 github.com/AlaudaDevops/pkg v0.13.1-0.20250211060527-40c23b251945/go.mod h1:PXbacpZSG3+8L0lkX0nivpHkVCaciZN0sdeC66LegKw=
 github.com/AlaudaDevops/pkg v0.13.1-0.20250517020307-0e33c480e2ce h1:MPZCdAbsFI0NIWozetAhlzryEazxQm//I2vqriTptnE=
