@@ -3,6 +3,7 @@ kind: PipelineRun
 metadata:
   name: integration-test
   annotations:
+    pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       target_branch.matches("^(main|release-.*|alauda-.*)$")
     pipelinesascode.tekton.dev/max-keep-runs: "5"
