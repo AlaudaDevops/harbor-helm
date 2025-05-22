@@ -1,4 +1,4 @@
-FROM docker-mirrors.alauda.cn/library/golang:1.23.3-bookworm AS builder
+FROM docker-mirrors.alauda.cn/library/golang:1.23.7-bookworm AS builder
 
 WORKDIR /tools
 RUN mkdir -p /tools/bin
