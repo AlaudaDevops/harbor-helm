@@ -7,7 +7,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: |-
       target_branch.matches("^(main|release-.*|alauda-.*)$")
     pipelinesascode.tekton.dev/max-keep-runs: "5"
-    pipelinesascode.tekton.dev/pipeline: [".tekton/pipeline.yaml"]
+    pipelinesascode.tekton.dev/pipeline: "[.tekton/pipeline.yaml]"
 spec:
   taskRunTemplate:
     podTemplate:
