@@ -10,9 +10,9 @@
   @allure.label.case_id:harbor-chart-deploy-storage-sc
   场景: 使用存储类方式部署 harbor
     假定 集群已存在存储类
-    并且 命名空间 "harbor-storage-sc" 已存在
+    并且 命名空间 "testing-harbor-sc-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "harbor-storage-sc" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-sc-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-sc
@@ -42,9 +42,9 @@
   @harbor-chart-deploy-storage-hostpath
   @allure.label.case_id:harbor-chart-deploy-storage-hostpath
   场景: 使用 hostpath 方式部署 harbor
-    假定 命名空间 "harbor-storage-hostpath" 已存在
+    假定 命名空间 "testing-harbor-hostpath-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "harbor-storage-hostpath" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-hostpath-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-hostpath
@@ -73,10 +73,10 @@
   @harbor-chart-deploy-storage-pvc
   @allure.label.case_id:harbor-chart-deploy-storage-pvc
   场景: 使用指定 pvc 的方式部署 harbor
-    假定 命名空间 "harbor-storage-pvc" 已存在
+    假定 命名空间 "testing-harbor-pvc-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
     并且 已导入 "pvc" 资源: "./testdata/resources/storage-pvc.yaml"
-    当 使用 helm 部署实例到 "harbor-storage-pvc" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-pvc-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-pvc
