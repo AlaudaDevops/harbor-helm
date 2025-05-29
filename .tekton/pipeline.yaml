@@ -1,0 +1,671 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: vcluster-integration-test
+  labels:
+    app.kubernetes.io/version: "0.2"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.56.0"
+    tekton.dev/tags: "vcluster, integration-test, golang"
+    tekton.dev/displayName: "VCluster Integration Test Pipeline"
+    tekton.dev/categories: "Testing"
+    tekton.dev/description: "Pipeline to run integration tests with vcluster"
+spec:
+  description: |
+    This pipeline can be used for vcluster-based integration testing, supporting installation of prerequisites, automatic collection and uploading of test reports.
+  params:
+  - name: git-revision
+    description: |
+      Git revision object with url, branch, commit, and version.
+      * url: The url of the git repository
+      * branch: The source branch of the git repository
+      * commit: The commit of the git repository
+    type: object
+    properties:
+      url: { type: string }
+      branch: { type: string }
+      commit: { type: string }
+  - name: prepare
+    description: |
+      Params to prepare the testing environment
+      * command: Command to prepare the testing environment, if empty, the deploy-dependency step will be skipped
+      * image: Image used to prepare the testing environment
+    type: object
+    properties:
+      command: { type: string }
+      image: { type: string }
+    default:
+      command: ""
+      image: ""
+  - name: test
+    description: |
+      Params to run the test
+      * command: Command to run the test
+      * image: Image used to run the test, if you want to use the built test image, just leave it empty
+    type: object
+    properties:
+      command: { type: string }
+      image: { type: string }
+    default:
+      image: registry.alauda.cn:60080/devops/nonroot/builder-go:latest
+  - name: file-list-for-commit-sha
+    type: array
+    default:
+    - "."
+    description: |
+      This list of files will be used to calculate the most recently modified commit sha.
+      It is used to set the `SOURCE_DATE_EPOCH` environment variable and version number, ensuring that the image digest remains consistent when files have not changed.
+  - name: build-test-image
+    description: |
+      Params to build test image
+      * image-repository: If you want to build test image, specify the Image repository address, like build-harbor.alauda.cn/test/image-repo
+      * dockerfile-path: If you want to build test image, specify the path to the Dockerfile used to build you image i.e ./Dockerfile
+      * context: If you want to build test image, specify the path to the directory to use as context in docker build
+    type: object
+    properties:
+      image-repository: { type: string }
+      dockerfile-path: { type: string }
+      context: { type: string }
+    default:
+      image-repository: ""
+      dockerfile-path: ./Dockerfile
+      context: "."
+  - name: commit-test-image
+    description: |
+      Params to commit test image to upstream repository
+      * skip-commit: Skip to commit the test image to upstream repository
+      * upstream: The params of the upstream repo. if set, the image digest will be updated into the upstream repo.
+        The format of the string is:
+          "repo-url: <the url of the upstream repo. e.g. https://github.com/example/repo.git>
+          branch-name: <the branch name of the upstream repo. e.g. main or {{ git_branch }}>
+          yaml-file-path: <the path to the values.yaml file in the upstream repo. e.g. chart/values.yaml>"
+      * upstream-branch-condition: Branch condition to commit the test image
+      * upstream-secret: Secret to commit the test image
+    type: object
+    properties:
+      skip-commit: { type: string }
+      upstream: { type: string }
+      upstream-branch-condition: { type: string }
+      upstream-secret: { type: string }
+    default:
+      skip-commit: "false"
+      upstream: ""
+      upstream-branch-condition: "^(main|master|release-.*)$"
+      upstream-secret: ""
+  - name: vcluster
+    type: object
+    description: |
+      Params to create vcluster
+      * custom-config: Custom config provided to create vcluster
+    properties:
+      custom-config: { type: string }
+    default:
+      custom-config: ""
+  - name: report
+    description: |
+      Params to generate allure report
+      * path: The path of the generated report
+      * command: Command to generate allure report, if empty, the generate-report step will be skipped
+      * image: Image used to generate allure report
+    type: object
+    properties:
+      path: { type: string }
+      command: { type: string }
+      image: { type: string }
+    default:
+      path: ./allure-report
+      command: allure generate --clean
+      image: build-harbor.alauda.cn/devops/plugin-test
+  workspaces:
+  - name: source
+  - name: cache
+  - name: kube-config
+  - name: upload-conf
+  - name: test-config
+    description: |
+      used to store the config of the test
+    optional: true
+  - name: basic-auth
+    optional: true
+    description: |
+      A Workspace containing a .gitconfig and .git-credentials file.
+      These will be copied to the user's home before any git commands are run.
+      Any other files in this Workspace are ignored.
+      It is strongly recommended to use ssh-directory over basic-auth whenever possible and to bind a Secret to this Workspace over other volume types.
+      You should specify this workspace when you want to build test image.
+  - name: gitversion-config
+    optional: true
+    description: |
+      A Workspace containing a gitversion-config file. This file is used to set the git version.
+      You should specify this workspace when you want to build test image.
+  - name: dockerconfig
+    description: |
+      Workspace for Docker configuration files, such as `config.json` or `.dockerconfigjson`.
+      This is optional and is used for authentication when pushing images to the registry when you build test image.
+    optional: true
+  tasks:
+  - name: git-clone
+    timeout: 10m
+    retries: 2
+    taskRef:
+      resolver: hub
+      params:
+        - name: catalog
+          value: catalog
+        - name: kind
+          value: task
+        - name: name
+          value: git-clone
+        - name: version
+          value: "0.9"
+
+    params:
+      - name: url
+        value: $(params.git-revision.url)
+      - name: revision
+        value: $(params.git-revision.branch)
+
+    workspaces:
+      - name: output
+        workspace: source
+      - name: basic-auth
+        workspace: basic-auth
+
+  - name: calculate-commit-sha
+    runAfter:
+    - git-clone
+    timeout: 10m
+    retries: 0
+    params:
+    - name: image
+      value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+    - name: args
+      value: $(params.file-list-for-commit-sha[*])
+    - name: imagePullPolicy
+      value: Always
+    - name: script
+      value: |
+        #!/bin/bash
+        set -e
+
+        # Add the source directory to the safe.directory list
+        git config --global --add safe.directory $(workspaces.source.path)
+
+        # Initialize environment variables
+        export GIT_URL=$(params.git-revision.url)
+        export GIT_REVISION=$(params.git-revision.branch)
+        export RESET_GIT_COMMIT=$(params.git-revision.commit)
+        export RESULT_STRING_PATH=$(results.string-result.path)
+        export RESULT_ARRAY_PATH=$(results.array-result.path)
+        export RESULT_OBJECT_PATH=$(results.object-result.path)
+        export DEFAULT_GIT_COMMIT=$(git rev-parse HEAD)
+        export DEFAULT_GIT_COMMITTER_DATE=$(git log -1 --pretty=%ct)
+        export WORKSPACE_SOURCE_PATH=$(workspaces.source.path)
+        export WORKSPACE_SECRET_BOUND=$(workspaces.secret.bound)
+        export WORKSPACE_SECRET_PATH=$(workspaces.secret.path)
+
+        # calculate the last commit info
+        calculate-last-commit-info.sh $@
+
+        # Define the commit info file path and create the directory if it doesn't exist
+        COMMIT_INFO_FILE=".git/$(context.pipelineRun.name)/.last-changed-commit-sha"
+        mkdir -p "$(dirname ${COMMIT_INFO_FILE})"
+        # Store the last changed commit sha in a file
+        cp -f $(results.string-result.path) "${COMMIT_INFO_FILE}"
+
+        # Store the original git revision in a file
+        echo -n "${GIT_REVISION}" > .git/$(context.pipelineRun.name)/.git-revision
+
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: catalog
+      - name: kind
+        value: task
+      - name: name
+        value: run-script
+      - name: version
+        value: "0.1"
+    workspaces:
+    - name: source
+      workspace: source
+    - name: secret
+      workspace: basic-auth
+
+  - name: git-version
+    params:
+    - name: gitversion-image
+      value: registry.alauda.cn:60080/devops/gittools/gitversion:6.0.5
+    - name: yq-image
+      value: registry.alauda.cn:60080/devops/nonroot/yq:latest
+    - name: commit
+      value: $(tasks.calculate-commit-sha.results.string-result)
+    - name: config-file
+      value: GitVersion.yaml
+    - name: post-command
+      value: |
+        # Extract version information from gitversion output
+        PRE_RELEASE_LABEL=$(sed -n 's/.*"PreReleaseLabel": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+        INFORMATIONAL_VERSION=$(sed -n 's/.*"InformationalVersion": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+        FULL_SEM_VERSION=$(sed -n 's/.*"FullSemVer": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+
+        # Get current branch name
+        current_revision=$(git branch --show-current)
+
+        GIT_REVISION=$(cat .git/$(context.pipelineRun.name)/.git-revision)
+
+        # Only adjust FullSemVer when:
+        # 1. PreReleaseLabel cannot be empty to avoid affecting the version of the tag.
+        # 2. This revision is not a tag.
+        if [ -n "$PRE_RELEASE_LABEL" ] && [ "${GIT_REVISION#refs/tags/}" = "${GIT_REVISION}" ]; then
+          sed -i "s/\"FullSemVer\": \"[^\"]*\"/\"FullSemVer\": \"$INFORMATIONAL_VERSION\"/" $FINAL_RESULTS_PATH
+          echo "Current revision: $current_revision"
+          echo "Adjusted FullSemVer from $FULL_SEM_VERSION to $INFORMATIONAL_VERSION"
+        fi
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: extras
+      - name: kind
+        value: task
+      - name: name
+        value: git-version
+      - name: version
+        value: "0.2"
+    timeout: 10m0s
+    workspaces:
+    - name: source
+      workspace: source
+    - name: basic-auth
+      workspace: basic-auth
+    - name: config
+      workspace: gitversion-config
+
+  - name: get-vcluster-config
+    params:
+    - name: environment
+      value: dev-devops-region
+    - name: cluster
+      value: region
+    taskRef:
+      kind: ClusterTask
+      name: katanomi-get-cluster-config
+    workspaces:
+    - name: kube-config
+      workspace: kube-config
+  - name: create-virtual-cluster
+    runAfter:
+    - get-vcluster-config
+    taskRef:
+      resolver: katanomi.dev.gitsource
+      params:
+      - name: url
+        value: https://gitlab-ce.alauda.cn/devops/edge
+      - name: revision
+        value: refs/heads/master
+      - name: pathInRepo
+        value: tasks/create-vcluster/0.1/create-vcluster.yaml
+    params:
+    - name: name
+      value: catalog-$(context.pipelineRun.name)
+    - name: custom-vcluster-config
+      value: $(params.vcluster.custom-config)
+    workspaces:
+    - name: kube-config
+      workspace: kube-config
+  - name: deploy-dependency
+    timeout: 30m
+    retries: 0
+    when:
+    - input: $(params.prepare.command)
+      operator: notin
+      values:
+      - ""
+    taskRef:
+      kind: ClusterTask
+      name: alauda-script
+    workspaces:
+    - name: source
+      workspace: source
+    - name: custom
+      workspace: kube-config
+    runAfter:
+    - git-clone
+    - create-virtual-cluster
+    params:
+    - name: script
+      value: $(params.prepare.command)
+    - name: tool-image
+      value: $(params.prepare.image)
+
+  - name: build-test-image
+    runAfter:
+    - git-clone
+    - git-version
+    when:
+    - input: $(params.build-test-image.image-repository)
+      operator: notin
+      values:
+      - ""
+      - " "
+    - input: $(params.build-test-image.dockerfile-path)
+      operator: notin
+      values:
+      - ""
+      - " "
+    timeout: 50m
+    retries: 0
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: extras
+      - name: kind
+        value: task
+      - name: name
+        value: buildx
+      - name: version
+        value: "0.1"
+    workspaces:
+    - name: source
+      workspace: source
+    - name: dockerconfig
+      workspace: dockerconfig
+    params:
+    - name: buildx-image
+      value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+    - name: image-url
+      value: $(params.build-test-image.image-repository)
+    - name: image-tags
+      value:
+      - "v$(tasks.git-version.results.variables.FullSemVer)"
+    - name: dockerfile
+      value: $(params.build-test-image.dockerfile-path)
+    - name: context
+      value: $(params.build-test-image.context)
+    - name: platform
+      value:
+      - linux/amd64
+      - linux/arm64
+    - name: environments
+      value:
+      - BUILDX_NO_DEFAULT_ATTESTATIONS=1
+      - SOURCE_DATE_EPOCH=$(tasks.calculate-commit-sha.results.array-result[1])
+    - name: labels
+      value:
+      - branch=$(params.git-revision.branch)
+      # The first element is the commit sha, the second element is the commit date
+      - commit=$(params.git-revision.commit)
+      # Record the namespace where the image is built, so that the image source can be traced back.
+      - ns=$(context.taskRun.namespace)
+    - name: extra-args
+      value:
+      - --build-arg version=v$(tasks.git-version.results.variables.FullSemVer)
+      - --build-arg app_version=v$(tasks.git-version.results.variables.FullSemVer)
+      - --build-arg commit_id=$(params.git-revision.commit)
+      - --output type=registry,rewrite-timestamp=true
+      # - $(params.build-test-image.build-extra-args[*])
+
+  - name: select-test-image
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: catalog
+      - name: kind
+        value: task
+      - name: name
+        value: run-script
+      - name: version
+        value: "0.1"
+    workspaces:
+    - name: source
+      workspace: source
+    params:
+    - name: image
+      value: registry.alauda.cn:60080/devops/nonroot/builder-go:latest
+    - name: script
+      value: |
+        if [ -z "$(params.build-test-image.image-repository)" ]; then
+          echo -n "$(params.test.image)" >  $(results.string-result.path)
+        else
+          echo -n "$(params.build-test-image.image-repository):v$(tasks.git-version.results.variables.FullSemVer)" >  $(results.string-result.path)
+        fi
+
+        echo "using `cat $(results.string-result.path)` as test image"
+
+  - name: commit-test-image
+    runAfter:
+    - run-test
+    workspaces:
+    - name: source
+      workspace: source
+    when:
+    - input: $(tasks.run-test.results.result)
+      operator: in
+      values:
+      - "passed"
+    - input: $(params.commit-test-image.skip-commit)
+      operator: notin
+      values:
+      - "true"
+    - cel: "'$(params.git-revision.branch)'.matches('$(params.commit-test-image.upstream-branch-condition)')"
+    - input: $(params.commit-test-image.upstream-secret)
+      operator: notin
+      values:
+      - ""
+      - " "
+      - "null"
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: alauda
+      - name: kind
+        value: task
+      - name: name
+        value: trigger-pipeline
+      - name: version
+        value: "0.1"
+    matrix:
+      params:
+      - name: string-params
+        value:
+        - "$(params.commit-test-image.upstream)"
+        # !!! Do not remove until this PR is merged into the currently used tekton-pipeline https://github.com/tektoncd/pipeline/pull/8465/files
+        # An empty array in matrix could cause tekton-pipeline panic, this is to prevent tekton-pipeline from panicking.
+        # The trigger-pipeline taskrun with these string-params will exit with 0 without committing to any repo.
+        - "null: null"
+    params:
+    - name: pipeline-name
+      value: update-image-version
+    - name: pipeline-version
+      value: "0.1"
+    - name: pipeline-catalog
+      value: alauda
+    - name: wait-completion
+      value: "false"
+    - name: array-params
+      value:
+      - "--name:image-digests"
+      - "$(tasks.build-test-image.results.image-digests[0])"
+    - name: workspace-bindings
+      value: |
+        - name: shared-workspace
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteMany
+              resources:
+                requests:
+                  storage: 1Gi
+        - name: basic-auth
+          secret:
+            secretName: $(params.commit-test-image.upstream-secret)
+    - name: taskrun-template
+      value: |
+        podTemplate:
+          securityContext:
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+
+  - name: run-test
+    timeout: 60m
+    retries: 0
+    onError: continue
+    taskRef:
+      resolver: katanomi.dev.gitsource
+      params:
+      - name: url
+        value: https://gitlab-ce.alauda.cn/devops/edge
+      - name: revision
+        value: refs/heads/master
+      - name: pathInRepo
+        value: tasks/run-script/0.1/run-script.yaml
+    workspaces:
+    - name: source
+      workspace: source
+    - name: config
+      workspace: kube-config
+    - name: secret
+      workspace: test-config
+    runAfter:
+    - deploy-dependency
+    - build-test-image
+    when: []
+    params:
+    - name: script
+      value: |
+        # switch current shell to bash
+        RUN_ON=`cat /proc/$$/comm`
+        if [ "$RUN_ON" != "bash" ] && command -v bash >/dev/null 2>&1; then
+            echo "task need to be executed in bash"
+            exec bash "$0" $@
+        fi
+
+        set -ex
+
+        LOG_DIR=$(workspaces.source.path)/.git/temp-logs
+        mkdir -p ${LOG_DIR}
+
+        # execute command user provided
+        {
+          $(params.test.command)
+        } 2>&1 | tee -a ${LOG_DIR}/test.log
+
+        if [ ${PIPESTATUS[0]} -ne 0 ]; then
+          echo "User provided command failed, please check the logs of run-test task for more details"
+          exit 1
+        fi
+
+        # If execution reaches here, it means the test has passed successfully
+        echo -n "passed" > $(results.result.path)
+    - name: image
+      value: $(tasks.select-test-image.results.string-result)
+  - name: generate-report
+    timeout: 30m
+    retries: 0
+    runAfter:
+    - run-test
+    taskRef:
+      resolver: katanomi.dev.gitsource
+      params:
+      - name: url
+        value: https://gitlab-ce.alauda.cn/devops/edge
+      - name: revision
+        value: refs/heads/master
+      - name: pathInRepo
+        value: tasks/run-script/0.1/run-script.yaml
+    workspaces:
+    - name: source
+      workspace: source
+    when:
+    - input: $(params.report.command)
+      operator: notin
+      values:
+      - ""
+    params:
+    - name: script
+      value: |
+        set -ex
+        TEST_STATUS="passed"
+        if [ "$(tasks.run-test.results.result)" != "passed" ]; then
+           TEST_STATUS="failed"
+        fi
+
+        # set log dir environment variable, so user can use it in the report command
+        LOG_DIR=$(workspaces.source.path)/.git/temp-logs
+
+        $(params.report.command)
+    - name: image
+      value: $(params.report.image)
+  - name: upload-allure-report
+    timeout: 30m
+    retries: 0
+    runAfter:
+    - generate-report
+    taskRef:
+      resolver: katanomi.dev.gitsource
+      params:
+      - name: url
+        value: https://gitlab-ce.alauda.cn/devops/edge
+      - name: revision
+        value: refs/heads/master
+      - name: pathInRepo
+        value: tasks/upload-allure-report/0.1/upload-allure-report.yaml
+    workspaces:
+    - name: shared-workspace
+      workspace: source
+    - name: upload-conf
+      workspace: upload-conf
+    params:
+    - name: upload-bucket
+      value: backend-test
+    - name: folder-name
+      value: $(date +%Y%m%d%H%M%S)-$(context.pipelineRun.name)
+    - name: local-report-path
+      value: $(params.report.path)
+  finally:
+  - name: check-test-status
+    timeout: 1m
+    retries: 0
+    params:
+    - name: image
+      value: registry.alauda.cn:60080/devops/nonroot/builder-go:latest
+    - name: script
+      value: |
+        set -ex
+        if [ "$(tasks.run-test.results.result)" != "passed" ]; then
+          echo "test failed, please check the logs of run-test task for more details"
+          exit 1
+        fi
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: catalog
+      - name: kind
+        value: task
+      - name: name
+        value: run-script
+      - name: version
+        value: "0.1"
+  - name: release-vcluster
+    params:
+    - name: name
+      value: catalog-$(context.pipelineRun.name)
+    taskRef:
+      kind: ClusterTask
+      name: katanomi-release-vcluster
+    when:
+    - input: $(tasks.create-virtual-cluster.status)
+      operator: in
+      values:
+      - Succeeded
+      - Failed
+    workspaces:
+    - name: kube-config
+      workspace: kube-config
