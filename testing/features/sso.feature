@@ -10,13 +10,13 @@
     @allure.label.case_id:harbor-chart-deploy-sso
     场景: 使用 SSO 模式部署 harbor
         假定 集群已存在存储类
-        并且 命名空间 "harbor-sso" 已存在
+        并且 命名空间 "testing-harbor-sso-<template.{{randAlphaNum 4 | toLower}}>" 已存在
         并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
         并且 执行 "sso 配置" 脚本成功
             | command                                                                                                                                                                 |
             | bash ./testdata/script/prepare-sso-config.sh '<config.{{.acp.baseUrl}}>' '<config.{{.acp.token}}>' '<config.{{.acp.cluster}}>' 'http://<node.ip.random.readable>:<nodeport.http>' |
             | mkdir -p output/images                                                                                                                                                  |
-        当 使用 helm 部署实例到 "harbor-sso" 命名空间
+        当 使用 helm 部署实例到 "testing-harbor-sso-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
             """
             chartPath: ../
             releaseName: harbor-sso

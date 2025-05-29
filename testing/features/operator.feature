@@ -1,0 +1,19 @@
+# language: zh-CN
+
+@operator
+@e2e
+@harbor-operator-deploy
+@allure.label.case_id:harbor-operator-deploy
+功能: 测试 operator 部署 harbor 实例
+
+    场景: 测试 operator 部署 harbor 实例
+        假定 集群已存在存储类
+        并且 命名空间 "testing-harbor-operator-<template.{{randAlphaNum 4 | toLower}}>" 已存在
+        并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
+        当 创建 "harbor 实例" 资源: "./testdata/harbor.yaml"
+        那么 "harbor-sample" 可以正常访问
+            """
+            url: http://<node.ip.random.readable>:<nodeport.http>
+            timeout: 15m
+            """
+        并且 "harbor-operator" 组件检查通过

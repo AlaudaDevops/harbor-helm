@@ -13,9 +13,9 @@
             | domain                      | ip           |
             | test-ingress-ha.example.com | <ingress-ip> |
         并且 集群已存在存储类
-        并且 命名空间 "harbor-ha" 已存在
+        并且 命名空间 "testing-harbor-ha-<template.{{randAlphaNum 4 | toLower}}>" 已存在
         并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-        当 使用 helm 部署实例到 "harbor-ha" 命名空间
+        当 使用 helm 部署实例到 "testing-harbor-ha-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
             """
             chartPath: ../
             releaseName: harbor-ha

@@ -12,9 +12,9 @@
     并且 已添加域名解析
       | domain                        | ip           |
       | test-ingress-http.example.com | <ingress-ip> |
-    并且 命名空间 "harbor-network-http" 已存在
+    并且 命名空间 "testing-harbor-network-http-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "harbor-network-http" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-network-http-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-http
@@ -42,10 +42,10 @@
     并且 已添加域名解析
       | domain                         | ip           |
       | test-ingress-https.example.com | <ingress-ip> |
-    并且 命名空间 "harbor-network-https" 已存在
+    并且 命名空间 "testing-harbor-network-https-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
     并且 已导入 "tls 证书" 资源: "./testdata/resources/secret-tls-cert.yaml"
-    当 使用 helm 部署实例到 "harbor-network-https" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-network-https-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-https
@@ -69,9 +69,9 @@
   @harbor-chart-deploy-network-nodeport
   @allure.label.case_id:harbor-chart-deploy-network-nodeport
   场景: 使用 nodeport 方式部署 harbor
-    假定 命名空间 "harbor-network-nodeport" 已存在
+    假定 命名空间 "testing-harbor-network-nodeport-<template.{{randAlphaNum 4 | toLower}}>" 已存在
     并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
-    当 使用 helm 部署实例到 "harbor-network-nodeport" 命名空间
+    当 使用 helm 部署实例到 "testing-harbor-network-nodeport-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
       """
       chartPath: ../
       releaseName: harbor-nodeport
