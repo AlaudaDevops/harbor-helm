@@ -51,6 +51,7 @@ spec:
           configMap:
             name: {{ template "harbor.oidc" . }}-config
       restartPolicy: OnFailure
+      automountServiceAccountToken: {{ .Values.oidc.automountServiceAccountToken | default false }}
     {{- with .Values.core.tolerations }}
       tolerations:
 {{ toYaml . | indent 6 }}

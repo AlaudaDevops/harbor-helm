@@ -61,6 +61,7 @@ oidc:
   issuer: ""
   scope: "openid,profile,offline_access,groups,email"
   verifyCert: false
+  automountServiceAccountToken: false
 
 expose:
   # Set how to expose the service. Set the type as "ingress", "clusterIP", "nodePort" or "loadBalancer"
