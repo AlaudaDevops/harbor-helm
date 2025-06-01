@@ -4,32 +4,32 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     trivyOfflineDB:
@@ -39,12 +39,12 @@ global:
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.12.3-d7991c56
+      tag: 2.12.3-9df9d499
       support_arm: true
       thirdparty: true
     initContainer:
