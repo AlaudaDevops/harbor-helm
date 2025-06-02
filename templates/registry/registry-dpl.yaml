@@ -97,21 +97,8 @@ spec:
         {{- if not (empty .Values.containerSecurityContext) }}
         securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 10 }}
         {{- end }}
-        envFrom:
-        - secretRef:
-            name: "{{ template "harbor.registry" . }}"
-        {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
-        - secretRef:
-            name: {{ .Values.persistence.imageChartStorage.s3.existingSecret }}
-        {{- end }}
+        envFrom: []
         env:
-        {{- if .Values.registry.existingSecret }}
-        - name: REGISTRY_HTTP_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.registry.existingSecret }}
-              key: {{ .Values.registry.existingSecretKey }}
-        {{- end }}
         {{- if has "registry" .Values.proxy.components }}
         - name: HTTP_PROXY
           value: "{{ .Values.proxy.httpProxy }}"
@@ -130,40 +117,6 @@ spec:
         - name: INTERNAL_TLS_TRUST_CA_PATH
           value: /etc/harbor/ssl/registry/ca.crt
         {{- end }}
-        {{- if .Values.persistence.imageChartStorage.azure.existingSecret }}
-        - name: REGISTRY_STORAGE_AZURE_ACCOUNTKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.azure.existingSecret }}
-              key: AZURE_STORAGE_ACCESS_KEY
-        {{- end }}
-        {{- if .Values.persistence.imageChartStorage.swift.existingSecret }}
-        - name: REGISTRY_STORAGE_SWIFT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_PASSWORD
-        - name: REGISTRY_STORAGE_SWIFT_SECRETKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_SECRETKEY
-              optional: true
-        - name: REGISTRY_STORAGE_SWIFT_ACCESSKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_ACCESSKEY
-              optional: true
-        {{- end }}
-        {{- if .Values.persistence.imageChartStorage.oss.existingSecret }}
-        - name: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.oss.existingSecret }}
-              key: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
-              optional: true
-        {{- end}}
 {{- with .Values.registry.registry.extraEnvVars }}
 {{- toYaml . | nindent 8 }}
 {{- end }}
@@ -171,6 +124,31 @@ spec:
         - containerPort: {{ template "harbor.registry.containerPort" . }}
         - containerPort: {{ ternary .Values.metrics.registry.port 5001 .Values.metrics.enabled }}
         volumeMounts:
+        - name: registry-secret
+          mountPath: /etc/env-files/registry-secret
+        - name: registryctl-secret
+          mountPath: /etc/env-files/registryctl-secret
+        {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
+        - name: s3-secret
+          mountPath: /etc/env-files/s3-secret
+        {{- end }}
+        {{- if .Values.registry.existingSecret }}
+        - name: registry-secret-secret
+          mountPath: /etc/env-files/registry-secret-secret
+        {{- end }}
+        {{- if .Values.persistence.imageChartStorage.azure.existingSecret }}
+        - name: azure-secret
+          mountPath: /etc/env-files/azure-secret
+        {{- end }}
+        {{- if .Values.persistence.imageChartStorage.swift.existingSecret }}
+        - name: swift-secret
+          mountPath: /etc/env-files/swift-secret
+        {{- end }}
+        {{- if .Values.persistence.imageChartStorage.oss.existingSecret }}
+        - name: oss-secret
+          mountPath: /etc/env-files/oss-secret
+        {{- end }}
+
         - name: registry-data
           mountPath: {{ .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
           subPath: {{ .Values.persistence.persistentVolumeClaim.registry.subPath }}
@@ -231,36 +209,7 @@ spec:
         envFrom:
         - configMapRef:
             name: "{{ template "harbor.registryCtl" . }}"
-        - secretRef:
-            name: "{{ template "harbor.registry" . }}"
-        - secretRef:
-            name: "{{ template "harbor.registryCtl" . }}"
-        {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
-        - secretRef:
-            name: {{ .Values.persistence.imageChartStorage.s3.existingSecret }}
-        {{- end }}
         env:
-        {{- if .Values.registry.existingSecret }}
-        - name: REGISTRY_HTTP_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.registry.existingSecret }}
-              key: {{ .Values.registry.existingSecretKey }}
-        {{- end }}
-        - name: CORE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ default (include "harbor.core" .) .Values.core.existingSecret }}
-              key: secret
-        - name: JOBSERVICE_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ default (include "harbor.jobservice" .) .Values.jobservice.existingSecret }}
-              {{- if .Values.jobservice.existingSecret }}
-              key: {{ .Values.jobservice.existingSecretKey }}
-              {{- else }}
-              key: JOBSERVICE_SECRET
-              {{- end }}
         {{- if has "registry" .Values.proxy.components }}
         - name: HTTP_PROXY
           value: "{{ .Values.proxy.httpProxy }}"
@@ -279,46 +228,42 @@ spec:
         - name: INTERNAL_TLS_TRUST_CA_PATH
           value: /etc/harbor/ssl/registry/ca.crt
         {{- end }}
-        {{- if .Values.persistence.imageChartStorage.azure.existingSecret }}
-        - name: REGISTRY_STORAGE_AZURE_ACCOUNTKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.azure.existingSecret }}
-              key: AZURE_STORAGE_ACCESS_KEY
-        {{- end }}
-        {{- if .Values.persistence.imageChartStorage.swift.existingSecret }}
-        - name: REGISTRY_STORAGE_SWIFT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_PASSWORD
-        - name: REGISTRY_STORAGE_SWIFT_SECRETKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_SECRETKEY
-              optional: true
-        - name: REGISTRY_STORAGE_SWIFT_ACCESSKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
-              key: REGISTRY_STORAGE_SWIFT_ACCESSKEY
-              optional: true
-        {{- end }}
-        {{- if .Values.persistence.imageChartStorage.oss.existingSecret }}
-        - name: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.persistence.imageChartStorage.oss.existingSecret }}
-              key: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
-              optional: true
-        {{- end}}
 {{- with .Values.registry.controller.extraEnvVars }}
 {{- toYaml . | nindent 8 }}
 {{- end }}
         ports:
         - containerPort: {{ template "harbor.registryctl.containerPort" . }}
         volumeMounts:
+        - name: registry-secret
+          mountPath: /etc/env-files/registry-secret
+        - name: registryctl-secret
+          mountPath: /etc/env-files/registryctl-secret
+        {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
+        - name: s3-secret
+          mountPath: /etc/env-files/s3-secret
+        {{- end }}
+        {{- if .Values.registry.existingSecret }}
+        - name: registry-secret-secret
+          mountPath: /etc/env-files/registry-secret-secret
+        {{- end }}
+        - name: core-secret-secret
+          mountPath: /etc/env-files/core-secret-secret
+        - name: jobservice-secret-secret
+          mountPath: /etc/env-files/jobservice-secret-secret
+
+        {{- if .Values.persistence.imageChartStorage.azure.existingSecret }}
+        - name: azure-secret
+          mountPath: /etc/env-files/azure-secret
+        {{- end }}
+        {{- if .Values.persistence.imageChartStorage.swift.existingSecret }}
+        - name: swift-secret
+          mountPath: /etc/env-files/swift-secret
+        {{- end }}
+        {{- if .Values.persistence.imageChartStorage.oss.existingSecret }}
+        - name: oss-secret
+          mountPath: /etc/env-files/oss-secret
+        {{- end }}
+
         - name: registry-data
           mountPath: {{ .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
           subPath: {{ .Values.persistence.persistentVolumeClaim.registry.subPath }}
@@ -346,6 +291,73 @@ spec:
 {{ include "harbor.caBundleVolumeMount" . | indent 8 }}
         {{- end }}
       volumes:
+      - name: registry-secret
+        secret:
+          secretName: {{ template "harbor.registry" . }}
+      - name: registryctl-secret
+        secret:
+          secretName: {{ template "harbor.registryCtl" . }}
+      {{- if .Values.persistence.imageChartStorage.s3.existingSecret }}
+      - name: s3-secret
+        secret:
+          secretName: {{ .Values.persistence.imageChartStorage.s3.existingSecret }}
+      {{- end }}
+      {{- if .Values.registry.existingSecret }}
+      - name: registry-secret-secret
+        secret:
+          secretName: {{ .Values.registry.existingSecret }}
+          items:
+            - key: {{ .Values.registry.existingSecretKey }}
+              path: REGISTRY_HTTP_SECRET
+      {{- end }} 
+      - name: core-secret-secret
+        secret:
+          secretName: {{ default (include "harbor.core" .) .Values.core.existingSecret }}
+          items:
+            - key: secret
+              path: CORE_SECRET
+      - name: jobservice-secret-secret
+        secret:
+          secretName: {{ default (include "harbor.jobservice" .) .Values.jobservice.existingSecret }}
+          items:
+          {{- if .Values.jobservice.existingSecret }}
+            - key: {{ .Values.jobservice.existingSecretKey }}
+              path: JOBSERVICE_SECRET
+          {{- else }}
+            - key: JOBSERVICE_SECRET
+              path: JOBSERVICE_SECRET
+          {{- end }}
+      {{- if .Values.persistence.imageChartStorage.azure.existingSecret }}
+      - name: azure-secret
+        secret:
+          secretName: {{ .Values.persistence.imageChartStorage.azure.existingSecret }}
+          items:
+            - key: AZURE_STORAGE_ACCESS_KEY
+              path: REGISTRY_STORAGE_AZURE_ACCOUNTKEY
+      {{- end }}
+      {{- if .Values.persistence.imageChartStorage.swift.existingSecret }}
+      - name: swift-secret
+        secret:
+          secretName: {{ .Values.persistence.imageChartStorage.swift.existingSecret }}
+          items:
+            - key: REGISTRY_STORAGE_SWIFT_PASSWORD
+              path: REGISTRY_STORAGE_SWIFT_PASSWORD
+            - key: REGISTRY_STORAGE_SWIFT_SECRETKEY
+              path: REGISTRY_STORAGE_SWIFT_SECRETKEY
+            - key: REGISTRY_STORAGE_SWIFT_ACCESSKEY
+              path: REGISTRY_STORAGE_SWIFT_ACCESSKEY
+          optional: true
+      {{- end }}
+      {{- if .Values.persistence.imageChartStorage.oss.existingSecret }}
+      - name: oss-secret
+        secret:
+          secretName: {{ .Values.persistence.imageChartStorage.oss.existingSecret }}
+          items:
+            - key: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
+              path: REGISTRY_STORAGE_OSS_ACCESSKEYSECRET
+          optional: true
+      {{- end }}
+
       - name: registry-htpasswd
         secret:
           {{- if not .Values.registry.credentials.existingSecret }}

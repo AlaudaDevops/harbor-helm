@@ -94,11 +94,6 @@ spec:
               value: {{ .Values.trivy.vulnType | quote }}
             - name: "SCANNER_TRIVY_TIMEOUT"
               value: {{ .Values.trivy.timeout | quote }}
-            - name: "SCANNER_TRIVY_GITHUB_TOKEN"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "harbor.trivy" . }}
-                  key: gitHubToken
             - name: "SCANNER_TRIVY_SEVERITY"
               value: {{ .Values.trivy.severity | quote }}
             - name: "SCANNER_TRIVY_IGNORE_UNFIXED"
@@ -123,21 +118,6 @@ spec:
             - name: SCANNER_API_SERVER_TLS_CERTIFICATE
               value: /etc/harbor/ssl/trivy/tls.crt
             {{- end }}
-            - name: "SCANNER_REDIS_URL"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "harbor.trivy" . }}
-                  key: redisURL
-            - name: "SCANNER_STORE_REDIS_URL"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "harbor.trivy" . }}
-                  key: redisURL
-            - name: "SCANNER_JOB_QUEUE_REDIS_URL"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "harbor.trivy" . }}
-                  key: redisURL
 {{- with .Values.trivy.extraEnvVars }}
 {{- toYaml . | nindent 12 }}
 {{- end }}
@@ -145,6 +125,15 @@ spec:
             - name: api-server
               containerPort: {{ template "harbor.trivy.containerPort" . }}
           volumeMounts:
+          - name: github-token
+            mountPath: /etc/env-files/github-token
+          - name: redis-url
+            mountPath: /etc/env-files/redis-url
+          - name: store-redis-url
+            mountPath: /etc/env-files/store-redis-url
+          - name: job-queue-redis-url
+            mountPath: /etc/env-files/job-queue-redis-url
+          
           - name: data
             mountPath: /home/scanner/.cache
             subPath: {{ .Values.persistence.persistentVolumeClaim.trivy.subPath }}
@@ -176,8 +165,32 @@ spec:
             failureThreshold: 3
           resources:
 {{ toYaml .Values.trivy.resources | indent 12 }}
-      {{- if or (or .Values.internalTLS.enabled .Values.caBundleSecretName) (or (not .Values.persistence.enabled) (not $trivy.storageClass)) }}
       volumes:
+      - name: github-token
+        secret:
+          secretName: {{ template "harbor.trivy" . }}
+          items:
+            - key: gitHubToken
+              path: SCANNER_TRIVY_GITHUB_TOKEN
+      - name: redis-url
+        secret:
+          secretName: {{ template "harbor.trivy" . }}
+          items:
+            - key: redisURL
+              path: SCANNER_REDIS_URL
+      - name: store-redis-url
+        secret:
+          secretName: {{ template "harbor.trivy" . }}
+          items:
+            - key: redisURL
+              path: SCANNER_STORE_REDIS_URL
+      - name: job-queue-redis-url
+        secret:
+          secretName: {{ template "harbor.trivy" . }}
+          items:
+            - key: redisURL
+              path: SCANNER_JOB_QUEUE_REDIS_URL
+      {{- if or (or .Values.internalTLS.enabled .Values.caBundleSecretName) (or (not .Values.persistence.enabled) (not $trivy.storageClass)) }}
       {{- if .Values.internalTLS.enabled }}
       - name: trivy-internal-certs
         secret:
