@@ -17,3 +17,7 @@
             timeout: 15m
             """
         并且 "harbor-operator" 组件检查通过
+        并且 "Harbor 模版" 资源检查通过
+            |     kind  | apiVersion | name               | namespace    | path | value |
+            | ConfigMap | v1         | harbor-template-ha | cpaas-system | $.metadata.name | harbor-template-ha |
+            | ConfigMap | v1         | harbor-template-quickstart | cpaas-system | $.metadata.name | harbor-template-quickstart |
