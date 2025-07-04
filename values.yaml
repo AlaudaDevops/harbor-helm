@@ -4,32 +4,32 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     trivyOfflineDB:
@@ -39,12 +39,12 @@ global:
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.12.3-5d074c05
+      tag: 2.12.4-7711915c
       support_arm: true
       thirdparty: true
     initContainer:
@@ -943,7 +943,7 @@ database:
   internal:
     image:
       repository: goharbor/harbor-db
-      tag: v2.12.3
+      tag: v2.12.4
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token
@@ -1024,7 +1024,7 @@ redis:
   internal:
     image:
       repository: goharbor/redis-photon
-      tag: v2.12.3
+      tag: v2.12.4
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token
