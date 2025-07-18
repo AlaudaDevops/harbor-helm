@@ -319,7 +319,13 @@ spec:
           type: Pipeline
           name: build-harbor-image
         params:
-          name: component-name
+          - name: component-name
+            value: core
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              make build -e BUILDTARGET=_build_core
         workspaces:
           - name: source-amd64
             workspace: source-amd64
