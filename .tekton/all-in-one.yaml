@@ -21,7 +21,6 @@ metadata:
       ))
     pipelinesascode.tekton.dev/max-keep-runs: "10"
     pipelinesascode.tekton.dev/pipeline: '[.tekton/pipelines/build-harbor-image.yaml]'
-    pipelinesascode.tekton.dev/task: '[.tekton/pipelines/build-harbor-image.yaml]'
 spec:
   timeouts:
     pipeline: 3h
