@@ -213,8 +213,6 @@ spec:
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
-              apt-get update && apt-get install -y make
-              
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -242,8 +240,6 @@ spec:
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
-              apt-get update && apt-get install -y make
-              
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -374,6 +370,23 @@ spec:
         requests:
           cpu: "2"
           memory: 2Gi
+    - pipelineTaskName: fetch-thirdparty-amd64
+      computeResources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "2"
+          memory: 2Gi
+    - pipelineTaskName: fetch-thirdparty-arm64
+      computeResources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "2"
+          memory: 2Gi
+
   workspaces:
     - name: source-amd64
       volumeClaimTemplate:
