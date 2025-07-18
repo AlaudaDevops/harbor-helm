@@ -209,6 +209,8 @@ spec:
             - name: version
               value: "0.2"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60080/devops/builder-tools:ubuntu-v3.8.1
           - name: command
             value: |
               apt-get update && apt-get install -y make
@@ -236,6 +238,8 @@ spec:
             - name: version
               value: "0.2"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60080/devops/builder-tools:ubuntu-v3.8.1
           - name: command
             value: |
               apt-get update && apt-get install -y make
