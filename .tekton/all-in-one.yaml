@@ -164,7 +164,7 @@ spec:
               bash make/patches/patch-amd64.sh
         workspaces:
           - name: source
-            workspace: source-arm64
+            workspace: source-amd64
 
       - name: patch-arm64
         runAfter:
