@@ -330,13 +330,328 @@ spec:
               value: .tekton/pipelines/build-harbor-image.yaml
         params:
           - name: component-name
-            value: core
+            value: harbor-core
           - name: image-tag
             value: 2.12.4-123456
           - name: build-command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_core
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-jobservice-image
+        runAfter:
+          - compile-amd64
+          - compile-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: harbor-jobservice
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_jobservice
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-registryctl-image
+        runAfter:
+          - compile-amd64
+          - compile-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: harbor-registryctl
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_registryctl
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-redis-image
+        runAfter:
+          - patch-amd64
+          - patch-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: redis-photon
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_bitnami_redis
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-db-image
+        runAfter:
+          - patch-amd64
+          - patch-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: harbor-db
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_db
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-portal-image
+        runAfter:
+          - patch-amd64
+          - patch-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: harbor-portal
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_portal
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-nginx-image
+        runAfter:
+          - patch-amd64
+          - patch-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: nginx-photon
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_nginx
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-registry-image
+        runAfter:
+          - fetch-thirdparty-amd64
+          - fetch-thirdparty-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: registry-photon
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_registry
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-trivy-adapter-image
+        runAfter:
+          - fetch-thirdparty-amd64
+          - fetch-thirdparty-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: trivy-adapter-photon
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_build_trivy_adapter
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+      - name: build-exporter-image
+        runAfter:
+          - patch-amd64
+          - patch-arm64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          apiVersion: tekton.dev/v1
+          kind: Pipeline
+          name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
+        params:
+          - name: component-name
+            value: harbor-exporter
+          - name: image-tag
+            value: 2.12.4-123456
+          - name: build-command
+            value: |
+              cd $(workspaces.source.path)/$(params.build-path)
+              make build -e BUILDTARGET=_compile_and_build_exporter
         workspaces:
           - name: source-amd64
             workspace: source-amd64

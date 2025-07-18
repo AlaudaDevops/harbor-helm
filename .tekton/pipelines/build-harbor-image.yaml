@@ -55,7 +55,7 @@ spec:
         
         # Check if we should try to reuse artifacts
         if [ "$(params.reuse-artifact)" == "true" ]; then
-          image_url=$(params.image-namespace)/goharbor-harbor-$(params.component-name):$(params.image-tag)
+          image_url=$(params.image-namespace)/goharbor-$(params.component-name):$(params.image-tag)
           echo "==> Checking for existing artifacts..."
           digest=$(docker buildx imagetools inspect "${image_url}" | grep -i '^Digest:' | head -n1 | awk '{print $2}')
           if [ -n "${digest}" ]; then
@@ -215,7 +215,7 @@ spec:
               fi
             fi
             
-            image_url=$(params.image-namespace)/goharbor-harbor-$(params.component-name):$(params.image-tag)
+            image_url=$(params.image-namespace)/goharbor-$(params.component-name):$(params.image-tag)
             docker manifest create ${image_url} ${image_url}-amd64 ${image_url}-arm64
             docker manifest push ${image_url}
 
