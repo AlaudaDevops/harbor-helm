@@ -76,7 +76,7 @@ spec:
           cd -
 
           TRIVY_ADAPTER_VERSION=0.33.2-alauda-0
-          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
+          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy-${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
           cd ${BUILDPATH}/make/photon/trivy-adapter
           curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
           mv alauda-scanner-trivy scanner-trivy
