@@ -1,0 +1,52 @@
+apiVersion: builds.katanomi.dev/v1alpha1
+kind: Build
+spec:
+  runTemplate:
+    timeouts:
+      pipeline: 1h
+  workspaces:
+    - description: |
+        This workspace is shared among all the pipeline tasks to read/write common resources
+      name: source
+  tasks:
+    - name: prepare-dockerfile
+      timeout: 30m
+      retries: 0
+      taskRef:
+        kind: ClusterTask
+        name: alauda-script
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: tool-image
+          value: registry.alauda.cn:60080/fundamentals/katanomi-ci-builder:master
+        - name: script
+          value: | 
+            cd tests/test-engine-image && ./generate.sh api
+    - name: alauda-build-image
+      timeout: 1h
+      retries: 0
+      taskRef:
+        kind: ClusterTask
+        name: alauda-build-image
+      workspaces:
+        - name: source
+          workspace: source
+      runAfter:
+        - prepare-dockerfile
+      when: []
+      params:
+        - name: container-image
+          value: build-harbor.alauda.cn/fundamentals/harbor-e2e-engine
+        - name: container-image-tag
+          value: 5.3.0-api-docker-28
+        - name: dockerfile
+          value: tests/test-engine-image/Dockerfile
+        - name: labels
+          value:
+            - branch=$(build.git.branch.name)
+            - commit=$(build.git.lastCommit.id)
+            - commit_id=$(build.git.lastCommit.id)
+        - name: context
+          value: tests/test-engine-image
