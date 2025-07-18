@@ -66,7 +66,8 @@ spec:
           - --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           - --exit-code=1
       - name: fetch-third-party-script
-        value: |
+        type: string
+        default: |
           TRIVY_VERSION=0.62.2-alauda-0
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           cd ${BUILDPATH}/make/photon/trivy-adapter
