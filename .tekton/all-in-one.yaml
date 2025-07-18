@@ -316,7 +316,7 @@ spec:
           - compile-amd64
         timeout: 120m
         retries: 3
-        taskRef:
+        pipelineRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
           name: build-harbor-image
