@@ -316,7 +316,7 @@ spec:
         timeout: 120m
         retries: 3
         taskRef:
-          type: Pipeline
+          kind: Pipeline
           name: build-harbor-image
         params:
           - name: component-name
