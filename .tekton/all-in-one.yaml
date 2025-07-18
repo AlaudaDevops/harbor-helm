@@ -1,0 +1,383 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: harbor-all-in-one
+  annotations:
+    pipelinesascode.tekton.dev/on-comment: "^(/allinone)$"
+    pipelinesascode.tekton.dev/on-cel-expression: |-
+      (
+        source_branch.matches("^(main|master|release-.*|alauda-.*)$") ||
+        !last_commit_title.contains("Auto-commit")
+      ) && ((
+        event == "push" && (
+          source_branch.matches("^(main|master|release-.*|alauda-.*)$") ||
+          target_branch.matches("^(main|master|release-.*|alauda-.*)$") ||
+          target_branch.startsWith("refs/tags/")
+        )
+      ) || (
+        event == "pull_request" && (
+          target_branch.matches("^(main|master|release-.*|alauda-.*)$")
+        )
+      ))
+    pipelinesascode.tekton.dev/max-keep-runs: "10"
+    pipelinesascode.tekton.dev/pipeline: '[.tekton/pipelines/build-harbor-image.yaml]'
+spec:
+  timeouts:
+    pipeline: 3h
+    tasks: 1h
+
+  params:
+    - name: git-url
+      value: "{{ repo_url }}"
+    - name: git-revision
+      value: "{{ source_branch }}"
+    - name: git-commit
+      value: "{{ revision }}"
+
+  pipelineSpec:
+    description: The pipeline is used to combine multiple pipeline templates
+    params:
+      - name: git-url
+        description: Repository URL to clone from.
+        type: string
+      - name: git-revision
+        description: Revision to checkout. (branch, tag, sha, ref, etc...)
+        type: string
+      - name: git-commit
+        description: Commit sha used in this build
+        default: ""
+      - name: go-environments
+        type: array
+        default:
+          - GOPROXY=https://build-nexus.alauda.cn/repository/golang/,https://goproxy.cn,direct
+          - GOMAXPROCS=4
+          - GOFLAGS=-buildvcs=false
+          - CGO_ENABLED=0
+      - name: trivy-args
+        type: array
+        default:
+          - image
+          - --scanners
+          - vuln
+          # - --ignore-unfixed
+          # - --severity MEDIUM,HIGH,CRITICAL
+          - --skip-db-update=false
+          - --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db
+          - --skip-java-db-update=false
+          - --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
+          - --exit-code=1
+    tasks:
+      - name: git-clone-amd64
+        timeout: 30m
+        retries: 3
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: git-clone
+            - name: version
+              value: "0.9"
+
+        params:
+          - name: url
+            value: $(params.git-url)
+          - name: revision
+            value: $(params.git-revision)
+
+        workspaces:
+          - name: output
+            workspace: source-amd64
+          - name: basic-auth
+            workspace: basic-auth
+
+      - name: git-clone-arm64
+        timeout: 30m
+        retries: 3
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: git-clone
+            - name: version
+              value: "0.9"
+
+        params:
+          - name: url
+            value: $(params.git-url)
+          - name: revision
+            value: $(params.git-revision)
+
+        workspaces:
+          - name: output
+            workspace: source-arm64
+          - name: basic-auth
+            workspace: basic-auth
+
+      - name: patch-amd64
+        runAfter:
+          - git-clone-amd64
+        timeout: 10m
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              bash make/patches/patch-amd64.sh
+        workspaces:
+          - name: source
+            workspace: source-arm64
+
+      - name: patch-arm64
+        runAfter:
+          - git-clone-arm64
+        timeout: 10m
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              bash make/patches/patch-amd64.sh
+              bash make/patches/patch-arm64.sh
+        workspaces:
+          - name: source
+            workspace: source-arm64
+
+      - name: compile-amd64
+        runAfter:
+          - patch-amd64
+        timeout: 1h
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              BUILDPATH="$(workspaces.source.path)" make compile
+        workspaces:
+          - name: source
+            workspace: source-amd64
+
+      - name: compile-arm64
+        runAfter:
+          - patch-arm64
+        timeout: 1h
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              BUILDPATH="$(workspaces.source.path)" make compile
+        workspaces:
+          - name: source
+            workspace: source-arm64
+
+      - name: fetch-thirdparty-amd64
+        runAfter:
+          - patch-amd64
+        timeout: 60m
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              set -ex
+              BUILDPATH=$(workspaces.source.path)
+              ARCH=x86_64
+              
+              TRIVY_VERSION=0.62.2-alauda-0
+              TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
+              cd ${BUILDPATH}/make/photon/trivy-adapter
+              curl -L ${TRIVY_DOWNLOAD_URL} | tar -xz
+              mv alauda-trivy trivy
+              cd -
+              
+              TRIVY_ADAPTER_VERSION=0.62.2-alauda-0
+              TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
+              cd ${BUILDPATH}/make/photon/trivy-adapter
+              curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
+              mv alauda-scanner-trivy scanner-trivy
+              cd -
+              
+              # compile registry
+              REGISTRY_SRC=https://github.com/distribution/distribution.git
+              REGISTRY_SRC_TAG=v2.8.3
+              cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} && cd -
+
+        workspaces:
+          - name: source
+            workspace: source-amd64
+
+      - name: fetch-thirdparty-arm64
+        runAfter:
+          - patch-arm64
+        timeout: 60m
+        retries: 1
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        params:
+          - name: script
+            value: |
+              set -ex
+              BUILDPATH=$(workspaces.source.path)
+              ARCH=arm64
+              
+              TRIVY_VERSION=0.62.2-alauda-0
+              TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
+              cd ${BUILDPATH}/make/photon/trivy-adapter
+              curl -L ${TRIVY_DOWNLOAD_URL} | tar -xz
+              mv alauda-trivy trivy
+              cd -
+              
+              TRIVY_ADAPTER_VERSION=0.62.2-alauda-0
+              TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
+              cd ${BUILDPATH}/make/photon/trivy-adapter
+              curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
+              mv alauda-scanner-trivy scanner-trivy
+              cd -
+              
+              # compile registry
+              REGISTRY_SRC=https://github.com/distribution/distribution.git
+              REGISTRY_SRC_TAG=v2.8.3
+              cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} && cd -
+
+        workspaces:
+          - name: source
+            workspace: source-arm64
+
+      - name: build-core-image
+        runAfter:
+          - compile-amd64
+        timeout: 120m
+        retries: 3
+        taskRef:
+          type: Pipeline
+          name: build-harbor-image
+        params:
+          name: component-name
+        workspaces:
+          - name: source-amd64
+            workspace: source-amd64
+          - name: source-arm64
+            workspace: source-arm64
+          - name: dockerconfig
+            workspace: dockerconfig
+
+  taskRunTemplate:
+    # 让所有任务都以非 root 用户运行。
+    podTemplate:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
+  taskRunSpecs:
+    - pipelineTaskName: run-test
+      computeResources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "2"
+          memory: 2Gi
+  workspaces:
+    - name: source-amd64
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 1Gi
+    - name: source-arm64
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 1Gi
+    - name: dockerconfig
+      secret:
+        secretName: build-harbor.kauto.docfj
+    # This secret will be replaced by the pac controller
+    - name: basic-auth
+      secret:
+        secretName: "{{ git_auth_secret }}"
+    - name: gitversion-config
+      configMap:
+        name: gitversion-config
+    - name: sonar-credentials
+      secret:
+        secretName: sonarqube-credentials
+    - name: go-cache
+      persistentVolumeClaim:
+        claimName: build-cache-v4
+    - name: signkey
+      secret:
+        secretName: signing-secrets
