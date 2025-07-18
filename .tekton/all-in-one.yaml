@@ -313,6 +313,7 @@ spec:
       - name: build-core-image
         runAfter:
           - compile-amd64
+          - compile-arm64
         timeout: 120m
         retries: 3
         taskRef:
