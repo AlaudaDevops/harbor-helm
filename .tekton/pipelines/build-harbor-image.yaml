@@ -191,6 +191,8 @@ spec:
           - name: version
             value: "0.2"
       workspaces:
+        - name: source
+          workspace: source-amd64
         - name: cache
           workspace: dockerconfig
       params:
@@ -218,4 +220,3 @@ spec:
             image_url=$(params.image-namespace)/goharbor-$(params.component-name):$(params.image-tag)
             docker manifest create ${image_url} ${image_url}-amd64 ${image_url}-arm64
             docker manifest push ${image_url}
-
