@@ -180,16 +180,20 @@ spec:
           resolver: hub
           params:
             - name: catalog
-              value: catalog
+              value: alauda
+            - name: type
+              value: tekton
             - name: kind
-              value: task
+              value: pipeline
             - name: name
-              value: run-script
+              value: docker-in-docker
             - name: version
-              value: "0.1"
+              value: "0.2"
         params:
           - name: script
             value: |
+              apt-get update && apt-get install -y make
+              
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -205,16 +209,20 @@ spec:
           resolver: hub
           params:
             - name: catalog
-              value: catalog
+              value: alauda
+            - name: type
+              value: tekton
             - name: kind
-              value: task
+              value: pipeline
             - name: name
-              value: run-script
+              value: docker-in-docker
             - name: version
-              value: "0.1"
+              value: "0.2"
         params:
           - name: script
             value: |
+              apt-get update && apt-get install -y make
+              
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -238,6 +246,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/builder-go:latest
           - name: script
             value: |
               set -ex
@@ -285,6 +295,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/builder-go:latest
           - name: script
             value: |
               set -ex
