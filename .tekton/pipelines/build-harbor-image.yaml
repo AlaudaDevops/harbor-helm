@@ -119,6 +119,8 @@ spec:
         - name: cache
           workspace: dockerconfig
       params:
+        - name: tools-image
+          value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
         - name: command
           value: |
             set -ex
@@ -154,6 +156,8 @@ spec:
         - name: cache
           workspace: dockerconfig
       params:
+        - name: tools-image
+          value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
         - name: command
           value: |
             set -ex
@@ -192,6 +196,8 @@ spec:
         - name: cache
           workspace: dockerconfig
       params:
+        - name: tools-image
+          value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
         - name: command
           value: |
             set -ex
