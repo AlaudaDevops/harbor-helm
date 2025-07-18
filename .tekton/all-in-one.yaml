@@ -125,7 +125,6 @@ spec:
           - git-clone-amd64
         timeout: 10m
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -140,6 +139,7 @@ spec:
         params:
           - name: script
             value: |
+              cd $(params.build-path)
               bash make/patches/patch-amd64.sh
         workspaces:
           - name: source
@@ -150,7 +150,6 @@ spec:
           - git-clone-arm64
         timeout: 10m
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -165,6 +164,7 @@ spec:
         params:
           - name: script
             value: |
+              cd $(params.build-path)
               bash make/patches/patch-amd64.sh
               bash make/patches/patch-arm64.sh
         workspaces:
@@ -176,7 +176,6 @@ spec:
           - patch-amd64
         timeout: 1h
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -191,7 +190,8 @@ spec:
         params:
           - name: script
             value: |
-              BUILDPATH=${realpath .} make compile
+              cd $(params.build-path)
+              BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
             workspace: source-amd64
@@ -201,7 +201,6 @@ spec:
           - patch-arm64
         timeout: 1h
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -216,7 +215,8 @@ spec:
         params:
           - name: script
             value: |
-              BUILDPATH=${realpath .} make compile
+              cd $(params.build-path)
+              BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
             workspace: source-arm64
@@ -226,7 +226,6 @@ spec:
           - patch-amd64
         timeout: 60m
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -242,7 +241,8 @@ spec:
           - name: script
             value: |
               set -ex
-              BUILDPATH=$(workspaces.source.path)
+              cd $(params.build-path)
+              BUILDPATH=$(realpath .)
               ARCH=x86_64
               
               TRIVY_VERSION=0.62.2-alauda-0
@@ -273,7 +273,6 @@ spec:
           - patch-arm64
         timeout: 60m
         retries: 1
-        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -289,7 +288,8 @@ spec:
           - name: script
             value: |
               set -ex
-              BUILDPATH=$(workspaces.source.path)
+              cd $(params.build-path)
+              BUILDPATH=$(realpath .)
               ARCH=arm64
               
               TRIVY_VERSION=0.62.2-alauda-0
