@@ -33,6 +33,8 @@ spec:
       value: "{{ source_branch }}"
     - name: git-commit
       value: "{{ revision }}"
+    - name: build-path
+      value: "$(workspace.source.path)/subtree/harbor"
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -46,13 +48,10 @@ spec:
       - name: git-commit
         description: Commit sha used in this build
         default: ""
-      - name: go-environments
-        type: array
-        default:
-          - GOPROXY=https://build-nexus.alauda.cn/repository/golang/,https://goproxy.cn,direct
-          - GOMAXPROCS=4
-          - GOFLAGS=-buildvcs=false
-          - CGO_ENABLED=0
+      - name: build-path
+        description: The path to the build directory
+        type: string
+        default: "$(workspace.source.path)"
       - name: trivy-args
         type: array
         default:
@@ -126,6 +125,7 @@ spec:
           - git-clone-amd64
         timeout: 10m
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -150,6 +150,7 @@ spec:
           - git-clone-arm64
         timeout: 10m
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -175,6 +176,7 @@ spec:
           - patch-amd64
         timeout: 1h
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -189,7 +191,7 @@ spec:
         params:
           - name: script
             value: |
-              BUILDPATH="$(workspaces.source.path)" make compile
+              BUILDPATH=${realpath .} make compile
         workspaces:
           - name: source
             workspace: source-amd64
@@ -199,6 +201,7 @@ spec:
           - patch-arm64
         timeout: 1h
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -213,7 +216,7 @@ spec:
         params:
           - name: script
             value: |
-              BUILDPATH="$(workspaces.source.path)" make compile
+              BUILDPATH=${realpath .} make compile
         workspaces:
           - name: source
             workspace: source-arm64
@@ -223,6 +226,7 @@ spec:
           - patch-amd64
         timeout: 60m
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
@@ -269,6 +273,7 @@ spec:
           - patch-arm64
         timeout: 60m
         retries: 1
+        workingDir: $(params.build-path)
         taskRef:
           resolver: hub
           params:
