@@ -1,0 +1,16 @@
+FROM build-harbor.alauda.cn/3rdparty/bitnami/redis:7.0.15-debian-12-r13
+
+USER root
+RUN groupadd -g 999 redis \
+    && useradd -u 999 -g 999 -c "Redis Database Server" -d /var/lib/redis -s /sbin/nologin -m redis
+
+VOLUME /var/lib/redis
+WORKDIR /var/lib/redis
+COPY ./make/photon/redis/docker-healthcheck /usr/bin/
+COPY ./make/photon/redis/redis.conf /etc/redis.conf
+RUN chmod +x /usr/bin/docker-healthcheck \
+    && chown redis:redis /etc/redis.conf
+
+HEALTHCHECK CMD ["docker-healthcheck"]
+USER redis
+CMD ["redis-server", "/etc/redis.conf"]
