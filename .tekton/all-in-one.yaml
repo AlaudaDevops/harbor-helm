@@ -259,17 +259,17 @@ spec:
           resolver: hub
           params:
             - name: catalog
-              value: catalog
-            - name: kind
-              value: task
+              value: alauda
+            - name: type
+              value: tekton
             - name: name
-              value: run-script
+              value: docker-in-docker
             - name: version
-              value: "0.1"
+              value: "0.2"
         params:
           - name: image
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
-          - name: script
+          - name: command
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
@@ -291,17 +291,17 @@ spec:
           resolver: hub
           params:
             - name: catalog
-              value: catalog
-            - name: kind
-              value: task
+              value: alauda
+            - name: type
+              value: tekton
             - name: name
-              value: run-script
+              value: docker-in-docker
             - name: version
-              value: "0.1"
+              value: "0.2"
         params:
           - name: image
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
-          - name: script
+          - name: command
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
