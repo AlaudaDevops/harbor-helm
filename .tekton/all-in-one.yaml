@@ -267,7 +267,7 @@ spec:
             - name: version
               value: "0.2"
         params:
-          - name: image
+          - name: tools-image
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
@@ -299,7 +299,7 @@ spec:
             - name: version
               value: "0.2"
         params:
-          - name: image
+          - name: tools-image
             value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
