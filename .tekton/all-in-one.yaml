@@ -315,10 +315,18 @@ spec:
           - compile-amd64
         timeout: 120m
         retries: 3
-        pipelineRef:
+        taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
           name: build-harbor-image
+          resolver: git
+          params:
+            - name: url
+              value: "{{ repo_url }}"
+            - name: revision
+              value: "{{ revision }}"
+            - name: pathInRepo
+              value: .tekton/pipelines/build-harbor-image.yaml
         params:
           - name: component-name
             value: core
