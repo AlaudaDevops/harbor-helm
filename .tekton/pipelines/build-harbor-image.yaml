@@ -186,8 +186,6 @@ spec:
             value: alauda
           - name: type
             value: tekton
-          - name: kind
-            value: pipeline
           - name: name
             value: docker-in-docker
           - name: version
