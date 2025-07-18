@@ -317,6 +317,7 @@ spec:
         timeout: 120m
         retries: 3
         taskRef:
+          apiVersion: tekton.dev/v1
           kind: Pipeline
           name: build-harbor-image
         params:
