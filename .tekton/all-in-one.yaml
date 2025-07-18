@@ -34,7 +34,7 @@ spec:
     - name: git-commit
       value: "{{ revision }}"
     - name: build-path
-      value: "$(workspace.source.path)/subtree/harbor"
+      value: subtree/harbor
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -49,9 +49,9 @@ spec:
         description: Commit sha used in this build
         default: ""
       - name: build-path
-        description: The path to the build directory
+        description: The path to the build directory, it is the related path to the source code.
         type: string
-        default: "$(workspace.source.path)"
+        default: "."
       - name: trivy-args
         type: array
         default:
@@ -139,7 +139,7 @@ spec:
         params:
           - name: script
             value: |
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               bash make/patches/patch-amd64.sh
         workspaces:
           - name: source
@@ -164,7 +164,7 @@ spec:
         params:
           - name: script
             value: |
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               bash make/patches/patch-amd64.sh
               bash make/patches/patch-arm64.sh
         workspaces:
@@ -190,7 +190,7 @@ spec:
         params:
           - name: script
             value: |
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -215,7 +215,7 @@ spec:
         params:
           - name: script
             value: |
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -241,7 +241,7 @@ spec:
           - name: script
             value: |
               set -ex
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .)
               ARCH=x86_64
               
@@ -288,7 +288,7 @@ spec:
           - name: script
             value: |
               set -ex
-              cd $(params.build-path)
+              cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .)
               ARCH=arm64
               
@@ -340,6 +340,7 @@ spec:
             value: 2.12.4-123456
           - name: build-command
             value: |
+              cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_core
         workspaces:
           - name: source-amd64
