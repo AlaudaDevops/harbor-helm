@@ -188,7 +188,7 @@ spec:
             - name: version
               value: "0.2"
         params:
-          - name: script
+          - name: command
             value: |
               apt-get update && apt-get install -y make
               
@@ -215,7 +215,7 @@ spec:
             - name: version
               value: "0.2"
         params:
-          - name: script
+          - name: command
             value: |
               apt-get update && apt-get install -y make
               
