@@ -344,7 +344,15 @@ spec:
         fsGroup: 65532
         fsGroupChangePolicy: "OnRootMismatch"
   taskRunSpecs:
-    - pipelineTaskName: run-test
+    - pipelineTaskName: compile-amd64
+      computeResources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "2"
+          memory: 2Gi
+    - pipelineTaskName: compile-arm64
       computeResources:
         limits:
           cpu: "4"
