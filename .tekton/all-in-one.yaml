@@ -41,11 +41,11 @@ spec:
     - name: e2e-image
       description: The e2e image built by this pipeline
       type: string
-      values: $(tasks.update-files-based-on-image.results.string-result)
+      values: $(tasks.update-image-tags.results.string-result)
     - name: components-images
       description: The components images built by this pipeline
       type: array
-      values: $(tasks.update-files-based-on-image.results.array-result)
+      values: $(tasks.update-image-tags.results.array-result)
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -1067,7 +1067,7 @@ spec:
           - name: context
             value: $(params.build-path)/tests/test-engine-image
 
-      - name: update-files-based-on-image
+      - name: update-image-tags
         runAfter:
           - git-clone-amd64
         timeout: 20m
@@ -1121,14 +1121,14 @@ spec:
               echo "$component_results" > $(results.array-result.path)
               
               echo "set image tag for e2e test image"
-              ESCAPED_IMAGE_NAME=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
-              sed -i "s|\(${ESCAPED_IMAGE_NAME}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
+              escaped_image_name=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
+              sed -i "s|\(${escaped_image_name}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
               cat testing/testdata/script/run-harbor-e2e.sh
               echo "$e2e_image" > $(results.string-result.path)
               
               # If git is installed, show the diff
               if command -v git &> /dev/null; then
-                echo "=> updated files based on image: $IMAGE"
+                echo "=> updated files complete"
                 git diff .
               fi
         taskRef:
@@ -1148,7 +1148,7 @@ spec:
 
       - name: commit
         runAfter:
-          - update-files-based-on-image
+          - update-image-tags
         timeout: 60m
         retries: 0
         params:
