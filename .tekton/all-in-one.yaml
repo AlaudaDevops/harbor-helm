@@ -120,12 +120,12 @@ spec:
           cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} && cd -
       - name: trivy-args
         type: string
-        default: |
-          --scanners vuln \
-          --skip-db-update=false \
-          --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db \
-          --skip-java-db-update=false \
-          --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db \
+        default: >-
+          --scanners vuln
+          --skip-db-update=false
+          --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db
+          --skip-java-db-update=false
+          --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           --exit-code=1
     tasks:
       - name: git-clone-amd64
@@ -1050,6 +1050,126 @@ spec:
               - commit_id=$(build.git.lastCommit.id)
           - name: context
             value: $(params.build-path)/tests/test-engine-image
+
+      - name: update-files-based-on-image
+        runAfter:
+          - build-core-image
+          - build-jobservice-image
+          - build-registryctl-image
+          - build-redis-image
+          - build-db-image
+          - build-portal-image
+          - build-nginx-image
+          - build-registry-image
+          - build-trivy-adapter-image
+          - build-exporter-image
+          - build-e2e-image
+        timeout: 20m
+        retries: 3
+        params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+          - name: imagePullPolicy
+            value: Always
+          - name: script
+            value: |
+              #!/bin/bash
+              set -e
+              
+              if command -v git &> /dev/null; then
+                # Add the source directory to the safe.directory list
+                git config --global --add safe.directory $(workspaces.source.path)
+              fi
+              
+              update_image_version.sh values.yaml ${IMAGE}
+              
+              
+              
+              # If git is installed, show the diff
+              if command -v git &> /dev/null; then
+                echo "=> updated files based on image: $IMAGE"
+                git diff .
+              fi
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: commit
+        runAfter:
+          - update-files-based-on-image
+        when:
+          - input: $(params.skip-commit)
+            operator: notin
+            values:
+              - "true"
+          - input: $(params.update-files-based-on-image)
+            operator: notin
+            values:
+              - ""
+              - " "
+        timeout: 60m
+        retries: 0
+        params:
+          - name: BASE_IMAGE
+            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+          - name: GIT_USER_NAME
+            value: "Alauda Bot"
+          - name: GIT_USER_EMAIL
+            value: "alaudabot@alauda.io"
+          - name: USER_HOME
+            value: "/home/git"
+          - name: VERBOSE
+            value: "false"
+          - name: GIT_SCRIPT
+            value: |
+              set -e
+              
+              # Create temporary script file
+              TMP_SCRIPT=$(mktemp)
+              
+              # Write script content to temp file
+              cat <<EOF > "${TMP_SCRIPT}"
+              $(params.pre-commit-script)
+              EOF
+              chmod +x "${TMP_SCRIPT}"
+              
+              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
+              
+              # Commit the changes
+              git-push-commit.sh \
+                --revision $(params.git-revision) \
+                --source-path $(workspaces.source.path) \
+                --output-path $(results.commit.path) \
+                --message "${COMMIT_MESSAGE}" \
+                --pre-commit "${TMP_SCRIPT}"
+
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: extras
+            - name: kind
+              value: task
+            - name: name
+              value: git-cli
+            - name: version
+              value: "0.4"
+        workspaces:
+          - name: source
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
