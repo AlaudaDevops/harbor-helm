@@ -41,9 +41,11 @@ spec:
     - name: e2e-image
       description: The e2e image built by this pipeline
       type: string
+      values: $(tasks.update-files-based-on-image.results.string-result)
     - name: components-images
       description: The components images built by this pipeline
       type: array
+      values: $(tasks.update-files-based-on-image.results.array-result)
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -1116,12 +1118,13 @@ spec:
               component_results="$component_results\"$db_image\","
               component_results="$component_results\"$redis_image\","
               component_results="$component_results]"
+              echo "$component_results" > $(results.array-result.path)
               
               echo "set image tag for e2e test image"
               ESCAPED_IMAGE_NAME=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
               sed -i "s|\(${ESCAPED_IMAGE_NAME}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
               cat testing/testdata/script/run-harbor-e2e.sh
-              
+              echo "$e2e_image" > $(results.string-result.path)
               
               # If git is installed, show the diff
               if command -v git &> /dev/null; then
