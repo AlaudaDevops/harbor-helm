@@ -280,7 +280,7 @@ spec:
         timeout: 10m0s
         workspaces:
           - name: source
-            workspace: source
+            workspace: source-amd64
           - name: basic-auth
             workspace: basic-auth
           - name: config
@@ -328,7 +328,7 @@ spec:
               value: "0.1"
         workspaces:
           - name: source
-            workspace: source
+            workspace: source-amd64
 
       - name: patch-amd64
         runAfter:
