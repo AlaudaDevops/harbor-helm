@@ -34,8 +34,8 @@ spec:
       value: "{{ revision }}"
     - name: build-path
       value: subtree/harbor
-    - name: image-tag
-      value: 2.12.4-{{ revision }}
+    - name: tag-template
+      value: 2.12.4-g$ShortSha
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -49,15 +49,13 @@ spec:
       - name: git-commit
         description: Commit sha used in this build
         default: ""
+      - name: tag-template
+        description: The tag template to be used to generate the tag.
       - name: reuse-artifact
         description: >-
           If set to true, the task will reuse the built image from the previous run.
           This is useful for speeding up the build process when the image has not changed.
         default: "true"
-
-      - name: image-tag
-        description: The tag to be added to the built image.
-        type: string
 
       - name: build-path
         description: Path to the directory to build the image from
@@ -155,6 +153,164 @@ spec:
             workspace: source-arm64
           - name: basic-auth
             workspace: basic-auth
+
+      - name: calculate-commit-sha
+        runAfter:
+          - git-clone-amd64
+        timeout: 10m
+        retries: 1
+        params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+          - name: args
+            value: $(params.file-list-for-commit-sha[*])
+          - name: imagePullPolicy
+            value: Always
+          - name: script
+            value: |
+              #!/bin/bash
+              set -e
+              
+              # Add the source directory to the safe.directory list
+              git config --global --add safe.directory $(workspaces.source.path)
+              
+              # Initialize environment variables
+              export GIT_URL=$(params.git-url)
+              export GIT_REVISION=$(params.git-revision)
+              export RESET_GIT_COMMIT=$(params.git-commit)
+              export RESULT_STRING_PATH=$(results.string-result.path)
+              export RESULT_ARRAY_PATH=$(results.array-result.path)
+              export RESULT_OBJECT_PATH=$(results.object-result.path)
+              export DEFAULT_GIT_COMMIT=$(git rev-parse HEAD)
+              export DEFAULT_GIT_COMMITTER_DATE=$(git log -1 --pretty=%ct)
+              export WORKSPACE_SOURCE_PATH=$(workspaces.source.path)
+              export WORKSPACE_SECRET_BOUND=$(workspaces.secret.bound)
+              export WORKSPACE_SECRET_PATH=$(workspaces.secret.path)
+              
+              # calculate the last commit info
+              calculate-last-commit-info.sh $@
+              
+              # Define the commit info file path and create the directory if it doesn't exist
+              COMMIT_INFO_FILE=".git/$(context.pipelineRun.name)/.last-changed-commit-sha"
+              mkdir -p "$(dirname ${COMMIT_INFO_FILE})"
+              # Store the last changed commit sha in a file
+              cp -f $(results.string-result.path) "${COMMIT_INFO_FILE}"
+              
+              # Store the original git revision in a file
+              echo -n "${GIT_REVISION}" > .git/$(context.pipelineRun.name)/.git-revision
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        workspaces:
+          - name: source
+            workspace: source
+          - name: secret
+            workspace: basic-auth
+
+      - name: git-version
+        retries: 1
+        runAfter:
+          - calculate-commit-sha
+        params:
+          - name: gitversion-image
+            value: registry.alauda.cn:60080/devops/gittools/gitversion:6.0.5
+          - name: yq-image
+            value: registry.alauda.cn:60080/devops/nonroot/yq:latest
+          - name: commit
+            value: $(tasks.calculate-commit-sha.results.string-result)
+          - name: config-file
+            value: GitVersion.yaml
+          - name: post-command
+            value: |
+              # Extract version information from gitversion output
+              PRE_RELEASE_LABEL=$(sed -n 's/.*"PreReleaseLabel": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+              INFORMATIONAL_VERSION=$(sed -n 's/.*"InformationalVersion": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+              FULL_SEM_VERSION=$(sed -n 's/.*"FullSemVer": "\([^"]*\)".*/\1/p' $FINAL_RESULTS_PATH)
+              
+              # Get current branch name
+              current_revision=$(git branch --show-current)
+              
+              GIT_REVISION=$(cat .git/$(context.pipelineRun.name)/.git-revision)
+              
+              # Only adjust FullSemVer when:
+              # 1. PreReleaseLabel cannot be empty to avoid affecting the version of the tag.
+              # 2. This revision is not a tag.
+              if [ -n "$PRE_RELEASE_LABEL" ] && [ "${GIT_REVISION#refs/tags/}" = "${GIT_REVISION}" ]; then
+                sed -i "s/\"FullSemVer\": \"[^\"]*\"/\"FullSemVer\": \"$INFORMATIONAL_VERSION\"/" $FINAL_RESULTS_PATH
+                echo "Current revision: $current_revision"
+                echo "Adjusted FullSemVer from $FULL_SEM_VERSION to $INFORMATIONAL_VERSION"
+              fi
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: extras
+            - name: kind
+              value: task
+            - name: name
+              value: git-version
+            - name: version
+              value: "0.2"
+        timeout: 10m0s
+        workspaces:
+          - name: source
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
+          - name: config
+            workspace: gitversion-config
+
+      - name: generate-tag
+        runAfter:
+          - git-version
+        timeout: 60m
+        retries: 0
+        params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+          - name: args
+            value:
+              - $(tasks.git-version.results.variables.FullSemVer)
+          - name: script
+            value: |
+              #!/bin/sh
+              set -e
+              
+              full_sem_ver=$(tasks.git-version.results.variables.FullSemVer)
+              
+              export FULL_SEM_VERSION="$full_sem_ver"
+              export ShortSha=$(tasks.git-version.results.variables.ShortSha)
+              export Major=$(tasks.git-version.results.variables.Major)
+              export Minor=$(tasks.git-version.results.variables.Minor)
+              export Patch=$(tasks.git-version.results.variables.Patch)
+              export MajorMinorPatch=$(tasks.git-version.results.variables.MajorMinorPatch)
+              export PreReleaseNumber=$(tasks.git-version.results.variables.PreReleaseNumber)
+              export FullSemVer=$(tasks.git-version.results.variables.FullSemVer)
+              
+              tag=$(echo "$(params.tag-template)")
+              echo -n "$tag" > $(results.string-result.path)
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        workspaces:
+          - name: source
+            workspace: source
 
       - name: patch-amd64
         runAfter:
@@ -351,15 +507,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-core:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-core:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
               
               $(params.pre-build-command)
               
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_core
               
@@ -398,15 +554,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
               
               $(params.pre-build-command)
               
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_jobservice
               
@@ -445,15 +601,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_registryctl
 
@@ -492,15 +648,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-redis-photon:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-redis-photon:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_bitnami_redis
 
@@ -539,15 +695,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-db:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-db:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_db
 
@@ -586,15 +742,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-portal:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-portal:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_portal
 
@@ -633,15 +789,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-nginx-photon:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-nginx-photon:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_nginx
 
@@ -680,15 +836,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-registry-photon:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-registry-photon:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_registry
 
@@ -727,15 +883,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_trivy_adapter
 
@@ -774,15 +930,15 @@ spec:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: image
-            value: build-harbor.alauda.cn/devops/goharbor-harbor-exporter:$(params.image-tag)
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-exporter:$(tasks.generate-tag.results.string-result)
           - name: build-command
             value: |
               set -ex
 
               $(params.pre-build-command)
 
-              export VERSIONTAG=$(params.image-tag)-$ARCH
-              export BASEIMAGETAG=$(params.image-tag)-$ARCH
+              export VERSIONTAG=$(tasks.generate-tag.results.string-result)-$ARCH
+              export BASEIMAGETAG=$(tasks.generate-tag.results.string-result)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_compile_and_build_exporter
 
