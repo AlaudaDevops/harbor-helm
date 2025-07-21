@@ -99,19 +99,20 @@ spec:
       - name: fetch-third-party-script
         type: string
         default: |
+          # download trivy and scanner-trivy
           TRIVY_VERSION=0.62.2-alauda-0
+          TRIVY_ADAPTER_VERSION=0.33.2-alauda-0
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
+          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
+          
           cd ${BUILDPATH}/make/photon/trivy-adapter
+          mkdir -p binary
           curl -L ${TRIVY_DOWNLOAD_URL} | tar -xz
-          mv alauda-trivy trivy
+          curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
+          mv alauda-trivy binary/trivy
+          mv alauda-scanner-trivy binary/scanner-trivy
           cd -
 
-          TRIVY_ADAPTER_VERSION=0.33.2-alauda-0
-          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
-          cd ${BUILDPATH}/make/photon/trivy-adapter
-          curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
-          mv alauda-scanner-trivy scanner-trivy
-          cd -
 
           # compile registry
           REGISTRY_SRC=https://github.com/distribution/distribution.git
