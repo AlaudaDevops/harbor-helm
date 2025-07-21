@@ -19,8 +19,7 @@ metadata:
           target_branch.matches("^(main|master|release-.*|alauda-.*)$")
         )
       ))
-    pipelinesascode.tekton.dev/max-keep-runs: "10"
-    pipelinesascode.tekton.dev/pipeline: '[.tekton/pipelines/build-harbor-image.yaml]'
+    pipelinesascode.tekton.dev/max-keep-runs: "30"
 spec:
   timeouts:
     pipeline: 3h
@@ -35,6 +34,8 @@ spec:
       value: "{{ revision }}"
     - name: build-path
       value: subtree/harbor
+    - name: image-tag
+      value: 2.12.4-"{{ revision }}"
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -52,19 +53,41 @@ spec:
         description: The path to the build directory, it is the related path to the source code.
         type: string
         default: "."
-      - name: trivy-args
-        type: array
-        default:
-          - image
-          - --scanners
-          - vuln
-          # - --ignore-unfixed
-          # - --severity MEDIUM,HIGH,CRITICAL
-          - --skip-db-update=false
-          - --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db
-          - --skip-java-db-update=false
-          - --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
-          - --exit-code=1
+      - name: reuse-artifact
+        description: >-
+          If set to true, the task will reuse the built image from the previous run.
+          This is useful for speeding up the build process when the image has not changed.
+        default: "true"
+
+      - name: image-tag
+        description: The tag to be added to the built image.
+        type: string
+
+      - name: build-path
+        description: Path to the directory to build the image from
+        type: string
+        default: "./subtree/harbor"
+
+      - name: pre-build-command
+        description: The command to be used to pre-build the image.
+        type: string
+        default: |
+          export IMAGENAMESPACE="build-harbor.alauda.cn/devops"
+          export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
+          export PUSHBASEIMAGE=false
+          export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --provenance=false .build-metadata.txt"
+
+      - name: build-command
+        description: The command to be used to build the image.
+        type: string
+
+      - name: post-build-command
+        description: The command to be used to post-build the image.
+        type: string
+        default: |
+          echo "==== build metadata"
+          cat .build-metadata.txt
+          echo "==== build metadata"
       - name: fetch-third-party-script
         type: string
         default: |
@@ -319,24 +342,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-core
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-core:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+              
+              $(params.pre-build-command)
+              
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_core
+              
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -354,24 +387,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-jobservice
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+              
+              $(params.pre-build-command)
+              
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_jobservice
+              
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -389,24 +432,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-registryctl
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_registryctl
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -424,24 +477,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: redis-photon
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-redis-photon:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_bitnami_redis
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -459,24 +522,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-db
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-db:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_db
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -494,24 +567,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-portal
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-portal:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_portal
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -529,24 +612,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: nginx-photon
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-nginx-photon:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_nginx
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -564,24 +657,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: registry-photon
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-registry-photon:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_registry
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -599,24 +702,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: trivy-adapter-photon
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_build_trivy_adapter
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -634,24 +747,34 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: build-harbor-image
-          resolver: git
+          name: dind-build-merge-scan
+          resolver: hub
           params:
-            - name: url
-              value: "{{ repo_url }}"
-            - name: revision
-              value: "{{ revision }}"
-            - name: pathInRepo
-              value: .tekton/pipelines/build-harbor-image.yaml
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: dind-build-merge-scan
+            - name: version
+              value: "0.1"
         params:
-          - name: component-name
-            value: harbor-exporter
-          - name: image-tag
-            value: 2.12.4-123456
+          - name: reuse-artifact
+            value: $(params.reuse-artifact)
+          - name: image
+            value: build-harbor.alauda.cn/devops/goharbor-harbor-exporter:$(params.image-tag)
           - name: build-command
             value: |
+              set -ex
+
+              $(params.pre-build-command)
+
+              export VERSIONTAG=$(params.image-tag)-$ARCH
+              export BASEIMAGETAG=$(params.image-tag)-$ARCH
               cd $(workspaces.source.path)/$(params.build-path)
               make build -e BUILDTARGET=_compile_and_build_exporter
+
+              $(params.post-build-command)
         workspaces:
           - name: source-amd64
             workspace: source-amd64
@@ -659,6 +782,44 @@ spec:
             workspace: source-arm64
           - name: dockerconfig
             workspace: dockerconfig
+
+#      - name: build-e2e-image
+#        runAfter:
+#          - git-clone-amd64
+#        timeout: 60m
+#        taskRef:
+#          resolver: hub
+#          params:
+#            - name: catalog
+#              value: extras
+#            - name: kind
+#              value: task
+#            - name: name
+#              value: buildx
+#            - name: version
+#              value: "0.1"
+#        workspaces:
+#          - name: source
+#            workspace: source-amd64
+#          - name: dockerconfig
+#            workspace: dockerconfig
+#        params:
+#          - name: reuse-artifact
+#            value: $(reuse-artifact)
+#          - name: command
+#            value: |
+#              set -ex
+#
+#              ARCH=amd64
+#
+#              echo "=> Running pre build command..."
+#              $(params.pre-build-command)
+#
+#              echo "=> Building $ARCH image..."
+#              $(params.build-command)
+#
+#              echo "=> Running post build command..."
+#              $(params.post-build-command)
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
