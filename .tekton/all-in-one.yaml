@@ -1067,17 +1067,18 @@ spec:
 
       - name: update-files-based-on-image
         runAfter:
-          - build-core-image
-          - build-jobservice-image
-          - build-registryctl-image
-          - build-redis-image
-          - build-db-image
-          - build-portal-image
-          - build-nginx-image
-          - build-registry-image
-          - build-trivy-adapter-image
-          - build-exporter-image
-          - build-e2e-image
+          - generate-tag
+#          - build-core-image
+#          - build-jobservice-image
+#          - build-registryctl-image
+#          - build-redis-image
+#          - build-db-image
+#          - build-portal-image
+#          - build-nginx-image
+#          - build-registry-image
+#          - build-trivy-adapter-image
+#          - build-exporter-image
+#          - build-e2e-image
         timeout: 20m
         retries: 3
         params:
@@ -1154,7 +1155,7 @@ spec:
               value: "0.1"
         workspaces:
           - name: source
-            workspace: source
+            workspace: source-amd64
 
       - name: commit
         runAfter:
@@ -1202,7 +1203,7 @@ spec:
               value: "0.4"
         workspaces:
           - name: source
-            workspace: source
+            workspace: source-amd64
           - name: basic-auth
             workspace: basic-auth
 
