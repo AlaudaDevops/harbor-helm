@@ -87,7 +87,7 @@ spec:
           export IMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export PUSHBASEIMAGE=false
-          export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --provenance=false --metadata-file .build-metadata.txt"
+          export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --output=oci-mediatypes=false --provenance=false --metadata-file .build-metadata.txt"
 
       - name: post-build-command
         description: The command to be used to post-build the image.
@@ -1001,7 +1001,7 @@ spec:
             workspace: dockerconfig
         params:
           - name: reuse-artifact
-            value: $(reuse-artifact)
+            value: $(params.reuse-artifact)
           - name: prepare-command
             value: |
               cd $(params.build-path)/tests/test-engine-image && ./generate.sh api
