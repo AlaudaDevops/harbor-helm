@@ -1049,8 +1049,9 @@ spec:
               cd $(params.build-path)/tests/test-engine-image && ./generate.sh api && cd -
           - name: image-url
             value: build-harbor.alauda.cn/fundamentals/harbor-e2e-engine
-          - name: container-image-tag
-            value: $(tasks.generate-tag.results.string-result)
+          - name: image-tags
+            value:
+              - $(tasks.generate-tag.results.string-result)
           - name: dockerfile
             value: $(params.build-path)/tests/test-engine-image/Dockerfile
           - name: labels
