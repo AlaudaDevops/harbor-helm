@@ -1102,16 +1102,6 @@ spec:
               e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
               db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"
               redis_image="build-harbor.alauda.cn/devops/goharbor-redis-photon:${image_tag}"
-              component_images=(
-                "build-harbor.alauda.cn/devops/goharbor-harbor-core:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-portal:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-exporter:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-registry-photon:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-nginx-photon:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:${image_tag}"
-              )
               component_results="["
               
               for image in "${component_images[@]}"; do
