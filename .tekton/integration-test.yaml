@@ -55,6 +55,9 @@ spec:
           yq --version
           kubectl version --client
           helm version
+          
+          # Cleanup source code in subtree dir
+          rm -rf $(workspace.source.path)/subtree
 
           export KUBECONFIG=$(workspaces.config.path)/vcluster-config
           kubectl config view
