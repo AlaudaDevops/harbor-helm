@@ -1200,7 +1200,7 @@ spec:
         timeout: 30m
         retries: 0
         runAfter:
-          - update-files-based-on-image
+          - update-image-tags
         taskRef:
           params:
             - name: catalog
