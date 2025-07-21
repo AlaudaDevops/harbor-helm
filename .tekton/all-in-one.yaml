@@ -1104,14 +1104,11 @@ spec:
               component_results="$component_results\"$db_image\","
               component_results="$component_results\"$redis_image\","
               component_results="$component_results]"
-              echo "$component_results" > $(results.components-images.path)
               
               echo "set image tag for e2e test image"
               ESCAPED_IMAGE_NAME=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
               sed -i "s|\(${ESCAPED_IMAGE_NAME}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
               cat testing/testdata/script/run-harbor-e2e.sh
-              
-              echo "e2e_image" > $(results.e2e-image.path)
               
               # If git is installed, show the diff
               if command -v git &> /dev/null; then
