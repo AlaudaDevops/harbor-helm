@@ -1116,7 +1116,7 @@ spec:
               cat ${base_values_file}
               
               component_results="$component_results\"$db_image\","
-              component_results="$component_results\"$redis_image\","
+              component_results="$component_results\"$redis_image\""
               component_results="$component_results]"
               echo "$component_results" > $(results.array-result.path)
               
