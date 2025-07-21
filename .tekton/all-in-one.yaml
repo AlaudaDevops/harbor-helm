@@ -73,10 +73,6 @@ spec:
           export PUSHBASEIMAGE=false
           export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --provenance=false .build-metadata.txt"
 
-      - name: build-command
-        description: The command to be used to build the image.
-        type: string
-
       - name: post-build-command
         description: The command to be used to post-build the image.
         type: string
