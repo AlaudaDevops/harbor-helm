@@ -49,10 +49,6 @@ spec:
       - name: git-commit
         description: Commit sha used in this build
         default: ""
-      - name: build-path
-        description: The path to the build directory, it is the related path to the source code.
-        type: string
-        default: "."
       - name: reuse-artifact
         description: >-
           If set to true, the task will reuse the built image from the previous run.
