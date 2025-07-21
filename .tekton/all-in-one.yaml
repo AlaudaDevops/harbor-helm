@@ -110,7 +110,7 @@ spec:
           # download trivy and scanner-trivy
           
           # renovate: datasource=github-tags depName=trivy packageName=AlaudaDevops/trivy
-          TRIVY_VERSION=0.62.2-alauda-5
+          TRIVY_VERSION=0.62.2-alauda-6
           
           # renovate: datasource=github-tags depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
           TRIVY_ADAPTER_VERSION=0.33.2-alauda-4
