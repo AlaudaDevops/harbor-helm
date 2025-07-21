@@ -1067,7 +1067,7 @@ spec:
 
       - name: update-files-based-on-image
         runAfter:
-          - generate-tag
+          - git-clone-amd64
 #          - build-core-image
 #          - build-jobservice-image
 #          - build-registryctl-image
@@ -1079,6 +1079,7 @@ spec:
 #          - build-trivy-adapter-image
 #          - build-exporter-image
 #          - build-e2e-image
+#        image_tag=$(tasks.generate-tag.results.string-result)
         timeout: 20m
         retries: 3
         params:
@@ -1095,7 +1096,8 @@ spec:
                 git config --global --add safe.directory $(workspaces.source.path)
               fi
               
-              image_tag=$(tasks.generate-tag.results.string-result)
+              ## todo update tag
+              image_tag=v2.1.1-123456
               e2e_image_name="fundamentals/harbor-e2e-engine"
               e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
               db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"
