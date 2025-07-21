@@ -1069,7 +1069,7 @@ spec:
         runAfter:
           - git-clone-amd64
         timeout: 20m
-        retries: 3
+        retries: 0
         params:
           - name: image
             value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
@@ -1084,9 +1084,21 @@ spec:
                 git config --global --add safe.directory $(workspaces.source.path)
               fi
               
-              ## todo update tag
-              image_tag=v2.1.1-123456
+              image_tag=$(tasks.generate-tag.results.string-result)
               e2e_image_name="fundamentals/harbor-e2e-engine"
+              e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
+              db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"
+              redis_image="build-harbor.alauda.cn/devops/goharbor-redis-photon:${image_tag}"
+              component_images=(
+                "build-harbor.alauda.cn/devops/goharbor-harbor-core:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-portal:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-exporter:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-registry-photon:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-nginx-photon:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:${image_tag}"
+              )
               component_results="["
               
               for image in "${component_images[@]}"; do
@@ -1109,6 +1121,7 @@ spec:
               ESCAPED_IMAGE_NAME=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
               sed -i "s|\(${ESCAPED_IMAGE_NAME}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
               cat testing/testdata/script/run-harbor-e2e.sh
+              
               
               # If git is installed, show the diff
               if command -v git &> /dev/null; then
