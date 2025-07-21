@@ -1068,18 +1068,6 @@ spec:
       - name: update-files-based-on-image
         runAfter:
           - git-clone-amd64
-#          - build-core-image
-#          - build-jobservice-image
-#          - build-registryctl-image
-#          - build-redis-image
-#          - build-db-image
-#          - build-portal-image
-#          - build-nginx-image
-#          - build-registry-image
-#          - build-trivy-adapter-image
-#          - build-exporter-image
-#          - build-e2e-image
-#        image_tag=$(tasks.generate-tag.results.string-result)
         timeout: 20m
         retries: 3
         params:
