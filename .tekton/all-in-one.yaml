@@ -187,7 +187,7 @@ spec:
           - name: script
             value: |
               #!/bin/bash
-              set -e
+              set -ex
               
               # Add the source directory to the safe.directory list
               git config --global --add safe.directory $(workspaces.source.path)
@@ -501,6 +501,7 @@ spec:
 
       - name: build-core-image
         runAfter:
+          - generate-tag
           - compile-amd64
           - compile-arm64
         timeout: 120m
@@ -548,6 +549,7 @@ spec:
 
       - name: build-jobservice-image
         runAfter:
+          - generate-tag
           - compile-amd64
           - compile-arm64
         timeout: 120m
@@ -595,6 +597,7 @@ spec:
 
       - name: build-registryctl-image
         runAfter:
+          - generate-tag
           - compile-amd64
           - compile-arm64
         timeout: 120m
@@ -642,6 +645,7 @@ spec:
 
       - name: build-redis-image
         runAfter:
+          - generate-tag
           - patch-amd64
           - patch-arm64
         timeout: 120m
@@ -689,6 +693,7 @@ spec:
 
       - name: build-db-image
         runAfter:
+          - generate-tag
           - patch-amd64
           - patch-arm64
         timeout: 120m
@@ -736,6 +741,7 @@ spec:
 
       - name: build-portal-image
         runAfter:
+          - generate-tag
           - patch-amd64
           - patch-arm64
         timeout: 120m
@@ -783,6 +789,7 @@ spec:
 
       - name: build-nginx-image
         runAfter:
+          - generate-tag
           - patch-amd64
           - patch-arm64
         timeout: 120m
@@ -830,6 +837,7 @@ spec:
 
       - name: build-registry-image
         runAfter:
+          - generate-tag
           - fetch-thirdparty-amd64
           - fetch-thirdparty-arm64
         timeout: 120m
@@ -877,6 +885,7 @@ spec:
 
       - name: build-trivy-adapter-image
         runAfter:
+          - generate-tag
           - fetch-thirdparty-amd64
           - fetch-thirdparty-arm64
         timeout: 120m
@@ -924,6 +933,7 @@ spec:
 
       - name: build-exporter-image
         runAfter:
+          - generate-tag
           - patch-amd64
           - patch-arm64
         timeout: 120m
