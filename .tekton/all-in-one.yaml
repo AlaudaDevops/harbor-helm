@@ -1203,6 +1203,33 @@ spec:
           - name: basic-auth
             workspace: basic-auth
 
+      - name: trigger-e2e-test
+        timeout: 30m
+        retries: 0
+        runAfter:
+          - result
+        taskRef:
+          params:
+            - name: catalog
+              value: alauda
+            - name: kind
+              value: task
+            - name: name
+              value: trigger-pac
+            - name: version
+              value: "0.1"
+          resolver: hub
+        workspaces:
+          - name: secret
+            workspace: incoming-secret
+        params:
+          - name: repository
+            value: harbor-helm
+          - name: branch
+            value: $(params.git-revision)
+          - name: pipeline-run
+            value: integration-test
+
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
     podTemplate:
@@ -1281,3 +1308,6 @@ spec:
     - name: signkey
       secret:
         secretName: signing-secrets
+    - name: incoming-secret
+      secret:
+        secretName: catalog-repo-incoming-secret
