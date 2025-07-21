@@ -121,13 +121,12 @@ spec:
       - name: trivy-args
         type: string
         default: |
-          - --scanners
-          - vuln
-          - --skip-db-update=false
-          - --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db
-          - --skip-java-db-update=false
-          - --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
-          - --exit-code=1
+          --scanners vuln \
+          --skip-db-update=false \
+          --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db \
+          --skip-java-db-update=false \
+          --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db \
+          --exit-code=1
     tasks:
       - name: git-clone-amd64
         timeout: 30m
