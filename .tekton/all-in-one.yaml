@@ -1166,9 +1166,6 @@ spec:
             value: |
               set -e
               
-              # Create temporary script file
-              TMP_SCRIPT=$(mktemp)
-              
               COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
               
               # Commit the changes
@@ -1176,8 +1173,7 @@ spec:
                 --revision $(params.git-revision) \
                 --source-path $(workspaces.source.path) \
                 --output-path $(results.commit.path) \
-                --message "${COMMIT_MESSAGE}" \
-                --pre-commit "${TMP_SCRIPT}"
+                --message "${COMMIT_MESSAGE}"
 
         taskRef:
           resolver: hub
