@@ -1084,7 +1084,7 @@ spec:
                 git config --global --add safe.directory $(workspaces.source.path)
               fi
               
-              image_tag=$(tasks.generate-tag.results.string-result)
+              export image_tag=$(tasks.generate-tag.results.string-result)
               e2e_image_name="fundamentals/harbor-e2e-engine"
               e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
               db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"

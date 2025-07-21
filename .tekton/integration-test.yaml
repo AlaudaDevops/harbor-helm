@@ -37,6 +37,12 @@ spec:
         url: "{{ repo_url }}"
         branch: "{{ source_branch }}"
         commit: "{{ revision }}"
+    - name: reuse-artifact
+      value: "true"
+    - name: file-list-for-commit-sha
+      value:
+        - testing
+        - Dockerfile
     - name: build-test-image
       value:
         image-repository: build-harbor.alauda.cn/devops/harbor-ce-test
