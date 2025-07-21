@@ -64,6 +64,7 @@ spec:
 
           echo "run integration tests..."
           export REPORT=allure
+          export RUN_E2E_TEST=true
           make test-smoke
     - name: vcluster
       value:
