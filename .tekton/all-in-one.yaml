@@ -37,6 +37,14 @@ spec:
     - name: tag-template
       value: 2.12.4-g$ShortSha
 
+  results:
+    - name: e2e-image
+      description: The e2e image built by this pipeline
+      type: string
+    - name: components-images
+      description: The components images built by this pipeline
+      type: array
+
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
     params:
@@ -685,8 +693,8 @@ spec:
         params:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
-          - name: trivy-args
-            value: $(params.trivy-args)
+          - name: skip-trivy-scan
+            value: "true"
           - name: image
             value: build-harbor.alauda.cn/devops/goharbor-redis-photon:$(tasks.generate-tag.results.string-result)
           - name: build-command
@@ -735,8 +743,8 @@ spec:
         params:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
-          - name: trivy-args
-            value: $(params.trivy-args)
+          - name: skip-trivy-scan
+            value: "true"
           - name: image
             value: build-harbor.alauda.cn/devops/goharbor-harbor-db:$(tasks.generate-tag.results.string-result)
           - name: build-command
@@ -935,6 +943,8 @@ spec:
         params:
           - name: reuse-artifact
             value: $(params.reuse-artifact)
+          - name: skip-trivy-scan
+            value: "true"
           - name: trivy-args
             value: $(params.trivy-args)
           - name: image
@@ -1051,125 +1061,146 @@ spec:
           - name: context
             value: $(params.build-path)/tests/test-engine-image
 
-#      - name: update-files-based-on-image
-#        runAfter:
-#          - build-core-image
-#          - build-jobservice-image
-#          - build-registryctl-image
-#          - build-redis-image
-#          - build-db-image
-#          - build-portal-image
-#          - build-nginx-image
-#          - build-registry-image
-#          - build-trivy-adapter-image
-#          - build-exporter-image
-#          - build-e2e-image
-#        timeout: 20m
-#        retries: 3
-#        params:
-#          - name: image
-#            value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
-#          - name: imagePullPolicy
-#            value: Always
-#          - name: script
-#            value: |
-#              #!/bin/bash
-#              set -e
-#
-#              if command -v git &> /dev/null; then
-#                # Add the source directory to the safe.directory list
-#                git config --global --add safe.directory $(workspaces.source.path)
-#              fi
-#
-#              update_image_version.sh values.yaml ${IMAGE}
-#
-#
-#
-#              # If git is installed, show the diff
-#              if command -v git &> /dev/null; then
-#                echo "=> updated files based on image: $IMAGE"
-#                git diff .
-#              fi
-#        taskRef:
-#          resolver: hub
-#          params:
-#            - name: catalog
-#              value: catalog
-#            - name: kind
-#              value: task
-#            - name: name
-#              value: run-script
-#            - name: version
-#              value: "0.1"
-#        workspaces:
-#          - name: source
-#            workspace: source
-#
-#      - name: commit
-#        runAfter:
-#          - update-files-based-on-image
-#        when:
-#          - input: $(params.skip-commit)
-#            operator: notin
-#            values:
-#              - "true"
-#          - input: $(params.update-files-based-on-image)
-#            operator: notin
-#            values:
-#              - ""
-#              - " "
-#        timeout: 60m
-#        retries: 0
-#        params:
-#          - name: BASE_IMAGE
-#            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
-#          - name: GIT_USER_NAME
-#            value: "Alauda Bot"
-#          - name: GIT_USER_EMAIL
-#            value: "alaudabot@alauda.io"
-#          - name: USER_HOME
-#            value: "/home/git"
-#          - name: VERBOSE
-#            value: "false"
-#          - name: GIT_SCRIPT
-#            value: |
-#              set -e
-#
-#              # Create temporary script file
-#              TMP_SCRIPT=$(mktemp)
-#
-#              # Write script content to temp file
-#              cat <<EOF > "${TMP_SCRIPT}"
-#              $(params.pre-commit-script)
-#              EOF
-#              chmod +x "${TMP_SCRIPT}"
-#
-#              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
-#
-#              # Commit the changes
-#              git-push-commit.sh \
-#                --revision $(params.git-revision) \
-#                --source-path $(workspaces.source.path) \
-#                --output-path $(results.commit.path) \
-#                --message "${COMMIT_MESSAGE}" \
-#                --pre-commit "${TMP_SCRIPT}"
-#
-#        taskRef:
-#          resolver: hub
-#          params:
-#            - name: catalog
-#              value: extras
-#            - name: kind
-#              value: task
-#            - name: name
-#              value: git-cli
-#            - name: version
-#              value: "0.4"
-#        workspaces:
-#          - name: source
-#            workspace: source
-#          - name: basic-auth
-#            workspace: basic-auth
+      - name: update-files-based-on-image
+        runAfter:
+          - build-core-image
+          - build-jobservice-image
+          - build-registryctl-image
+          - build-redis-image
+          - build-db-image
+          - build-portal-image
+          - build-nginx-image
+          - build-registry-image
+          - build-trivy-adapter-image
+          - build-exporter-image
+          - build-e2e-image
+        timeout: 20m
+        retries: 3
+        params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+          - name: imagePullPolicy
+            value: Always
+          - name: script
+            value: |
+              #!/bin/bash
+              set -e
+              
+              if command -v git &> /dev/null; then
+                # Add the source directory to the safe.directory list
+                git config --global --add safe.directory $(workspaces.source.path)
+              fi
+              
+              image_tag=$(tasks.generate-tag.results.string-result)
+              e2e_image_name="fundamentals/harbor-e2e-engine"
+              e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
+              db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"
+              redis_image="build-harbor.alauda.cn/devops/goharbor-redis-photon:${image_tag}"
+              component_images=(
+                "build-harbor.alauda.cn/devops/goharbor-harbor-core:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-portal:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-harbor-exporter:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-registry-photon:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-nginx-photon:${image_tag}"
+                "build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:${image_tag}"
+              )
+              component_results="["
+              
+              for image in "${component_images[@]}"; do
+                echo "update_image_version.sh values.yaml $image"
+                update_image_version.sh values.yaml "$image"
+                component_results="$component_results\"$image\","
+              done
+              
+              echo "set image tag for db and redis"
+              base_values_file=testing/testdata/snippets/base-values.yaml
+              yq eval -i '.database.internal.image.tag = env(image_tag)' ${base_values_file}
+              yq eval -i '.redis.internal.image.tag = env(image_tag)' ${base_values_file}
+              cat ${base_values_file}
+              
+              component_results="$component_results\"$db_image\","
+              component_results="$component_results\"$redis_image\","
+              component_results="$component_results]"
+              echo "$component_results" > $(results.components-images.path)
+              
+              echo "set image tag for e2e test image"
+              ESCAPED_IMAGE_NAME=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
+              sed -i "s|\(${ESCAPED_IMAGE_NAME}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
+              cat testing/testdata/script/run-harbor-e2e.sh
+              
+              echo "e2e_image" > $(results.e2e-image.path)
+              
+              # If git is installed, show the diff
+              if command -v git &> /dev/null; then
+                echo "=> updated files based on image: $IMAGE"
+                git diff .
+              fi
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: commit
+        runAfter:
+          - update-files-based-on-image
+        timeout: 60m
+        retries: 0
+        params:
+          - name: BASE_IMAGE
+            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+          - name: GIT_USER_NAME
+            value: "Alauda Bot"
+          - name: GIT_USER_EMAIL
+            value: "alaudabot@alauda.io"
+          - name: USER_HOME
+            value: "/home/git"
+          - name: VERBOSE
+            value: "false"
+          - name: GIT_SCRIPT
+            value: |
+              set -e
+              
+              # Create temporary script file
+              TMP_SCRIPT=$(mktemp)
+              
+              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
+              
+              # Commit the changes
+              git-push-commit.sh \
+                --revision $(params.git-revision) \
+                --source-path $(workspaces.source.path) \
+                --output-path $(results.commit.path) \
+                --message "${COMMIT_MESSAGE}" \
+                --pre-commit "${TMP_SCRIPT}"
+
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: extras
+            - name: kind
+              value: task
+            - name: name
+              value: git-cli
+            - name: version
+              value: "0.4"
+        workspaces:
+          - name: source
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
