@@ -35,7 +35,7 @@ spec:
     - name: build-path
       value: subtree/harbor
     - name: image-tag
-      value: 2.12.4-"{{ revision }}"
+      value: 2.12.4-{{ revision }}
 
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
@@ -339,6 +339,8 @@ spec:
           params:
             - name: catalog
               value: alauda
+            - name: kind
+              value: pipeline
             - name: type
               value: tekton
             - name: name
@@ -386,6 +388,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -431,6 +435,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -476,6 +482,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -521,6 +529,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -566,6 +576,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -611,6 +623,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -656,6 +670,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -701,6 +717,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
@@ -746,6 +764,8 @@ spec:
               value: alauda
             - name: type
               value: tekton
+            - name: kind
+              value: pipeline
             - name: name
               value: dind-build-merge-scan
             - name: version
