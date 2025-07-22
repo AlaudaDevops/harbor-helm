@@ -6,7 +6,6 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
     pipelinesascode.tekton.dev/pipeline: .tekton/pipeline/dind-integration-test.yaml
-    pipelinesascode.tekton.dev/task: "[.tekton/docker-in-docker.yaml, .tekton/upload-allure-report.yaml]"
 spec:
   taskRunTemplate:
     podTemplate:
@@ -89,7 +88,7 @@ spec:
           echo "Listing contents of report directory"
           ls -al
         path: testing/allure-report
-        script-before-upload: |
+        pre-upload-script: |
           if [ -d "allure-results/harbor-e2e-reports" ]; then
             echo "harbor e2e report exists, copying to report directory"
             cp -R allure-results/harbor-e2e-reports $FOLDER_NAME
