@@ -6,6 +6,7 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
     pipelinesascode.tekton.dev/pipeline: .tekton/pipeline/dind-integration-test.yaml
+    pipelinesascode.tekton.dev/task: .tekton/docker-in-docker.yaml
 spec:
   taskRunTemplate:
     podTemplate:
@@ -52,7 +53,7 @@ spec:
           kubectl version --client
           helm version
 
-          export KUBECONFIG=$(workspaces.cache.path)/vcluster-config
+          export KUBECONFIG=$(workspaces.config.path)/vcluster-config
           kubectl config view
 
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct

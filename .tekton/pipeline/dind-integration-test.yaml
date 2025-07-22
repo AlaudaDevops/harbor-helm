@@ -2,6 +2,8 @@ apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: dind-integration-test
+  annotations:
+    pipelinesascode.tekton.dev/task: .tekton/docker-in-docker.yaml
 spec:
   description: |
     This pipeline can be used for vcluster-based integration testing, supporting installation of prerequisites, automatic collection and uploading of test reports.
@@ -536,7 +538,7 @@ spec:
     - name: source
       workspace: source
     when:
-    - input: $(tasks.run-test.results.result)
+    - input: $(tasks.run-test.results.string-result)
       operator: in
       values:
       - "passed"
@@ -610,22 +612,23 @@ spec:
     retries: 0
     onError: continue
     taskRef:
-      resolver: hub
-      params:
-        - name: catalog
-          value: alauda
-        - name: type
-          value: tekton
-        - name: name
-          value: docker-in-docker
-        - name: version
-          value: "0.2"
+      name: docker-in-docker
+#      resolver: hub
+#      params:
+#        - name: catalog
+#          value: alauda
+#        - name: type
+#          value: tekton
+#        - name: name
+#          value: docker-in-docker
+#        - name: version
+#          value: "0.2"
     workspaces:
     - name: source
       workspace: source
     - name: dockerconfig
       workspace: dockerconfig
-    - name: cache
+    - name: config
       workspace: kube-config
     runAfter:
     - deploy-dependency
@@ -666,7 +669,7 @@ spec:
         fi
 
         # If execution reaches here, it means the test has passed successfully
-        echo -n "passed" > $(results.result.path)
+        echo -n "passed" > $(results.string-result.path)
     - name: tools-image
       value: $(tasks.select-test-image.results.string-result)
   - name: generate-report
@@ -696,7 +699,7 @@ spec:
       value: |
         set -ex
         TEST_STATUS="passed"
-        if [ "$(tasks.run-test.results.result)" != "passed" ]; then
+        if [ "$(tasks.run-test.results.string-result)" != "passed" ]; then
            TEST_STATUS="failed"
         fi
 
@@ -742,7 +745,7 @@ spec:
     - name: script
       value: |
         set -ex
-        if [ "$(tasks.run-test.results.result)" != "passed" ]; then
+        if [ "$(tasks.run-test.results.string-result)" != "passed" ]; then
           echo "test failed, please check the logs of run-test task for more details"
           exit 1
         fi
