@@ -60,7 +60,7 @@ spec:
           
           # e2e report
           export RUN_E2E_TEST=true
-          export RESULT_DIR=$(workspaces.source.path)/allure-results/harbor-e2e-reports
+          export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
           mkdir -p $RESULT_DIR
           
           echo "run integration tests..."
@@ -89,9 +89,9 @@ spec:
           ls -al
         path: testing/allure-report
         pre-upload-script: |
-          if [ -d "allure-results/harbor-e2e-reports" ]; then
+          if [ -d "harbor-e2e-reports" ]; then
             echo "harbor e2e report exists, copying to report directory"
-            cp -R allure-results/harbor-e2e-reports $FOLDER_NAME
+            cp -R harbor-e2e-reports $FOLDER_NAME
           else
             echo "harbor e2e report does not exist"
           fi
