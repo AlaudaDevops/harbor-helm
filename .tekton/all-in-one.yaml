@@ -1214,7 +1214,7 @@ spec:
             workspace: incoming-secret
         params:
           - name: repository
-            value: harbor-helm
+            value: alaudadevops-harbor-helm
           - name: branch
             value: $(params.git-revision)
           - name: pipeline-run
