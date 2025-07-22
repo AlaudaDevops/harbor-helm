@@ -9,7 +9,7 @@ metadata:
 spec:
   timeouts:
     pipeline: 3h
-    tasks: 1h
+    tasks: 2h
   taskRunTemplate:
     podTemplate:
       securityContext:
@@ -20,7 +20,7 @@ spec:
       computeResources:
         limits:
           cpu: "4"
-          memory: 4Gi
+          memory: 8Gi
   pipelineRef:
     name: dind-integration-test
   params:
