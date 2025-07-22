@@ -52,7 +52,7 @@ spec:
       value:
         command: |
           set -x
-          cd $(workspaces.source.path)/testing
+          cd /app/testing
 
           export PATH=$(pwd)/bin:$PATH
           export YQ_VERSION=4.25.2
@@ -63,7 +63,7 @@ spec:
           kubectl version --client
           helm version
 
-          export KUBECONFIG=$(workspaces.config.path)/vcluster-config
+          export KUBECONFIG=$(workspaces.cache.path)/vcluster-config
           kubectl config view
 
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
@@ -72,6 +72,7 @@ spec:
           echo "run integration tests..."
           export REPORT=allure
           export RUN_E2E_TEST=true
+          export TEST_SUITE=daily
           make test-smoke
     - name: vcluster
       value:
