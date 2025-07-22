@@ -1243,7 +1243,7 @@ spec:
           - name: branch
             value: $(params.git-revision)
           - name: pipeline-run
-            value: integration-test
+            value: harbor-integration-test
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。

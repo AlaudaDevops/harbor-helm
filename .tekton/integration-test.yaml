@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  name: integration-test
+  name: harbor-integration-test
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
@@ -32,7 +32,7 @@ spec:
       value:
         - testing
         - Dockerfile
-#        - .tekton/integration-test
+        - .tekton/integration-test
     - name: build-test-image
       value:
         image-repository: build-harbor.alauda.cn/devops/harbor-ce-test
