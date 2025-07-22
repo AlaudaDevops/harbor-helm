@@ -60,7 +60,10 @@ e2e 镜像也是在 [all-in-one 流水线](.tekton/all-in-one.yaml) 中构建的
 
 执行 [e2e 脚本](testing/testdata/script/run-harbor-e2e.sh) 需要 docker 环境，所以无法直接使用 edge-devops-task 中的 `vcluster-integration-test`。
 
-新增了一条基于 `docker-in-docker` 的[集成测试流水线](.tekton/pipeline/dind-integration-test.yaml)，与 `vcluster-integration-test` 区别主要在于 run-test 是基于 `docker-in-docker` Task 运行的。
+新增了一条基于 `docker-in-docker` 的[集成测试流水线](.tekton/pipeline/dind-integration-test.yaml)，与 `vcluster-integration-test` 区别主要在于：
+
+- run-test 是基于 `docker-in-docker` Task 运行的
+- upload-allure-report 支持 pre-upload-script 参数，用于上传 harbor 脚本
 
 e2e 日志会输出在 `harbor-e2e-reports` 目录并上传到 minio，可以通过 pipeline result 中的 url 访问。
 
@@ -70,6 +73,4 @@ e2e 日志会输出在 `harbor-e2e-reports` 目录并上传到 minio，可以通
 git subtree pull --prefix=subtree/harbor https://github.com/goharbor/harbor.git <tag>
 ```
 
-执行 `git subtree pull` 后，会自动将远程仓库的 tag 合并到指定目录，加上 `--squash` 参数可以合并 commit
-
-处理完 conflict 后，push 即可
+执行 `git subtree pull` 后，会自动将远程仓库的 tag 合并到指定目录，加上 `--squash` 参数可以合并 commit，处理完 conflict 后 push 即可。
