@@ -1,0 +1,71 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  annotations:
+    tekton.dev/categories: Continuous Integration, Continuous Delivery
+    tekton.dev/displayName: Upload Allure Report
+  name: upload-allure-report
+spec:
+  description: >-
+    Upload allure report from shared-workspace to minio bucket
+  results:
+    - name: report-url
+      description: report http url for visiting
+      type: string
+  params:
+    - name: local-report-path
+      description: local report path
+      type: string
+      default: allure-report
+    - name: upload-bucket
+      description: upload report to bucket
+      type: string
+    - name: folder-name
+      description: upload folder name
+      type: string
+    - name: custom-script
+      description: custom script before upload to minio
+      type: string
+      default: ""
+  workspaces:
+    - name: shared-workspace
+    - name: upload-conf
+  steps:
+    - name: upload-to-minio
+      image: docker-mirrors.alauda.cn/minio/mc:RELEASE.2025-05-21T01-59-54Z
+      script: |
+        #!/bin/sh
+        set -e
+        
+        # 读取配置
+        cd $(workspaces.upload-conf.path)
+        MINIO_HOST=`cat MINIO_HOST`
+        MINIO_ID=`cat MINIO_ID`
+        MINIO_KEY=`cat MINIO_KEY`
+        WEB_ENDPOINT=`cat WEB_ENDPOINT`
+        # minio 配置服务端
+        echo "Configuring Minio host..."
+        mc alias set devops $MINIO_HOST $MINIO_ID $MINIO_KEY
+        # 上传目录到minio
+        echo "Uploading files to Minio..."
+        cd $(workspaces.shared-workspace.path)
+        FOLDER_NAME=$(params.folder-name)
+        mkdir -p $FOLDER_NAME
+        mv $(params.local-report-path) $FOLDER_NAME
+        
+        # 执行自定义脚本
+        $(params.custom-script)
+        
+        mc cp -r $FOLDER_NAME devops/$(params.upload-bucket)
+        # 生成报告结果
+        echo "Files uploaded"
+        REPORT_URL="${WEB_ENDPOINT}/$(params.upload-bucket)/$FOLDER_NAME/"
+        echo "查看报告地址： ${REPORT_URL} 如果没有内容，最多等待5分钟..."
+        echo -n "${REPORT_URL}" > $(results.report-url.path)
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1000Mi
+        requests:
+          cpu: 400m
+          memory: 200Mi

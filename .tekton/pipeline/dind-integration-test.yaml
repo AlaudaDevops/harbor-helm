@@ -3,7 +3,7 @@ kind: Pipeline
 metadata:
   name: dind-integration-test
   annotations:
-    pipelinesascode.tekton.dev/task: .tekton/docker-in-docker.yaml
+    pipelinesascode.tekton.dev/task: "[.tekton/docker-in-docker.yaml, .tekton/upload-allure-report.yaml]"
 spec:
   description: |
     This pipeline can be used for vcluster-based integration testing, supporting installation of prerequisites, automatic collection and uploading of test reports.
@@ -135,15 +135,18 @@ spec:
       * path: The path of the generated report
       * command: Command to generate allure report, if empty, the generate-report step will be skipped
       * image: Image used to generate allure report
+      * script-before-upload: Script to execute before upload allure report
     type: object
     properties:
       path: { type: string }
       command: { type: string }
       image: { type: string }
+      script-before-upload: { type: string }
     default:
       path: ./allure-report
       command: allure generate --clean
       image: build-harbor.alauda.cn/devops/plugin-test
+      script-before-upload: ""
   workspaces:
   - name: source
   - name: cache
@@ -715,14 +718,15 @@ spec:
     runAfter:
     - generate-report
     taskRef:
-      resolver: katanomi.dev.gitsource
-      params:
-      - name: url
-        value: https://gitlab-ce.alauda.cn/devops/edge
-      - name: revision
-        value: refs/heads/master
-      - name: pathInRepo
-        value: tasks/upload-allure-report/0.1/upload-allure-report.yaml
+#      resolver: katanomi.dev.gitsource
+#      params:
+#      - name: url
+#        value: https://gitlab-ce.alauda.cn/devops/edge
+#      - name: revision
+#        value: refs/heads/master
+#      - name: pathInRepo
+#        value: tasks/upload-allure-report/0.1/upload-allure-report.yaml
+      name: upload-allure-report
     workspaces:
     - name: shared-workspace
       workspace: source
@@ -735,6 +739,8 @@ spec:
       value: $(date +%Y%m%d%H%M%S)-$(context.pipelineRun.name)
     - name: local-report-path
       value: $(params.report.path)
+    - name: custom-script
+      value: $(params.report.script-before-upload)
   finally:
   - name: check-test-status
     timeout: 1m
