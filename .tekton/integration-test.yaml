@@ -33,7 +33,7 @@ spec:
       value:
         - testing
         - Dockerfile
-        - .tekton/integration-test
+#        - .tekton/integration-test
     - name: build-test-image
       value:
         image-repository: build-harbor.alauda.cn/devops/harbor-ce-test

@@ -37,16 +37,6 @@ spec:
     - name: tag-template
       value: 2.12.4-g$ShortSha
 
-  results:
-    - name: e2e-image
-      description: The e2e image built by this pipeline
-      type: string
-      values: $(tasks.update-image-tags.results.string-result)
-    - name: components-images
-      description: The components images built by this pipeline
-      type: array
-      values: $(tasks.update-image-tags.results.array-result)
-
   pipelineSpec:
     description: The pipeline is used to combine multiple pipeline templates
     params:
@@ -142,6 +132,15 @@ spec:
           --skip-java-db-update=false
           --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           --exit-code=1
+    results:
+      - name: e2e-image
+        description: The e2e image built by this pipeline
+        type: string
+        values: $(tasks.update-image-tags.results.string-result)
+      - name: components-images
+        description: The components images built by this pipeline
+        type: array
+        values: $(tasks.update-image-tags.results.array-result)
     tasks:
       - name: git-clone-amd64
         timeout: 30m
