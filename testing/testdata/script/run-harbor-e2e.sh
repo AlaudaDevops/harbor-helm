@@ -23,7 +23,7 @@ is_ipv6() {
     fi
 }
 
-TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:2.12.4-ge2ede2d
+TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:2.12.4-gc1f4e8b
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}

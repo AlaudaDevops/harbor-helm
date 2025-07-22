@@ -55,7 +55,7 @@ database:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
-      tag: 2.12.4-ge2ede2d
+      tag: 2.12.4-gc1f4e8b
   resources:
     requests:
       cpu: 100m
@@ -70,7 +70,7 @@ redis:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon
-      tag: 2.12.4-ge2ede2d
+      tag: 2.12.4-gc1f4e8b
     extraEnvVars:
       - name: ALLOW_EMPTY_PASSWORD
         value: "yes"
