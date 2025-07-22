@@ -136,11 +136,11 @@ spec:
       - name: e2e-image
         description: The e2e image built by this pipeline
         type: string
-        values: $(tasks.update-image-tags.results.string-result)
+        value: $(tasks.update-image-tags.results.string-result)
       - name: components-images
         description: The components images built by this pipeline
         type: array
-        values: $(tasks.update-image-tags.results.array-result)
+        value: $(tasks.update-image-tags.results.array-result)
     tasks:
       - name: git-clone-amd64
         timeout: 30m
