@@ -58,10 +58,14 @@ spec:
 
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
           export GOMAXPROCS=4
-
+          
+          # e2e report
+          export RUN_E2E_TEST=true
+          export RESULT_DIR=$(workspaces.source.path)/allure-results/harbor-e2e-reports
+          mkdir -p $RESULT_DIR
+          
           echo "run integration tests..."
           export REPORT=allure
-          export RUN_E2E_TEST=true
           export TEST_SUITE=daily
           make test-smoke
     - name: vcluster
