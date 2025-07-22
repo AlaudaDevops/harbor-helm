@@ -5,6 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
+    pipelinesascode.tekton.dev/pipeline: .tekton/pipeline/dind-integration-test.yaml
 spec:
   taskRunTemplate:
     podTemplate:
@@ -18,19 +19,7 @@ spec:
           cpu: "4"
           memory: 4Gi
   pipelineRef:
-    resolver: hub
-    params:
-      - name: catalog
-        value: alauda
-      - name: type
-        value: tekton
-      - name: kind
-        value: pipeline
-      - name: name
-        value: vcluster-integration-test
-      - name: version
-        value: "0.2"
-
+    name: dind-integration-test
   params:
     - name: git-revision
       value:
