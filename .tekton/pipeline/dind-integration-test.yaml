@@ -766,19 +766,19 @@ spec:
         value: run-script
       - name: version
         value: "0.1"
-  - name: release-vcluster
-    params:
-    - name: name
-      value: catalog-$(context.pipelineRun.name)
-    taskRef:
-      kind: ClusterTask
-      name: katanomi-release-vcluster
-    when:
-    - input: $(tasks.create-virtual-cluster.status)
-      operator: in
-      values:
-      - Succeeded
-      - Failed
-    workspaces:
-    - name: kube-config
-      workspace: kube-config
+#  - name: release-vcluster
+#    params:
+#    - name: name
+#      value: catalog-$(context.pipelineRun.name)
+#    taskRef:
+#      kind: ClusterTask
+#      name: katanomi-release-vcluster
+#    when:
+#    - input: $(tasks.create-virtual-cluster.status)
+#      operator: in
+#      values:
+#      - Succeeded
+#      - Failed
+#    workspaces:
+#    - name: kube-config
+#      workspace: kube-config
