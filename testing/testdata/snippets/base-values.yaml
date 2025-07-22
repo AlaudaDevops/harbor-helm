@@ -16,7 +16,6 @@ core:
     limits:
       cpu: 100m
       memory: 256Mi
-
 jobservice:
   resources:
     requests:
@@ -25,7 +24,6 @@ jobservice:
     limits:
       cpu: 100m
       memory: 256Mi
-
 registry:
   registry:
     resources:
@@ -43,7 +41,6 @@ registry:
       limits:
         cpu: 100m
         memory: 256Mi
-
 trivy:
   skipUpdate: true
   offlineScan: true
@@ -54,12 +51,11 @@ trivy:
     limits:
       cpu: 200m
       memory: 1Gi
-
 database:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
-      tag: 2.12.4-f5f788e2
+      tag: 2.12.4-g601f56f
   resources:
     requests:
       cpu: 100m
@@ -70,12 +66,11 @@ database:
   persistence:
     enabled: true
     storageClass: <storage-class>
-
 redis:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon
-      tag: 2.12.4-f5f788e2
+      tag: 2.12.4-g601f56f
     extraEnvVars:
       - name: ALLOW_EMPTY_PASSWORD
         value: "yes"
@@ -86,8 +81,7 @@ redis:
     cpu: 100m
     memory: 256Mi
   persistence:
-      enabled: true
-      storageClass: <storage-class>
-
+    enabled: true
+    storageClass: <storage-class>
 existingSecretAdminPassword: "harbor-password"
 existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
