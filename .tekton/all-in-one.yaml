@@ -306,8 +306,7 @@ spec:
 
       - name: patch-amd64
         runAfter:
-#          - git-clone-amd64
-          - detect-component-changes
+          - git-clone-amd64
         timeout: 10m
         retries: 1
         taskRef:
@@ -332,8 +331,7 @@ spec:
 
       - name: patch-arm64
         runAfter:
-#          - git-clone-arm64
-          - detect-component-changes
+          - git-clone-arm64
         timeout: 10m
         retries: 1
         taskRef:
@@ -1020,20 +1018,19 @@ spec:
 
       - name: update-image-tags
         runAfter:
-          - git-clone-amd64
-#          - build-core-image
-#          - build-jobservice-image
-#          - build-registryctl-image
-#          - build-redis-image
-#          - build-db-image
-#          - build-portal-image
-#          - build-nginx-image
-#          - build-registry-image
-#          - build-trivy-adapter-image
-#          - build-exporter-image
-#          - build-e2e-image
+          - build-core-image
+          - build-jobservice-image
+          - build-registryctl-image
+          - build-redis-image
+          - build-db-image
+          - build-portal-image
+          - build-nginx-image
+          - build-registry-image
+          - build-trivy-adapter-image
+          - build-exporter-image
+          - build-e2e-image
         timeout: 20m
-        retries: 0
+        retries: 1
         params:
           - name: image
             value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
@@ -1104,73 +1101,72 @@ spec:
           - name: source
             workspace: source-amd64
 
-#      - name: commit
-#        runAfter:
-#          - update-image-tags
-#        timeout: 60m
-#        retries: 0
-#        params:
-#          - name: BASE_IMAGE
-#            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
-#          - name: GIT_USER_NAME
-#            value: "Alauda Bot"
-#          - name: GIT_USER_EMAIL
-#            value: "alaudabot@alauda.io"
-#          - name: USER_HOME
-#            value: "/home/git"
-#          - name: VERBOSE
-#            value: "false"
-#          - name: GIT_SCRIPT
-#            value: |
-#              set -e
-#
-#              # Create temporary script file
-#              TMP_SCRIPT=$(mktemp)
-#
-#              # Write script content to temp file
-#              # Harbor use patches file to update source code, but we only want to update the specified files
-#              # So we use git stash to stash the changes and restore other changes
-#              cat <<EOF > "${TMP_SCRIPT}"
-#              git stash push --keep-index -- \
-#                testing/testdata/script/run-harbor-e2e.sh \
-#                testing/testdata/snippets/base-values.yaml \
-#                values.yaml
-#              git restore .
-#              git stash pop
-#              EOF
-#              chmod +x "${TMP_SCRIPT}"
-#
-#              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
-#
-#              # Commit the changes
-#              git-push-commit.sh \
-#                --revision $(params.git-revision) \
-#                --source-path $(workspaces.source.path) \
-#                --output-path $(results.commit.path) \
-#                --message "${COMMIT_MESSAGE}" \
-#                --pre-commit "${TMP_SCRIPT}"
-#
-#        taskRef:
-#          resolver: hub
-#          params:
-#            - name: catalog
-#              value: extras
-#            - name: kind
-#              value: task
-#            - name: name
-#              value: git-cli
-#            - name: version
-#              value: "0.4"
-#        workspaces:
-#          - name: source
-#            workspace: source-amd64
-#          - name: basic-auth
-#            workspace: basic-auth
+      - name: commit
+        runAfter:
+          - update-image-tags
+        timeout: 60m
+        retries: 0
+        params:
+          - name: BASE_IMAGE
+            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+          - name: GIT_USER_NAME
+            value: "Alauda Bot"
+          - name: GIT_USER_EMAIL
+            value: "alaudabot@alauda.io"
+          - name: USER_HOME
+            value: "/home/git"
+          - name: VERBOSE
+            value: "false"
+          - name: GIT_SCRIPT
+            value: |
+              set -e
+
+              # Create temporary script file
+              TMP_SCRIPT=$(mktemp)
+
+              # Write script content to temp file
+              # Harbor use patches file to update source code, but we only want to update the specified files
+              # So we use git stash to stash the changes and restore other changes
+              cat <<EOF > "${TMP_SCRIPT}"
+              git stash push --keep-index -- \
+                testing/testdata/script/run-harbor-e2e.sh \
+                testing/testdata/snippets/base-values.yaml \
+                values.yaml
+              git restore .
+              git stash pop
+              EOF
+              chmod +x "${TMP_SCRIPT}"
+
+              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
+
+              # Commit the changes
+              git-push-commit.sh \
+                --revision $(params.git-revision) \
+                --source-path $(workspaces.source.path) \
+                --output-path $(results.commit.path) \
+                --message "${COMMIT_MESSAGE}" \
+                --pre-commit "${TMP_SCRIPT}"
+
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: extras
+            - name: kind
+              value: task
+            - name: name
+              value: git-cli
+            - name: version
+              value: "0.4"
+        workspaces:
+          - name: source
+            workspace: source-amd64
+          - name: basic-auth
+            workspace: basic-auth
 
       - name: detect-component-changes
         runAfter:
-#          - git-version
-          - git-clone-amd64
+          - git-version
         timeout: 60m
         retries: 3
         taskRef:
@@ -1233,10 +1229,9 @@ spec:
 
       - name: trigger-e2e-test
         timeout: 30m
-        retries: 0
+        retries: 1
         runAfter:
-#          - commit
-          - detect-component-changes
+          - commit
         taskRef:
           params:
             - name: catalog

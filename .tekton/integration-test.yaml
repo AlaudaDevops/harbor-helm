@@ -61,10 +61,15 @@ spec:
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
           export GOMAXPROCS=4
           
-          # e2e report
+          # Control whether to execute the e2e script
+          # By default, e2e will be executed. It will be skipped only in two cases:
+          # 1. The skip_e2e parameter is configured and its value is true
+          # 2. Triggered by the all-in-one pipeline, and the harbor source code has not been modified (only chart changes do not require e2e)
           if [ "{{ skip_e2e }}" = "true" ] || [ "{{ source_code_changed }}" != "true" ]; then
+            echo "Skip e2e test"
             export RUN_E2E_TEST=false
-          else if 
+          elif 
+            echo "Run e2e test"
             export RUN_E2E_TEST=true
           fi
           export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
