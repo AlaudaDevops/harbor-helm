@@ -55,6 +55,7 @@ database:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
+      # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
       tag: 2.12.4-g20daa5c
   resources:
     requests:
@@ -70,6 +71,7 @@ redis:
   internal:
     image:
       repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon
+      # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
       tag: 2.12.4-g20daa5c
     extraEnvVars:
       - name: ALLOW_EMPTY_PASSWORD

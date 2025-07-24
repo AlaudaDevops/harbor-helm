@@ -1089,6 +1089,9 @@ spec:
             value: |
               set -e
               
+              # Important!!! Only the files specified in `TMP_SCRIPT` in the `commit` Task will be committed. 
+              # If a new file need to be committed, please update TMP_SCRIPT in time.
+              
               image_tag=$(tasks.generate-tag.results.string-result)
               
               # update image tag in values.yaml

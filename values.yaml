@@ -1,6 +1,7 @@
 global:
   registry:
     address: registry.alauda.cn:60080
+  # The default values of image tags will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
   images:
     portal:
       repository: devops/goharbor-harbor-portal
