@@ -195,67 +195,6 @@ spec:
           - name: basic-auth
             workspace: basic-auth
 
-#      - name: calculate-commit-sha
-#        runAfter:
-#          - git-clone-amd64
-#        timeout: 10m
-#        retries: 1
-#        params:
-#          - name: image
-#            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
-#          - name: args
-#            value: $(params.file-list-for-commit-sha[*])
-#          - name: imagePullPolicy
-#            value: Always
-#          - name: script
-#            value: |
-#              #!/bin/bash
-#              set -ex
-#
-#              # Add the source directory to the safe.directory list
-#              git config --global --add safe.directory $(workspaces.source.path)
-#
-#              # Initialize environment variables
-#              export GIT_URL=$(params.git-url)
-#              export GIT_REVISION=$(params.git-revision)
-#              export RESET_GIT_COMMIT=$(params.git-commit)
-#              export RESULT_STRING_PATH=$(results.string-result.path)
-#              export RESULT_ARRAY_PATH=$(results.array-result.path)
-#              export RESULT_OBJECT_PATH=$(results.object-result.path)
-#              export DEFAULT_GIT_COMMIT=$(git rev-parse HEAD)
-#              export DEFAULT_GIT_COMMITTER_DATE=$(git log -1 --pretty=%ct)
-#              export WORKSPACE_SOURCE_PATH=$(workspaces.source.path)
-#              export WORKSPACE_SECRET_BOUND=$(workspaces.secret.bound)
-#              export WORKSPACE_SECRET_PATH=$(workspaces.secret.path)
-#
-#              # calculate the last commit info
-#              calculate-last-commit-info.sh $@
-#
-#              # Define the commit info file path and create the directory if it doesn't exist
-#              COMMIT_INFO_FILE=".git/$(context.pipelineRun.name)/.last-changed-commit-sha"
-#              mkdir -p "$(dirname ${COMMIT_INFO_FILE})"
-#              # Store the last changed commit sha in a file
-#              cp -f $(results.string-result.path) "${COMMIT_INFO_FILE}"
-#
-#              # Store the original git revision in a file
-#              echo -n "${GIT_REVISION}" > .git/$(context.pipelineRun.name)/.git-revision
-#        taskRef:
-#          resolver: hub
-#          params:
-#            - name: catalog
-#              value: catalog
-#            - name: kind
-#              value: task
-#            - name: name
-#              value: run-script
-#            - name: version
-#              value: "0.1"
-#        workspaces:
-#          - name: source
-#            workspace: source-amd64
-#          - name: secret
-#            workspace: basic-auth
-
       - name: git-version
         retries: 1
         runAfter:
@@ -1067,17 +1006,18 @@ spec:
 
       - name: update-image-tags
         runAfter:
-          - build-core-image
-          - build-jobservice-image
-          - build-registryctl-image
-          - build-redis-image
-          - build-db-image
-          - build-portal-image
-          - build-nginx-image
-          - build-registry-image
-          - build-trivy-adapter-image
-          - build-exporter-image
-          - build-e2e-image
+          - git-clone-amd64
+#          - build-core-image
+#          - build-jobservice-image
+#          - build-registryctl-image
+#          - build-redis-image
+#          - build-db-image
+#          - build-portal-image
+#          - build-nginx-image
+#          - build-registry-image
+#          - build-trivy-adapter-image
+#          - build-exporter-image
+#          - build-e2e-image
         timeout: 20m
         retries: 0
         params:
@@ -1150,68 +1090,68 @@ spec:
           - name: source
             workspace: source-amd64
 
-      - name: commit
-        runAfter:
-          - update-image-tags
-        timeout: 60m
-        retries: 0
-        params:
-          - name: BASE_IMAGE
-            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
-          - name: GIT_USER_NAME
-            value: "Alauda Bot"
-          - name: GIT_USER_EMAIL
-            value: "alaudabot@alauda.io"
-          - name: USER_HOME
-            value: "/home/git"
-          - name: VERBOSE
-            value: "false"
-          - name: GIT_SCRIPT
-            value: |
-              set -e
-              
-              # Create temporary script file
-              TMP_SCRIPT=$(mktemp)
-  
-              # Write script content to temp file
-              # Harbor use patches file to update source code, but we only want to update the specified files
-              # So we use git stash to stash the changes and restore other changes
-              cat <<EOF > "${TMP_SCRIPT}"
-              git stash push --keep-index -- \
-                testing/testdata/script/run-harbor-e2e.sh \
-                testing/testdata/snippets/base-values.yaml \
-                values.yaml
-              git restore .
-              git stash pop
-              EOF
-              chmod +x "${TMP_SCRIPT}"
-
-              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
-
-              # Commit the changes
-              git-push-commit.sh \
-                --revision $(params.git-revision) \
-                --source-path $(workspaces.source.path) \
-                --output-path $(results.commit.path) \
-                --message "${COMMIT_MESSAGE}" \
-                --pre-commit "${TMP_SCRIPT}"
-
-        taskRef:
-          resolver: hub
-          params:
-            - name: catalog
-              value: extras
-            - name: kind
-              value: task
-            - name: name
-              value: git-cli
-            - name: version
-              value: "0.4"
-        workspaces:
-          - name: source
-            workspace: source-amd64
-          - name: basic-auth
-            workspace: basic-auth
+#      - name: commit
+#        runAfter:
+#          - update-image-tags
+#        timeout: 60m
+#        retries: 0
+#        params:
+#          - name: BASE_IMAGE
+#            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+#          - name: GIT_USER_NAME
+#            value: "Alauda Bot"
+#          - name: GIT_USER_EMAIL
+#            value: "alaudabot@alauda.io"
+#          - name: USER_HOME
+#            value: "/home/git"
+#          - name: VERBOSE
+#            value: "false"
+#          - name: GIT_SCRIPT
+#            value: |
+#              set -e
+#
+#              # Create temporary script file
+#              TMP_SCRIPT=$(mktemp)
+#
+#              # Write script content to temp file
+#              # Harbor use patches file to update source code, but we only want to update the specified files
+#              # So we use git stash to stash the changes and restore other changes
+#              cat <<EOF > "${TMP_SCRIPT}"
+#              git stash push --keep-index -- \
+#                testing/testdata/script/run-harbor-e2e.sh \
+#                testing/testdata/snippets/base-values.yaml \
+#                values.yaml
+#              git restore .
+#              git stash pop
+#              EOF
+#              chmod +x "${TMP_SCRIPT}"
+#
+#              COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
+#
+#              # Commit the changes
+#              git-push-commit.sh \
+#                --revision $(params.git-revision) \
+#                --source-path $(workspaces.source.path) \
+#                --output-path $(results.commit.path) \
+#                --message "${COMMIT_MESSAGE}" \
+#                --pre-commit "${TMP_SCRIPT}"
+#
+#        taskRef:
+#          resolver: hub
+#          params:
+#            - name: catalog
+#              value: extras
+#            - name: kind
+#              value: task
+#            - name: name
+#              value: git-cli
+#            - name: version
+#              value: "0.4"
+#        workspaces:
+#          - name: source
+#            workspace: source-amd64
+#          - name: basic-auth
+#            workspace: basic-auth
 
       - name: trigger-e2e-test
         timeout: 30m
