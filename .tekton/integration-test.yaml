@@ -68,7 +68,7 @@ spec:
           if [ "{{ skip_e2e }}" = "true" ] || [ "{{ source_code_changed }}" != "true" ]; then
             echo "Skip e2e test"
             export RUN_E2E_TEST=false
-          elif 
+          else
             echo "Run e2e test"
             export RUN_E2E_TEST=true
           fi
