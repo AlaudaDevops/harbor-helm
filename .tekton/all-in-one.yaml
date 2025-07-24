@@ -306,7 +306,8 @@ spec:
 
       - name: patch-amd64
         runAfter:
-          - git-clone-amd64
+#          - git-clone-amd64
+          - detect-component-changes
         timeout: 10m
         retries: 1
         taskRef:
@@ -331,7 +332,8 @@ spec:
 
       - name: patch-arm64
         runAfter:
-          - git-clone-arm64
+#          - git-clone-arm64
+          - detect-component-changes
         timeout: 10m
         retries: 1
         taskRef:
@@ -1233,8 +1235,8 @@ spec:
         timeout: 30m
         retries: 0
         runAfter:
-          - update-image-tags
 #          - commit
+          - detect-component-changes
         taskRef:
           params:
             - name: catalog
