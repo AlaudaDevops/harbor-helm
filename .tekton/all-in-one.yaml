@@ -279,7 +279,7 @@ spec:
               # Get current branch name
               current_revision=$(git branch --show-current)
               
-              GIT_REVISION=$(cat .git/$(context.pipelineRun.name)/.git-revision)
+              GIT_REVISION=$(params.git-commit)
               
               # Only adjust FullSemVer when:
               # 1. PreReleaseLabel cannot be empty to avoid affecting the version of the tag.
