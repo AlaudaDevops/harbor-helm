@@ -101,10 +101,10 @@ spec:
         default: |
           # download trivy and scanner-trivy
           
-          # renovate: datasource=github-tags depName=trivy packageName=AlaudaDevops/trivy
+          # renovate: datasource=github-releases depName=trivy packageName=AlaudaDevops/trivy
           TRIVY_VERSION=0.62.2-alauda-6
           
-          # renovate: datasource=github-tags depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
+          # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
           TRIVY_ADAPTER_VERSION=0.33.2-alauda-4
           
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
@@ -117,8 +117,7 @@ spec:
           mv alauda-trivy binary/trivy
           mv alauda-scanner-trivy binary/scanner-trivy
           cd -
-
-
+          
           # compile registry
           REGISTRY_SRC=https://github.com/distribution/distribution.git
           REGISTRY_SRC_TAG=v2.8.3
@@ -1052,7 +1051,7 @@ spec:
             value: |
               cd $(params.build-path)/tests/test-engine-image && ./generate.sh api && cd -
           - name: image-url
-            value: build-harbor.alauda.cn/fundamentals/harbor-e2e-engine
+            value: build-harbor.alauda.cn/devops/harbor-e2e-engine
           - name: image-tags
             value:
               - $(tasks.generate-tag.results.string-result)
@@ -1090,56 +1089,49 @@ spec:
             value: |
               set -e
               
-              if command -v git &> /dev/null; then
-                # Add the source directory to the safe.directory list
-                git config --global --add safe.directory $(workspaces.source.path)
-              fi
+              image_tag=$(tasks.generate-tag.results.string-result)
               
-              export image_tag=$(tasks.generate-tag.results.string-result)
-              e2e_image_name="fundamentals/harbor-e2e-engine"
-              e2e_image="build-harbor.alauda.cn/devops/${e2e_image_name}:${image_tag}"
-              db_image="build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}"
-              redis_image="build-harbor.alauda.cn/devops/goharbor-redis-photon:${image_tag}"
-              component_images=(
-                "build-harbor.alauda.cn/devops/goharbor-harbor-core:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-portal:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-harbor-exporter:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-registry-photon:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-nginx-photon:${image_tag}"
-                "build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:${image_tag}"
-              )
-              component_results="["
+              # update image tag in values.yaml
+              echo "update image tag in values.yaml"
+              make update-component-image-tag TAG=${image_tag} KEY=core 
+              make update-component-image-tag TAG=${image_tag} KEY=jobservice 
+              make update-component-image-tag TAG=${image_tag} KEY=registryController 
+              make update-component-image-tag TAG=${image_tag} KEY=portal 
+              make update-component-image-tag TAG=${image_tag} KEY=exporter 
+              make update-component-image-tag TAG=${image_tag} KEY=registry 
+              make update-component-image-tag TAG=${image_tag} KEY=nginx 
+              make update-component-image-tag TAG=${image_tag} KEY=trivy
+              cat values.yaml
               
-              for image in "${component_images[@]}"; do
-                echo "update_image_version.sh values.yaml $image"
-                update_image_version.sh values.yaml "$image"
-                component_results="$component_results\"$image\","
-              done
-              
-              echo "set image tag for db and redis"
+              # update image tag in base-values.yaml for integration test
               base_values_file=testing/testdata/snippets/base-values.yaml
-              yq eval -i '.database.internal.image.tag = env(image_tag)' ${base_values_file}
-              yq eval -i '.redis.internal.image.tag = env(image_tag)' ${base_values_file}
+              echo "update image tag in ${base_values_file}"
+              make update-yaml-value FILE=${base_values_file} VALUE=${image_tag} KEY=database.internal.image.tag 
+              make update-yaml-value FILE=${base_values_file} VALUE=${image_tag} KEY=redis.internal.image.tag
               cat ${base_values_file}
               
-              component_results="$component_results\"$db_image\","
-              component_results="$component_results\"$redis_image\""
-              component_results="$component_results]"
-              echo "$component_results" > $(results.array-result.path)
+              # update e2e image
+              e2e_script=testdata/script/run-harbor-e2e.sh
+              echo "update e2e image in ${e2e_script}"
+              cd testing
+              make update-e2e-image-tag TAG=${image_tag} E2E_SCRIPT=${e2e_script}
+              cat ${e2e_script}
+              cd -
               
-              echo "set image tag for e2e test image"
-              escaped_image_name=$(echo "${e2e_image_name}" | sed 's/[\/]/\\\//g')
-              sed -i "s|\(${escaped_image_name}:\)[^[:space:]]*|\1${image_tag}|" testing/testdata/script/run-harbor-e2e.sh
-              cat testing/testdata/script/run-harbor-e2e.sh
-              echo "$e2e_image" > $(results.string-result.path)
-              
-              # If git is installed, show the diff
-              if command -v git &> /dev/null; then
-                echo "=> updated files complete"
-                git diff .
-              fi
+              # write image info into results
+              echo "registry.alauda.cn:60070/devops/harbor-e2e-engine:${image_tag}" > $(results.string-result.path)
+              echo -n "[
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-core:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-jobservice:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-registryctl:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-portal:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-exporter:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-registry-photon:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-nginx-photon:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-trivy-adapter-photon:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-harbor-db:${image_tag}\",
+                \"build-harbor.alauda.cn/devops/goharbor-redis-photon:${image_tag}\"
+              ]" > $(results.array-result.path)
         taskRef:
           resolver: hub
           params:
