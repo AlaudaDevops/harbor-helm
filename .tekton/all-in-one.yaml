@@ -1204,7 +1204,7 @@ spec:
 
               export RESULT_PATH=$(results.object-result.path)
 
-              export WORKSPACE_SOURCE_PATH=$(workspaces.source-amd64.path)
+              export WORKSPACE_SOURCE_PATH=$(workspaces.source.path)
               export WORKSPACE_SECRET_BOUND=$(workspaces.secret.bound)
               export WORKSPACE_SECRET_PATH=$(workspaces.secret.path)
 
