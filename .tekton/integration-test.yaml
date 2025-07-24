@@ -62,9 +62,9 @@ spec:
           export GOMAXPROCS=4
           
           # e2e report
-          if [ "{{ enable_e2e }}" = "true" ]; then
+          if [ "{{ skip_e2e }}" = "true" ] || [ "{{ source_code_changed }}" != "true" ]; then
             export RUN_E2E_TEST=false
-          else
+          else if 
             export RUN_E2E_TEST=true
           fi
           export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
