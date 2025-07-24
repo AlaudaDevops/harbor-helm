@@ -69,11 +69,17 @@ e2e 日志会输出在 `harbor-e2e-reports` 目录并上传到 minio，可以通
 
 ## 集成测试
 
+### 自动触发
+
 [all-in-one 流水线](.tekton/all-in-one.yaml) 的所有步骤完成后，会自动触发 [integration-test 流水线](.tekton/integration-test.yaml)。
 
 只有当 harbor 源码被修改时，才会执行 e2e 测试（通过传递 `source_code_changed` 参数）。
 
-直接通过评论触发 [integration-test 流水线](.tekton/integration-test.yaml) 时，默认会执行 e2e 测试。可以通过 `skip-e2e` 来跳过 e2e 测试。
+### 手动触发
+
+直接通过评论触发 [integration-test 流水线](.tekton/integration-test.yaml) 时，默认会执行 e2e 测试。
+
+可以通过 `skip_e2e` 参数来跳过 e2e 测试，例如 `/integration-test skip_e2e="true"`
 
 ## 升级 harbor 版本
 
