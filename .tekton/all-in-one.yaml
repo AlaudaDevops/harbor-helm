@@ -1166,7 +1166,7 @@ spec:
 
       - name: detect-component-changes
         runAfter:
-          - git-clone-amd64
+          - git-version
         timeout: 60m
         retries: 3
         taskRef:
