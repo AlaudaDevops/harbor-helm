@@ -209,8 +209,7 @@ spec:
       - name: git-version
         retries: 1
         runAfter:
-#          - git-clone-amd64
-          - detect-component-changes
+          - git-clone-amd64
         params:
           - name: gitversion-image
             value: registry.alauda.cn:60080/devops/gittools/gitversion:6.0.5
@@ -1232,6 +1231,7 @@ spec:
         retries: 1
         runAfter:
           - commit
+          - detect-component-changes
         taskRef:
           params:
             - name: catalog
