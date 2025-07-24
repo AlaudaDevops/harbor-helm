@@ -1157,7 +1157,8 @@ spec:
         timeout: 30m
         retries: 0
         runAfter:
-          - commit
+          - update-image-tags
+#          - commit
         taskRef:
           params:
             - name: catalog
