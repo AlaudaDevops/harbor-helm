@@ -1,13 +1,15 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  name: integration-test
+  name: harbor-integration-test
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
-    pipelinesascode.tekton.dev/on-cel-expression: |-
-      target_branch.matches("^(main|release-.*|alauda-.*)$")
     pipelinesascode.tekton.dev/max-keep-runs: "5"
+    pipelinesascode.tekton.dev/pipeline: .tekton/pipeline/dind-integration-test.yaml
 spec:
+  timeouts:
+    pipeline: 3h
+    tasks: 2h
   taskRunTemplate:
     podTemplate:
       securityContext:
@@ -18,27 +20,22 @@ spec:
       computeResources:
         limits:
           cpu: "4"
-          memory: 4Gi
+          memory: 8Gi
   pipelineRef:
-    resolver: hub
-    params:
-      - name: catalog
-        value: alauda
-      - name: type
-        value: tekton
-      - name: kind
-        value: pipeline
-      - name: name
-        value: vcluster-integration-test
-      - name: version
-        value: "0.2"
-
+    name: dind-integration-test
   params:
     - name: git-revision
       value:
         url: "{{ repo_url }}"
         branch: "{{ source_branch }}"
         commit: "{{ revision }}"
+    - name: reuse-artifact
+      value: "true"
+    - name: file-list-for-commit-sha
+      value:
+        - testing
+        - Dockerfile
+        - .tekton/integration-test
     - name: build-test-image
       value:
         image-repository: build-harbor.alauda.cn/devops/harbor-ce-test
@@ -48,24 +45,39 @@ spec:
         command: |
           set -x
           cd $(workspaces.source.path)/testing
-
+          
           export PATH=$(pwd)/bin:$PATH
           export YQ_VERSION=4.25.2
           export KUBECTL_VERSION=1.28.2
           export HELM_VERSION=3.12.3
-
+          
           yq --version
           kubectl version --client
           helm version
-
+          
           export KUBECONFIG=$(workspaces.config.path)/vcluster-config
           kubectl config view
-
+          
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
           export GOMAXPROCS=4
-
+          
+          # Control whether to execute the e2e script
+          # By default, e2e will be executed. It will be skipped only in two cases:
+          # 1. The skip_e2e parameter is configured and its value is true
+          # 2. Triggered by the all-in-one pipeline, and the harbor source code has not been modified (only chart changes do not require e2e)
+          if [ "{{ skip_e2e }}" = "true" ] || [ "{{ source_code_changed }}" != "true" ]; then
+            echo "Skip e2e test"
+            export RUN_E2E_TEST=false
+          else
+            echo "Run e2e test"
+            export RUN_E2E_TEST=true
+          fi
+          export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
+          mkdir -p $RESULT_DIR
+          
           echo "run integration tests..."
-          export REPORT=allure
+          export GODOG_ARGS="--godog.format=allure"
+          export TEST_SUITE=daily
           make test-smoke
     - name: vcluster
       value:
@@ -88,6 +100,14 @@ spec:
           echo "Listing contents of report directory"
           ls -al
         path: testing/allure-report
+        pre-upload-script: |
+          if [ -d "harbor-e2e-reports" ]; then
+            echo "harbor e2e report exists, copying to report directory"
+            cp -R harbor-e2e-reports $FOLDER_NAME
+          else
+            echo "harbor e2e report does not exist"
+          fi
+
   workspaces:
     - name: kube-config
       volumeClaimTemplate:

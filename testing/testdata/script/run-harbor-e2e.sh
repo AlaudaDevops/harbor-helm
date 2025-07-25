@@ -23,7 +23,9 @@ is_ipv6() {
     fi
 }
 
-TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api-docker-28
+# 该镜像的默认值会由 `.tekton/all-in-one.yaml` 流水线中的 `update-image-tags` 自动更新
+# 如需修改，请同步更新 Makefile 中的 `update-e2e-image-tag`
+TEST_IMAGE=${TEST_IMAGE:-"registry.alauda.cn:60070/devops/harbor-e2e-engine:2.12.4-gee30165"}
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}
