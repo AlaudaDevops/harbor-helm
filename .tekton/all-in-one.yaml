@@ -118,13 +118,16 @@ spec:
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
           
-          cd ${BUILDPATH}/make/photon/trivy-adapter
-          mkdir -p binary
-          curl -L ${TRIVY_DOWNLOAD_URL} | tar -xz
-          curl -L ${TRIVY_ADAPTER_DOWNLOAD_URL} | tar -xz
-          mv alauda-trivy binary/trivy
-          mv alauda-scanner-trivy binary/scanner-trivy
-          cd -
+          TRIVY_BINARY_PATH=${BUILDPATH}/make/photon/trivy-adapter/binary
+          mkdir -p ${TRIVY_BINARY_PATH}
+          
+          curl --retry 6 --create-dirs -fLo /tmp/trivy.tar.gz ${TRIVY_DOWNLOAD_URL}
+          tar -xzf /tmp/trivy.tar.gz -C /tmp
+          mv /tmp/alauda-trivy ${TRIVY_BINARY_PATH}/trivy
+          
+          curl --retry 6 --create-dirs -fLo /tmp/trivy-adapter.tar.gz ${TRIVY_ADAPTER_DOWNLOAD_URL}
+          tar -xzf /tmp/trivy-adapter.tar.gz -C /tmp
+          mv /tmp/alauda-scanner-trivy ${TRIVY_BINARY_PATH}/scanner-trivy
           
           # compile registry
           REGISTRY_SRC=https://github.com/distribution/distribution.git
