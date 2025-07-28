@@ -110,13 +110,13 @@ spec:
           # download trivy and scanner-trivy
           
           # renovate: datasource=github-releases depName=trivy packageName=AlaudaDevops/trivy
-          TRIVY_VERSION=0.62.2-alauda-6
+          TRIVY_VERSION=v0.62.2-alauda-6
           
           # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
-          TRIVY_ADAPTER_VERSION=0.33.2-alauda-4
+          TRIVY_ADAPTER_VERSION=v0.33.2-alauda-4
           
-          TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/v${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
-          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/v${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION}_Linux_${ARCH}.tar.gz
+          TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
+          TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
           
           cd ${BUILDPATH}/make/photon/trivy-adapter
           mkdir -p binary
