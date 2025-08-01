@@ -162,7 +162,13 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 		Name:  "登录",
 		Exact: playwright.Bool(true),
 	}).Click(); err != nil {
-		return fmt.Errorf("点击登录按钮失败: %v", err)
+		// 如果 "登录" 按钮不存在，尝试点击 "Login" 按钮
+		if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
+			Name:  "Login",
+			Exact: playwright.Bool(true),
+		}).Click(); err != nil {
+			return fmt.Errorf("点击登录按钮失败: %v", err)
+		}
 	}
 
 	// 等待 Devops 文本出现
