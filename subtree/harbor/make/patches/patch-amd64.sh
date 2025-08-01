@@ -24,7 +24,7 @@ change_base_image "make/photon"
 
 # swagger
 
-# renovate: datasource=docker depName:golang
+# renovate: datasource=docker depName=golang
 export GOLANG_IMAGE_VERSION=1.24.4
 
 sed -i 's/registry.npmjs.org/build-nexus.alauda.cn\/repository\/npm\//g' "Makefile"
