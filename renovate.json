@@ -12,5 +12,19 @@
   "assignees": [
     "chengjingtao",
     "yuzichen12123"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "managerFilePatterns": [
+        "/^subtree\\/harbor\\/make\\/patches\\/patch-amd64\\.sh$/"
+      ],
+      "matchStrings": [
+        "defaultBaseImage\\s*:\\s*(?<depName>[^:\\s]+?)(?::(?<currentValue>[^\\s]+?))?\\s*$",
+        "# renovate: datasource=docker\\s+[^\\s:]+\\s*:\\s*(?<depName>[^:\\s]+?)(?::(?<currentValue>[^\\s]+?))?\\s*$"
+      ],
+      "description": "Update `defaultBaseImage` and images in `baseImageOverrides` in patches files. For `baseImageOverrides`, add `# renovate: datasource=docker` comment above each image entry."
+    }
   ]
 }
