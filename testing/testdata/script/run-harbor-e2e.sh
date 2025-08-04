@@ -25,7 +25,7 @@ is_ipv6() {
 
 # 该镜像的默认值会由 `.tekton/all-in-one.yaml` 流水线中的 `update-image-tags` 自动更新
 # 如需修改，请同步更新 Makefile 中的 `update-e2e-image-tag`
-TEST_IMAGE=${TEST_IMAGE:-"registry.alauda.cn:60070/devops/harbor-e2e-engine:2.12.4-gab64029"}
+TEST_IMAGE=${TEST_IMAGE:-"registry.alauda.cn:60070/devops/harbor-e2e-engine:2.12.4-gc643cef"}
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}
