@@ -170,7 +170,14 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 		playwright.LocatorWaitForOptions{
 			Timeout: playwright.Float(60000),
 		}); err != nil {
-		return fmt.Errorf("等待 登录用户 文本出现失败: %v", err)
+		log.Info("点击 登录 按钮失败，错误信息: %v", zap.Error(err))
+		log.Info("尝试点击 Login 按钮...")
+		if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
+			Name:  "Login",
+			Exact: playwright.Bool(true),
+		}).Click(); err != nil {
+			return fmt.Errorf("点击Login按钮失败: %v", err)
+		}
 	}
 
 	log.Info("acp 登录成功...")
