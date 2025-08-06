@@ -16,14 +16,14 @@
   "customManagers": [
     {
       "customType": "regex",
-      "datasourceTemplate": "docker",
+      "datasourceTemplate": "golang-version",
       "managerFilePatterns": [
         "/^subtree\\/harbor\\/make\\/patches\\/patch-amd64\\.sh$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: registryUrl=(?<registryUrl>[^\\s]+?))?\\s(?:export)\\s+[A-Za-z0-9_]+?_VERSION[ =][\"']?(?<currentValue>.+?)[\"']?\\s"
       ],
-      "description": "Update `defaultBaseImage` and images in `baseImageOverrides` in patches files. For `baseImageOverrides`, add `# renovate: datasource=docker` comment above each image entry."
+      "description": "Update golang image in `patch-amd64.sh`."
     }
   ]
 }
