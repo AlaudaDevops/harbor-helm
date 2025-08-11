@@ -27,7 +27,7 @@ change_base_image "make/photon"
 # renovate: datasource=golang-version depName=go
 export GOLANG_IMAGE_VERSION=1.24.5
 
-sed -i 's/registry.npmjs.org/build-nexus.alauda.cn\/repository\/npm\//g' "Makefile"
+sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
 sed -i 's/BUILDBIN=true/BUILDBIN=false/g' "Makefile"
 sed -i 's/PUSHBASEIMAGE=false/PUSHBASEIMAGE=true/g' "Makefile"
 sed -i 's/BASEIMAGENAMESPACE=goharbor/BASEIMAGENAMESPACE \?= goharbor/g' "Makefile"
