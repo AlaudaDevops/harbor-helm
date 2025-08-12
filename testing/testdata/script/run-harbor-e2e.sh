@@ -90,6 +90,8 @@ docker run ${DOCKER_OPTS} -i --privileged \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
   -e COSIGN_EXPERIMENTAL=1 \
+  -e COSIGN_TLOG_UPLOAD=false \
+  -e COSIGN_PRIVATE_INFRASTRUCTURE=true \
   -e CONTAINERD_ADDRESS=/var/run/docker/containerd/containerd.sock \
   -v /var/log/harbor/:/var/log/harbor/ \
   -v "${OUTPUT_DIR}:/results" \
