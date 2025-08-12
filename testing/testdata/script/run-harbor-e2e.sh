@@ -23,7 +23,7 @@ is_ipv6() {
     fi
 }
 
-TEST_IMAGE=registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api-docker-28
+TEST_IMAGE=${E2E_ENGINE_IMAGE:-"registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api-docker-28"}
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}

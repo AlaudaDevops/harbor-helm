@@ -3,7 +3,6 @@ package steps
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -23,7 +22,7 @@ type ssoParams struct {
 	Headless    bool          `yaml:"headless"`
 }
 
-func checkSSo(ctx context.Context, params *godog.DocString) (context.Context, error) {
+func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Context, err error) {
 	log := logger.LoggerFromContext(ctx)
 
 	ssoParams := ssoParams{}
@@ -81,22 +80,18 @@ func checkSSo(ctx context.Context, params *godog.DocString) (context.Context, er
 
 	screenshotPath := "output/images/harbor-sso-screenshot.png"
 	defer func() {
-		if _, err := page.Screenshot(playwright.PageScreenshotOptions{
+		data, screenshotErr := page.Screenshot(playwright.PageScreenshotOptions{
 			Path: playwright.String(screenshotPath),
-		}); err != nil {
-			log.Error("截图失败", zap.Error(err))
+		})
+		if screenshotErr != nil {
+			log.Error("截图失败", zap.Error(screenshotErr))
 		} else {
-			imageData, err := os.ReadFile(screenshotPath)
-			if err == nil {
-				ctx = godog.Attach(ctx, godog.Attachment{
-					Body:      imageData,
-					FileName:  "harbor-sso-screenshot.png",
-					MediaType: "image/png",
-				})
-				log.Info(fmt.Sprintf("保存截图成功: %s", screenshotPath))
-			} else {
-				log.Error("无法读取截图文件", zap.Error(err))
-			}
+			ctx2 = godog.Attach(ctx2, godog.Attachment{
+				Body:      data,
+				FileName:  "harbor-sso-screenshot.png",
+				MediaType: "image/png",
+			})
+			log.Info(fmt.Sprintf("保存截图成功: %s", screenshotPath))
 		}
 	}()
 
