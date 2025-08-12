@@ -8,6 +8,11 @@ set -ex
 # 例如:
 # 1. 基本用法: ./run-harbor-e2e.sh http 127.0.0.1  Harbor12345
 # 2. 附加 Docker 选项: ./run-harbor-e2e.sh http 127.0.0.1 Harbor12345 test --network host
+# 3. 附加环境变量:
+#   - E2E_ENGINE_IMAGE: 指定测试引擎镜像
+#   - E2E_DEPENDS_IMAGE_REGISTRY: 指定依赖镜像仓库, 默认值为 `ghcr.io`.
+#     在离线环境中执行时，需要在目标镜像仓库上准备 `goharbor/harbor-core:v2.8.2` 镜像.
+#   - E2E_INCLUDE_TAGS: 指定要包含的测试标签, e.g. "setup OR cosign"
 
 if [ "${RUN_E2E_TEST}" != "true" ]; then
     echo "Skipping Harbor e2e test"
@@ -24,6 +29,7 @@ is_ipv6() {
 }
 
 TEST_IMAGE=${E2E_ENGINE_IMAGE:-"registry.alauda.cn:60070/fundamentals/harbor-e2e-engine:5.3.0-api-docker-28"}
+DEPENDS_IMAGE_REGISTRY=${E2E_DEPENDS_IMAGE_REGISTRY:-"ghcr.io"}
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
 HARBOR_HOST=${2:-"127.0.0.1"}
@@ -77,6 +83,8 @@ if [ ${#EXCLUDE_TAGS_ARRAY[@]} -gt 0 ]; then
     EXCLUDE_TAGS=$(printf "%sOR" "${EXCLUDE_TAGS_ARRAY[@]}" | sed 's/OR$//')
 fi
 
+INCLUDE_TAGS=${E2E_INCLUDE_TAGS:-""}
+
 echo "Run Harbor e2e..."
 echo "Harbor password: ${HARBOR_PASSWORD}"
 echo "Harbor host: ${HARBOR_HOST}"
@@ -89,6 +97,7 @@ docker run ${DOCKER_OPTS} -i --privileged \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
+  -e DEPENDS_IMAGE_REGISTRY="${DEPENDS_IMAGE_REGISTRY}" \
   -e COSIGN_EXPERIMENTAL=1 \
   -e COSIGN_TLOG_UPLOAD=false \
   -e COSIGN_PRIVATE_INFRASTRUCTURE=true \
@@ -97,7 +106,7 @@ docker run ${DOCKER_OPTS} -i --privileged \
   -v "${OUTPUT_DIR}:/results" \
   -w /drone \
   "${TEST_IMAGE}" \
-  robot --exclude "${EXCLUDE_TAGS}" \
+  robot --exclude "${EXCLUDE_TAGS}" --include "${INCLUDE_TAGS}" \
   -v ip:"${HARBOR_HOST}" -v ip1: \
   -v http_get_ca:false \
   -v protocol:"${HARBOR_HOST_SCHEMA}" \
