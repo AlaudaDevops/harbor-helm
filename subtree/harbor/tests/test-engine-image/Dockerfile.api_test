@@ -56,4 +56,6 @@ RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh && \
 
 RUN tdnf makecache && tdnf install -y podman && tdnf clean all
 
+RUN cd /drone && pip uninstall setuptools -y && pip install -U pip setuptools && make swagger_client
+
 VOLUME /var/lib/docker
