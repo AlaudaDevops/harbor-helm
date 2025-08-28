@@ -6,7 +6,7 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^(/all-in-one)$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
-        source_branch.matches("^(main|master|release-.*|alauda-.*)$") ||
+        source_branch.matches("^(main|master|release-.*|alauda-.*)$") &&
         !last_commit_title.contains("Auto-commit")
       ) && ((
         event == "push" && (
