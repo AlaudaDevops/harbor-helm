@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: init-harbor-db
 spec:
+  backoffLimit: 3
   template:
     spec:
       containers:
@@ -18,6 +19,7 @@ spec:
             - sh
             - -c
             - |
+              set -e
               export pg_host=<config.{{.toolchains.postgresql_14.host | default "host"}}>
               export PGPASSWORD=${POSTGRES_POSTGRES_PASSWORD};
               export PGUSER=postgres;
@@ -26,6 +28,12 @@ spec:
                 echo "等待 Postgres 启动..."
                 sleep 2
               done
+              
               # 创建数据库
-              psql -h ${pg_host} -U ${PGUSER} -c "CREATE DATABASE harbordb;"
+              if ! psql -h ${pg_host} -U ${PGUSER} -lqt | cut -d \| -f 1 | grep -qw harbordb; then
+                echo "创建 harbordb 数据库"
+                psql -h ${pg_host} -U ${PGUSER} -c "CREATE DATABASE harbordb"
+              else
+                echo "harbordb 数据库已存在"
+              fi
       restartPolicy: OnFailure

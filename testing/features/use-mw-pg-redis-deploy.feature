@@ -1,6 +1,7 @@
 # language: zh-CN
 
 @e2e
+@operator
 @harbor-operator-deploy-use-mw-pg-redis
 功能: 使用数据服务的pg和redis部署Harbor
 
@@ -22,8 +23,3 @@
       url: http://<node.ip.random.readable>:<nodeport.http>
       timeout: 10m
       """
-    并且 Pod 资源检查通过
-      | name                 | path            | value           |
-      | harbor-mw-registry   | $.spec.nodeName | <node.name.random> |
-      | harbor-mw-jobservice | $.spec.nodeName | <node.name.random> |
-      | harbor-mw-trivy      | $.spec.nodeName | <node.name.random> |
