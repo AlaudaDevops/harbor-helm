@@ -1,0 +1,109 @@
+apiVersion: operator.alaudadevops.io/v1alpha1
+kind: Harbor
+metadata:
+  name: harbor-mw
+spec:
+  externalURL: http://<node.ip.random.readable>:<nodeport.http>
+  helmValues:
+    existingSecretAdminPassword: harbor-password
+    existingSecretAdminPasswordKey: POSTGRES_PASSWORD
+    expose:
+      nodePort:
+        name: harbor
+        ports:
+          http:
+            nodePort: <nodeport.http>
+            port: 80
+      type: nodePort
+    persistence:
+      enabled: true
+      hostPath:
+        jobservice:
+          path: /tmp/harbor/mw/jobservice
+        registry:
+          path: /tmp/harbor/mw/registry
+        trivy:
+          path: /tmp/harbor/mw/trivy
+    portal:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+    nginx:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+    core:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 400m
+          memory: 512Mi
+    registry:
+      nodeSelector:
+        kubernetes.io/hostname: <node.name.random>
+      registry:
+        resources:
+          requests:
+            cpu: 150m
+            memory: 400Mi
+          limits:
+            cpu: 300m
+            memory: 800Mi
+      controller:
+        resources:
+          requests:
+            cpu: 75m
+            memory: 100Mi
+          limits:
+            cpu: 150m
+            memory: 200Mi
+    jobservice:
+      nodeSelector:
+        kubernetes.io/hostname: <node.name.random>
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 400m
+          memory: 512Mi
+    trivy:
+      skipUpdate: true
+      offlineScan: true
+      nodeSelector:
+        kubernetes.io/hostname: <node.name.random>
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          cpu: 400m
+          memory: 1Gi
+    database:
+      external:
+        host: <config.{{.toolchains.postgresql_14.host | default "devops-pg.devops-ns.svc"}}>
+        password: <config.{{.toolchains.postgresql_14.password | default "password"}}>
+        port: <config.{{.toolchains.postgresql_14.port | default "5432"}}>
+        sslmode: require
+        username: <config.{{.toolchains.postgresql_14.username | default "postgres"}}>
+        coreDatabase: harbordb
+        existingSecret: harbor-pg
+        existingSecretKey: password
+      type: external
+    redis:
+      external:
+        addr: <config.{{.toolchains.redis_6_0.host | default "devops-redis:6379"}}>
+        sentinelMasterSet: <config.{{.toolchains.redis_6_0.masterName | default "mymaster"}}>
+        existingSecret: harbor-redis
+        existingSecretKey: password
+      type: external
