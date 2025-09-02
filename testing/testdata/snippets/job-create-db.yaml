@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-harbor-db
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+        - name: init-db
+          image: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/3rdparty/bitnami/postgresql:14.8.0-debian-11-r84
+          env:
+            - name: POSTGRES_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: harbor-pg
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              export pg_host=<config.{{.toolchains.postgresql_14.host | default "host"}}>
+              export PGPASSWORD=${POSTGRES_POSTGRES_PASSWORD};
+              export PGUSER=postgres;
+              export port=<config.{{.toolchains.postgresql_14.port | default "5432"}}>
+              
+              max_attempts=30
+              attempt=0
+              until pg_isready -U ${PGUSER} -h ${pg_host} -p ${port}; do
+                if [ $attempt -ge $max_attempts ]; then
+                  echo "达到最大尝试次数，Postgres 未启动"
+                  exit 1
+                fi
+                echo "等待 Postgres 启动..."
+                sleep 2
+                attempt=$((attempt + 1))
+              done
+              
+              # 创建数据库
+              if ! psql -h ${pg_host} -U ${PGUSER} -lqt | cut -d \| -f 1 | grep -qw harbordb; then
+                echo "创建 harbordb 数据库"
+                psql -h ${pg_host} -U ${PGUSER} -c "CREATE DATABASE harbordb"
+              else
+                echo "harbordb 数据库已存在"
+              fi
+      restartPolicy: OnFailure
