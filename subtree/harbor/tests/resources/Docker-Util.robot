@@ -115,7 +115,7 @@ Get Container IP
 # docker:1.13-dind
 # If you are running this keyword in a container, make sure it is run with --privileged turned on
 Start Docker Daemon Locally
-    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/dockerd | awk '{print $2}'
+    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/dockerd | awk '{print $2}' | head -1
     ${rc}  ${output}=  Run And Return Rc And Output  ./tests/robot-cases/Group0-Util/docker_config.sh
     Log To Console  output: ${output}
     Should Be Equal As Integers  ${rc}  0
@@ -125,7 +125,7 @@ Start Docker Daemon Locally
     ${handle}=  Start Process  /usr/local/bin/dockerd-entrypoint.sh dockerd>./daemon-local.log 2>&1  shell=True
     Process Should Be Running  ${handle}
     FOR  ${IDX}  IN RANGE  20
-        ${pid}=  Run  ps aux | grep -v grep | grep -v sh | grep dockerd | awk '{print $2}'
+        ${pid}=  Run  ps aux | grep -v grep | grep -v sh | grep dockerd | awk '{print $2}' | head -1
         Log To Console  pid: ${pid}
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
@@ -134,12 +134,12 @@ Start Docker Daemon Locally
     [Return]  ${handle}
 
 Start Containerd Daemon Locally
-    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}'
+    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}' | head -1
     Log To Console  pid: ${pid}
     Return From Keyword If  '${pid}' != '${EMPTY}'
     ${handle}=  Start Process  /usr/local/bin/containerd > ./daemon-local.log 2>&1 &  shell=True
     FOR  ${IDX}  IN RANGE  20
-        ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}'
+        ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}' | head -1
         Log To Console  pid: ${pid}
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s

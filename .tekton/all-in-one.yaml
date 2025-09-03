@@ -6,7 +6,6 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^(/all-in-one)$"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
-        source_branch.matches("^(main|master|release-.*|alauda-.*)$") &&
         !last_commit_title.contains("Auto-commit")
       ) && ((
         event == "push" && (
@@ -209,10 +208,78 @@ spec:
           - name: basic-auth
             workspace: basic-auth
 
+      # avoid bug of git-version task, the git-version task will fetch refs and save them in .git/refs/heads/ as root user
+      # it will causes the git-commit step failed to fetch new branch in nonroot user
+      # we can remove it after the git-version task is fixed
+      - name: calculate-commit-sha
+        runAfter:
+          - git-clone-amd64
+        timeout: 10m
+        retries: 3
+        params:
+          - name: image
+            value: registry.alauda.cn:60080/devops/nonroot/chainguard/git:latest
+          - name: args
+            value: $(params.file-list-for-commit-sha[*])
+          - name: imagePullPolicy
+            value: Always
+          - name: script
+            value: |
+              #!/bin/bash
+              set -ex
+              # sleep for less than 1 second to prevent from failure of git command due to concurrent run
+              sleep 0.$[ $((RANDOM % 100)) + 1 ]
+
+              # Add the source directory to the safe.directory list
+              git config --global --add safe.directory $(workspaces.source.path)
+
+              # Initialize environment variables
+              export GIT_URL=$(params.git-url)
+              export GIT_REVISION=$(params.git-revision)
+              export RESET_GIT_COMMIT=$(params.git-commit)
+              export RESULT_STRING_PATH=$(results.string-result.path)
+              export RESULT_ARRAY_PATH=$(results.array-result.path)
+              export RESULT_OBJECT_PATH=$(results.object-result.path)
+              export DEFAULT_GIT_COMMIT=$(git rev-parse HEAD)
+              export DEFAULT_GIT_COMMITTER_DATE=$(git log -1 --pretty=%ct)
+              export WORKSPACE_SOURCE_PATH=$(workspaces.source.path)
+              export WORKSPACE_SECRET_BOUND=$(workspaces.secret.bound)
+              export WORKSPACE_SECRET_PATH=$(workspaces.secret.path)
+
+              # calculate the last commit info
+              calculate-last-commit-info.sh $@
+
+              # Define the commit info file path and create the directory if it doesn't exist
+              COMMIT_INFO_FILE=".git/$(context.pipelineRun.name)/.last-changed-commit-sha"
+              mkdir -p "$(dirname ${COMMIT_INFO_FILE})"
+              # Store the last changed commit sha in a file
+              cp -f $(results.string-result.path) "${COMMIT_INFO_FILE}"
+
+              # Store the original git revision in a file
+              echo -n "${GIT_REVISION}" > .git/$(context.pipelineRun.name)/.git-revision
+
+        taskRef:
+          resolver: hub
+          params:
+            - name: catalog
+              value: catalog
+            - name: kind
+              value: task
+            - name: name
+              value: run-script
+            - name: version
+              value: "0.1"
+        workspaces:
+          - name: source
+            workspace: source-amd64
+          - name: secret
+            workspace: basic-auth
+
       - name: git-version
         retries: 1
         runAfter:
           - git-clone-amd64
+          - calculate-commit-sha
         params:
           - name: gitversion-image
             value: registry.alauda.cn:60080/devops/gittools/gitversion:6.0.5
