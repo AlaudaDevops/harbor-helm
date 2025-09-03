@@ -1,6 +1,7 @@
 # language: zh-CN
 @harbor-chart-deploy
 @e2e
+@acp
 功能: 支持 SSO 模式部署 harbor
 
     @e2e
