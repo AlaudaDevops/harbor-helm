@@ -1,5 +1,6 @@
 # language: zh-CN
 
+@acp
 @e2e
 @operator
 @harbor-operator-deploy-use-mw-pg-redis
