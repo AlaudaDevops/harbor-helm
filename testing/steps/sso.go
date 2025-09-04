@@ -23,7 +23,7 @@ type ssoParams struct {
 	Headless    bool          `yaml:"headless"`
 }
 
-func checkSSo(ctx context.Context, params *godog.DocString) (context.Context, error) {
+func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Context, err error) {
 	log := logger.LoggerFromContext(ctx)
 
 	ssoParams := ssoParams{}
@@ -88,7 +88,7 @@ func checkSSo(ctx context.Context, params *godog.DocString) (context.Context, er
 		} else {
 			imageData, err := os.ReadFile(screenshotPath)
 			if err == nil {
-				ctx = godog.Attach(ctx, godog.Attachment{
+				ctx2 = godog.Attach(ctx2, godog.Attachment{
 					Body:      imageData,
 					FileName:  "harbor-sso-screenshot.png",
 					MediaType: "image/png",
