@@ -56,10 +56,12 @@ sed -i 's/$(IMAGENAMESPACE)\//$(IMAGENAMESPACE)\/goharbor-/g' "make/photon/Makef
 echo "AMD64 after change the make/photon/Makefile is "
 cat make/photon/Makefile
 
+# Dockerfile will not be updated by renovate, so we use golang:1.24.6 directly
 sed -i "s/golang:1.24.6/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/trivy-adapter/Dockerfile.binary"
 echo "AMD64 after change the make/photon/trivy-adapter/Dockerfile.binary "
 cat make/photon/trivy-adapter/Dockerfile.binary
 
+# Dockerfile will not be updated by renovate, so we use golang:1.24.6 directly
 sed -i "s/golang:1.24.6/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/registry/Dockerfile.binary"
 echo "AMD64 after change the make/photon/registry/Dockerfile.binary "
 cat make/photon/registry/Dockerfile.binary

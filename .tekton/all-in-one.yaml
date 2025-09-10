@@ -134,6 +134,14 @@ spec:
       - name: git-commit
         description: Commit sha used in this build
         default: ""
+      - name: pull-request-number
+        description: Pull Request number to checkout. When provided, it takes precedence over revision parameter.
+        type: string
+        default: ""
+      - name: pr-revision-format
+        description: Format template for PR revision. Use {PR_NUMBER} as placeholder. Examples - GitHub 'pull/{PR_NUMBER}/head', GitLab 'merge-requests/{PR_NUMBER}/head', Gitee 'pulls/{PR_NUMBER}'
+        type: string
+        default: "pull/{PR_NUMBER}/head"
       - name: target-branch
         description: The target branch of the pull request
         type: string
@@ -1293,10 +1301,18 @@ spec:
               chmod +x "${TMP_SCRIPT}"
 
               COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
+              
+              # Handle PR revision logic
+              FINAL_REVISION=$(params.git-revision)
+              if [ -n "$(params.pull-request-number)" ] && [ -n "$(params.pr-revision-format)" ]; then
+                FINAL_REVISION=$(echo "$(params.pr-revision-format)" | sed "s/{PR_NUMBER}/$(params.pull-request-number)/g")
+                [ -z "${FINAL_REVISION}" ] && FINAL_REVISION="$(params.git-revision)"
+                echo "Using PR revision: ${FINAL_REVISION}"
+              fi
 
               # Commit the changes
               git-push-commit.sh \
-                --revision $(params.git-revision) \
+                --revision ${FINAL_REVISION} \
                 --source-path $(workspaces.source.path) \
                 --output-path $(results.commit.path) \
                 --message "${COMMIT_MESSAGE}" \
