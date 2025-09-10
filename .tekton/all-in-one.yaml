@@ -21,7 +21,7 @@ metadata:
     pipelinesascode.tekton.dev/max-keep-runs: "30"
     pip.tekton.dev/runspec.build-core-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -31,7 +31,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-jobservice-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -41,7 +41,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-registryctl-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -51,7 +51,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-portal-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -61,7 +61,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-nginx-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -71,7 +71,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-registry-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -81,7 +81,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-trivy-adapter-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
@@ -91,7 +91,7 @@ metadata:
               memory: 1Gi
     pip.tekton.dev/runspec.build-exporter-image: |
       taskRunSpecs:
-        - pipelineTaskName: image-scan
+        - pipelineTaskName: trivy-scan
           computeResources:
             limits:
               cpu: '2'
