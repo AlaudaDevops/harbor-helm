@@ -9,7 +9,7 @@ change_base_image () {
             change_base_image $1"/"$file
         elif [[ $file == *Dockerfile* ]]
         then
-            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202507071048/' $1"/"$file
+            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202509101100/' $1"/"$file
             sed -i 's/node:16.18.0/docker-mirrors.alauda.cn\/library\/node:16.18.0/' $1"/"$file
 
             echo $1"/"$file
@@ -25,7 +25,7 @@ change_base_image "make/photon"
 # swagger
 
 # renovate: datasource=golang-version depName=go
-export GOLANG_IMAGE_VERSION=1.24.6
+export GOLANG_IMAGE_VERSION=1.25.1
 
 sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
 sed -i 's/BUILDBIN=true/BUILDBIN=false/g' "Makefile"
@@ -56,11 +56,13 @@ sed -i 's/$(IMAGENAMESPACE)\//$(IMAGENAMESPACE)\/goharbor-/g' "make/photon/Makef
 echo "AMD64 after change the make/photon/Makefile is "
 cat make/photon/Makefile
 
-sed -i "s/golang:1.24.4/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/trivy-adapter/Dockerfile.binary"
+# Dockerfile will not be updated by renovate, so we use golang:1.24.6 directly
+sed -i "s/golang:1.24.6/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/trivy-adapter/Dockerfile.binary"
 echo "AMD64 after change the make/photon/trivy-adapter/Dockerfile.binary "
 cat make/photon/trivy-adapter/Dockerfile.binary
 
-sed -i "s/golang:1.24.4/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/registry/Dockerfile.binary"
+# Dockerfile will not be updated by renovate, so we use golang:1.24.6 directly
+sed -i "s/golang:1.24.6/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/registry/Dockerfile.binary"
 echo "AMD64 after change the make/photon/registry/Dockerfile.binary "
 cat make/photon/registry/Dockerfile.binary
 

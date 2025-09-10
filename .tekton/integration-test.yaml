@@ -29,6 +29,9 @@ spec:
         url: "{{ repo_url }}"
         branch: "{{ source_branch }}"
         commit: "{{ revision }}"
+        pull-request-number: "{{ pull_request_number }}"
+        pull-request-source: "{{ source_branch }}"
+        pull-request-target: "{{ target_branch }}"
     - name: reuse-artifact
       value: "true"
     - name: file-list-for-commit-sha

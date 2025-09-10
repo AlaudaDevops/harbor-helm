@@ -13,6 +13,11 @@
     "chengjingtao",
     "yuzichen12123"
   ],
+  "ignorePaths": [
+    "**/Dockerfile",
+    "**/Dockerfile.base",
+    "**/Dockerfile.binary"
+  ],
   "customManagers": [
     {
       "customType": "regex",
