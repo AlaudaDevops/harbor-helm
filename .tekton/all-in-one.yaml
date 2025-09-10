@@ -31,6 +31,8 @@ spec:
       value: "{{ source_branch }}"
     - name: git-commit
       value: "{{ revision }}"
+    - name: pull-request-number
+      value: "{{ pull_request_number }}"
     - name: target-branch
       value: "{{ target_branch }}"
     - name: build-path
@@ -174,6 +176,8 @@ spec:
             value: $(params.git-url)
           - name: revision
             value: $(params.git-revision)
+          - name: pr-number
+            value: $(params.pull-request-number)
 
         workspaces:
           - name: output
@@ -201,6 +205,8 @@ spec:
             value: $(params.git-url)
           - name: revision
             value: $(params.git-revision)
+          - name: pr-number
+            value: $(params.pull-request-number)
 
         workspaces:
           - name: output
