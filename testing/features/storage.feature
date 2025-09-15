@@ -64,6 +64,7 @@
       | harbor-hostpath-registry   | $.spec.nodeName | <node.name.random> |
       | harbor-hostpath-jobservice | $.spec.nodeName | <node.name.random> |
       | harbor-hostpath-trivy      | $.spec.nodeName | <node.name.random> |
+    并且 已导入 "强制失败" 资源: "./failed-failed.yaml"
     并且 执行 "harbor 官方 e2e" 脚本成功
        | command                                                                                                   |
        | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-hostpath |
