@@ -30,8 +30,7 @@ func TestMain(m *testing.M) {
 	bdd.New().
 		WithSuiteName("Harbor").
 		WithDumpOptions(diagnostic.DumpOptions{
-			CrossNamespaceLabelSelector: bdd.TestingScopeLabelKey + "=cross-namespace," + bdd.SuiteNameLabelKey + "!=",
-			ExtraNamespaces:             []string{"harbor-ce-operator"},
+			ExtraNamespaces: []string{"harbor-ce-operator"},
 			ExtraResources: []diagnostic.ResourceDumper{
 				{
 					Kind: "HarborList",
