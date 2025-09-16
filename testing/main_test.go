@@ -1,16 +1,15 @@
 package harbor
 
 import (
+	"github.com/AlaudaDevops/bdd/steps"
+	harbor "harbor/steps"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"os"
 	"testing"
 
-	harbor "harbor/steps"
-
 	"github.com/AlaudaDevops/bdd"
 	"github.com/AlaudaDevops/bdd/pkg/diagnostic"
-	"github.com/AlaudaDevops/bdd/steps"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 
@@ -31,16 +30,14 @@ func TestMain(m *testing.M) {
 		WithSuiteName("Harbor").
 		WithDumpOptions(diagnostic.DumpOptions{
 			ExtraNamespaces: []string{"harbor-ce-operator"},
-			ExtraResources: []diagnostic.ResourceDumper{
-				{
-					Kind: "HarborList",
-					GVK: schema.GroupVersionKind{
-						Group:   "operator.alaudadevops.io",
-						Version: "v1alpha1",
-						Kind:    "Harbor",
-					},
+			Resources: append(diagnostic.KubernetesResources, diagnostic.ResourceDumper{
+				Kind: "HarborList",
+				GVK: schema.GroupVersionKind{
+					Group:   "operator.alaudadevops.io",
+					Version: "v1alpha1",
+					Kind:    "Harbor",
 				},
-			},
+			}),
 		}).
 		WithOption(bdd.WithFeaturePaths("./features")).
 		WithExtensions(bdd.SharedClient(scheme)). // inject k8s client
