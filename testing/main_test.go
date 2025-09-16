@@ -1,15 +1,15 @@
 package harbor
 
 import (
-	"github.com/AlaudaDevops/bdd/steps"
-	harbor "harbor/steps"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"os"
 	"testing"
 
 	"github.com/AlaudaDevops/bdd"
 	"github.com/AlaudaDevops/bdd/pkg/diagnostic"
+	"github.com/AlaudaDevops/bdd/steps"
+	harbor "harbor/steps"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 

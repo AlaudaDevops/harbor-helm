@@ -36,7 +36,6 @@
             | Deployment  | apps/v1    | harbor-ha-registry   | $.spec.replicas | 2     |
             | Deployment  | apps/v1    | harbor-ha-jobservice | $.spec.replicas | 2     |
             | StatefulSet | apps/v1    | harbor-ha-trivy      | $.spec.replicas | 2     |
-        并且 已导入 "强制失败" 资源: "./failed-failed.yaml"
         并且 执行 "harbor 官方 e2e" 脚本成功
             | command                                                                                                                                      |
             | bash ./testdata/script/run-harbor-e2e.sh http test-ingress-ha.example.com Harbor12345 harbor-ha --add-host=test-ingress-ha.example.com:<ingress-ip>  |
