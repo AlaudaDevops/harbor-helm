@@ -4,7 +4,8 @@
     "github>AlaudaDevops/renovate-config:base"
   ],
   "baseBranches": [
-    "/^alauda-(?!release-).*/"
+    "/^alauda-.*/",
+    "!/^alauda-release-.*/"
   ],
   "postUpdateOptions": [
     "gomodTidy"
