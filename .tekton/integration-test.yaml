@@ -47,6 +47,10 @@ spec:
       value:
         command: |
           set -x
+          
+          # temp debug
+          sleep infinity
+          
           cd $(workspaces.source.path)/testing
           
           export PATH=$(pwd)/bin:$PATH
