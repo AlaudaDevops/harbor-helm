@@ -1,6 +1,6 @@
 module github.com/goharbor/harbor/src
 
-go 1.25.1
+go 1.25.3
 
 require (
 	filippo.io/csrf v0.2.1
