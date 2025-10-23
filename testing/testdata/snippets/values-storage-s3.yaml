@@ -1,0 +1,13 @@
+persistence:
+  enabled: true
+  imageChartStorage:
+    disableredirect: true
+    type: s3
+    s3:
+      existingSecret: harbor-minio
+      region: us-east-1
+      bucket: harbor-bucket
+      regionendpoint: http://minio-svc:9000
+jobservice:
+  jobLoggers:
+    - database
