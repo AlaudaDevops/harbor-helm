@@ -9,3 +9,6 @@ SECURITY.md
 test/*
 testing/*
 subtree/*
+
+# The integration test will generate this directory during execution.
+harbor-e2e-reports/*
