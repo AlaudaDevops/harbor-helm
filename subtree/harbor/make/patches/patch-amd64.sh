@@ -9,7 +9,7 @@ change_base_image () {
             change_base_image $1"/"$file
         elif [[ $file == *Dockerfile* ]]
         then
-            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202510091100/' $1"/"$file
+            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202510241100/' $1"/"$file
             sed -i 's/node:16.18.0/docker-mirrors.alauda.cn\/library\/node:16.18.0/' $1"/"$file
 
             echo $1"/"$file
