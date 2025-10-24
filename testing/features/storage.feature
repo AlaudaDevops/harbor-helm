@@ -134,4 +134,4 @@
       | harbor-s3-trivy      | $.spec.volumes[?(@.name == 'data')][0].emptyDir               |                |
     并且 执行 "harbor 官方 e2e" 脚本成功
        | command                                                                                             |
-       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-sc |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-s3 |

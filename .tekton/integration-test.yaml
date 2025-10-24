@@ -47,7 +47,6 @@ spec:
       value:
         command: |
           set -x
-          
           cd $(workspaces.source.path)/testing
           
           export PATH=$(pwd)/bin:$PATH
