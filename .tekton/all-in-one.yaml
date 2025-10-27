@@ -1304,7 +1304,7 @@ spec:
               
               # Commit the changes
               git-push-commit.sh \
-                --revision ${FINAL_REVISION} \
+                --revision $(params.git-revision) \
                 --source-path $(workspaces.source.path) \
                 --output-path $(results.commit.path) \
                 --message "${COMMIT_MESSAGE}" \
