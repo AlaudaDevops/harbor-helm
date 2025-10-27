@@ -9,17 +9,25 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: minio-mc
-          image: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>/3rdparty/bitnami/minio:latest
+          image: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>/3rdparty/bitnami/minio:DEVELOPMENT.2025-07-23T15-54-02Z
           command:
             - /bin/sh
             - -c
             - |
               export MC_CONFIG_DIR=/tmp/.mc
+              MAX_WAIT_SECONDS=${MINIO_WAIT_TIMEOUT:-300}
+              WAIT_INTERVAL_SECONDS=${MINIO_WAIT_INTERVAL:-5}
+              elapsed=0
               
               echo "Setting up MinIO client configuration..."
               until mc alias set local http://minio-svc:9000 admin 07Apples@; do
                 echo "Waiting for MinIO to be ready..."
-                sleep 5
+                if [ "$elapsed" -ge "$MAX_WAIT_SECONDS" ]; then
+                  echo "Timed out waiting for MinIO to be ready after ${elapsed}s"
+                  exit 1
+                fi
+                sleep "$WAIT_INTERVAL_SECONDS"
+                elapsed=$((elapsed + WAIT_INTERVAL_SECONDS))
               done
               
               # Verify MinIO connection
@@ -33,10 +41,11 @@ spec:
               create_bucket() {
                 local bucket_name="$1"
                 echo "Creating bucket: $bucket_name"
-                if mc mb local/$bucket_name; then
-                  echo "Successfully created bucket: $bucket_name"
+                if mc mb --ignore-existing local/$bucket_name; then
+                  echo "Successfully ensured bucket: $bucket_name"
                 else
-                  echo "Bucket $bucket_name already exists or failed to create"
+                  echo "Failed to create bucket: $bucket_name"
+                  exit 1
                 fi
               }
               

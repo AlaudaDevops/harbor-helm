@@ -50,7 +50,7 @@ spec:
               value: admin
             - name: MINIO_ROOT_PASSWORD
               value: 07Apples@
-          image: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>/3rdparty/bitnami/minio:latest
+          image: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>/3rdparty/bitnami/minio:DEVELOPMENT.2025-07-23T15-54-02Z
           imagePullPolicy: IfNotPresent
           name: minio
           resources:
