@@ -1297,6 +1297,7 @@ spec:
                 values.yaml
               git restore .
               git stash pop
+              sleep infinity
               EOF
               chmod +x "${TMP_SCRIPT}"
 
