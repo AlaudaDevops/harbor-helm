@@ -1284,6 +1284,15 @@ spec:
             value: |
               set -ex
 
+              BASIC_AUTH_PATH="$(workspaces.basic-auth.path)"
+              TOKEN_FILE="${BASIC_AUTH_PATH}/git-provider-token"
+
+              if [ -f "${TOKEN_FILE}" ]; then
+                echo "=> git-provider-token detected at ${TOKEN_FILE}, performing gh auth login"
+                gh auth login --with-token < "${TOKEN_FILE}"
+                echo "=> gh auth login completed"
+              fi
+
               # Create temporary script file
               TMP_SCRIPT=$(mktemp)
 
@@ -1297,7 +1306,6 @@ spec:
                 values.yaml
               git restore .
               git stash pop
-              sleep infinity
               EOF
               chmod +x "${TMP_SCRIPT}"
 
