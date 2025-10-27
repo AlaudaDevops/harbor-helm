@@ -1305,6 +1305,7 @@ spec:
               # Commit the changes
               git-push-commit.sh \
                 --revision $(params.git-revision) \
+                $( [ -n "$(params.pull-request-number)" ] && printf -- "--pr-number %s" "$(params.pull-request-number)" ) \
                 --source-path $(workspaces.source.path) \
                 --output-path $(results.commit.path) \
                 --message "${COMMIT_MESSAGE}" \
