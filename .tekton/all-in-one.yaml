@@ -1279,10 +1279,10 @@ spec:
           - name: USER_HOME
             value: "/home/git"
           - name: VERBOSE
-            value: "false"
+            value: "true"
           - name: GIT_SCRIPT
             value: |
-              set -e
+              set -ex
 
               # Create temporary script file
               TMP_SCRIPT=$(mktemp)
@@ -1302,14 +1302,6 @@ spec:
 
               COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
               
-              # Handle PR revision logic
-              FINAL_REVISION=$(params.git-revision)
-              if [ -n "$(params.pull-request-number)" ] && [ -n "$(params.pr-revision-format)" ]; then
-                FINAL_REVISION=$(echo "$(params.pr-revision-format)" | sed "s/{PR_NUMBER}/$(params.pull-request-number)/g")
-                [ -z "${FINAL_REVISION}" ] && FINAL_REVISION="$(params.git-revision)"
-                echo "Using PR revision: ${FINAL_REVISION}"
-              fi
-
               # Commit the changes
               git-push-commit.sh \
                 --revision ${FINAL_REVISION} \
