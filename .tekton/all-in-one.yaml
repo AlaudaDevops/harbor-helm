@@ -1430,6 +1430,8 @@ spec:
           - name: pac-params
             value:
               - "source_code_changed=$(tasks.detect-component-changes.results.object-result.changed_harbor_source_code)"
+          - name: pr-number
+            value: $(params.pull-request-number)
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
