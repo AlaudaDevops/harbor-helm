@@ -75,6 +75,8 @@ spec:
             echo "Run e2e test"
             export RUN_E2E_TEST=true
           fi
+          
+          # This dir is excluded by .helmignore
           export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
           mkdir -p $RESULT_DIR
           

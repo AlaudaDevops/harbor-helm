@@ -1279,10 +1279,19 @@ spec:
           - name: USER_HOME
             value: "/home/git"
           - name: VERBOSE
-            value: "false"
+            value: "true"
           - name: GIT_SCRIPT
             value: |
-              set -e
+              set -ex
+
+              BASIC_AUTH_PATH="$(workspaces.basic-auth.path)"
+              TOKEN_FILE="${BASIC_AUTH_PATH}/git-provider-token"
+
+              if [ -f "${TOKEN_FILE}" ]; then
+                echo "=> git-provider-token detected at ${TOKEN_FILE}, performing gh auth login"
+                gh auth login --with-token < "${TOKEN_FILE}"
+                echo "=> gh auth login completed"
+              fi
 
               # Create temporary script file
               TMP_SCRIPT=$(mktemp)
@@ -1302,17 +1311,10 @@ spec:
 
               COMMIT_MESSAGE="Auto-commit by alaudabot in edge [ci skip] - $(context.taskRun.namespace)/$(context.taskRun.name)"
               
-              # Handle PR revision logic
-              FINAL_REVISION=$(params.git-revision)
-              if [ -n "$(params.pull-request-number)" ] && [ -n "$(params.pr-revision-format)" ]; then
-                FINAL_REVISION=$(echo "$(params.pr-revision-format)" | sed "s/{PR_NUMBER}/$(params.pull-request-number)/g")
-                [ -z "${FINAL_REVISION}" ] && FINAL_REVISION="$(params.git-revision)"
-                echo "Using PR revision: ${FINAL_REVISION}"
-              fi
-
               # Commit the changes
               git-push-commit.sh \
-                --revision ${FINAL_REVISION} \
+                --revision $(params.git-revision) \
+                $( [ -n "$(params.pull-request-number)" ] && printf -- "--pr-number %s" "$(params.pull-request-number)" ) \
                 --source-path $(workspaces.source.path) \
                 --output-path $(results.commit.path) \
                 --message "${COMMIT_MESSAGE}" \
@@ -1428,6 +1430,8 @@ spec:
           - name: pac-params
             value:
               - "source_code_changed=$(tasks.detect-component-changes.results.object-result.changed_harbor_source_code)"
+          - name: pr-number
+            value: $(params.pull-request-number)
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。

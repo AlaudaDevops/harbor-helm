@@ -199,18 +199,20 @@ spec:
       {{- if .Values.caBundleSecretName }}
 {{ include "harbor.caBundleVolume" . | indent 6 }}
       {{- end }}
-      {{- if .Values.persistence.enabled }}
       - name: "data"
+      {{- if .Values.persistence.enabled }}
       {{- if .Values.persistence.hostPath.trivy.path }}
         hostPath:
           path: {{ .Values.persistence.hostPath.trivy.path }}
           type: DirectoryOrCreate
-      {{- else }}
+      {{- else if $trivy.storageClass }}
         persistentVolumeClaim:
           claimName: {{ $trivy.existingClaim }}
+      {{- else }}
+        emptyDir: {}
       {{- end }}
       {{- else }}
-        emptyDir: { }
+        emptyDir: {}
       {{- end }}
       {{- end }}
     {{- with .Values.trivy.nodeSelector }}

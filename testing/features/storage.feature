@@ -99,3 +99,39 @@
     并且 执行 "harbor 官方 e2e" 脚本成功
       | command                                                                                              |
       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-pvc |
+
+  @smoke
+  @automated
+  @priority-high
+  @harbor-chart-deploy-storage-s3
+  @allure.label.case_id:harbor-chart-deploy-storage-s3
+  场景: 使用对象存储方式部署 harbor
+    假定 命名空间 "testing-harbor-s3-<template.{{randAlphaNum 4 | toLower}}>" 已存在
+    并且 已导入 "Minio 对象存储" 资源: "./testdata/resources/minio-server.yaml"
+    并且 已导入 "Minio Bucket 初始化" 资源: "./testdata/resources/minio-bucket-init.yaml"
+    并且 已导入 "Minio 凭据" 资源: "./testdata/resources/secret-minio-password.yaml"
+    并且 已导入 "password" 资源: "./testdata/resources/secret-password.yaml"
+    当 使用 helm 部署实例到 "testing-harbor-s3-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
+      """
+      chartPath: ../
+      releaseName: harbor-s3
+      values:
+      - testdata/snippets/base-values.yaml
+      - testdata/snippets/values-network-nodeport.yaml
+      - testdata/snippets/values-storage-s3.yaml
+      """
+    那么 "harbor-s3" 组件检查通过
+    并且 "harbor" 可以正常访问
+      """
+      url: http://<node.ip.random.readable>:<nodeport.http>
+      timeout: 10m
+      """
+    并且 Pod 资源检查通过
+      | name                 | path                                                          | value          |
+      | harbor-s3-registry   | $.spec.volumes[?(@.name == 'registry-data')][0].emptyDir      |                |
+      | harbor-s3-registry   | $.spec.volumes[?(@.name == 's3-secret')][0].secret.secretName | harbor-minio   |
+      | harbor-s3-jobservice | $.spec.volumes[?(@.name == 'job-logs')][0].emptyDir           |                |
+      | harbor-s3-trivy      | $.spec.volumes[?(@.name == 'data')][0].emptyDir               |                |
+    并且 执行 "harbor 官方 e2e" 脚本成功
+       | command                                                                                             |
+       | bash ./testdata/script/run-harbor-e2e.sh http <node.ip.random.readable>:<nodeport.http> Harbor12345 harbor-s3 |
