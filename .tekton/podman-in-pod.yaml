@@ -87,5 +87,4 @@ spec:
       echo "[]" > $(results.array-result.path)
       echo "{}" > $(results.object-result.path)
 
-      git config --global --add safe.directory $(workspaces.source.path)
       $(params.command)

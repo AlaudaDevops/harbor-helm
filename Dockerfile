@@ -6,7 +6,6 @@ RUN mkdir -p /tools/bin
 ARG YQ_VERSION=4.25.2
 ARG KUBECTL_VERSION=1.28.2
 ARG HELM_VERSION=3.12.3
-ARG PODMAN_VERSION=5.6.2
 
 RUN set -eux; \
     if [ "$(arch)" = "arm64" ] || [ "$(arch)" = "aarch64" ]; then \
@@ -17,10 +16,6 @@ RUN set -eux; \
     export ARCH_ALIAS="x86_64"; \
     fi; \
     mkdir -p tmp; \
-    curl --retry 6 -fsSLO https://github.com/containers/podman/releases/download/v${PODMAN_VERSION}/podman-remote-static-linux_${ARCH}.tar.gz && \
-    tar xzvf podman-remote-static-linux_${ARCH}.tar.gz --strip 1 -C ./bin bin/podman-remote-static-linux_${ARCH} && \
-    mv ./bin/podman-remote-static-linux_${ARCH} ./bin/podman && \
-    curl --retry 6 -sfL https://github.com/containers/podman/releases/download/v${PODMAN_VERSION}/podman-remote-static-linux_${ARCH}.tar.gz | tar xzf - -C tmp 2>&1 && mv tmp/bin/podman-remote-static-linux_${ARCH} ./bin/podman && \
     curl --retry 6 -sfL https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${ARCH} -o ./bin/yq && \
     curl --retry 6 -sfL https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o ./bin/kubectl && \
     curl --retry 6 -sfL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar xzf - -C tmp 2>&1 && mv tmp/linux-${ARCH}/helm ./bin && \
@@ -28,8 +23,7 @@ RUN set -eux; \
     rm -rf tmp && \
     ./bin/yq --version && \
     ./bin/kubectl version --client && \
-    ./bin/helm version && \
-    ./bin/podman --version
+    ./bin/helm version
 
 
 COPY testing /app
@@ -48,7 +42,7 @@ COPY --from=builder /tools/bin /tools/bin
 COPY --from=builder /go/bin/playwright /tools/bin/playwright
 
 # install playwright dependencies
-RUN apt-get update && apt-get install -y ca-certificates tzdata bash locales make git\
+RUN apt-get update && apt-get install -y podman ca-certificates tzdata bash locales make git\
     && /tools/bin/playwright install chromium --with-deps \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen en_US.UTF-8 \
