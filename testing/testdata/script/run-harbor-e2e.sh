@@ -95,6 +95,8 @@ echo "Podman options: ${PODMAN_OPTS}"
 echo "Exclude tags: ${EXCLUDE_TAGS}"
 echo "Output ${OUTPUT_DIR}"
 
+mkdir -p /var/log/harbor
+
 podman run ${PODMAN_OPTS} -i --privileged \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
@@ -103,7 +105,6 @@ podman run ${PODMAN_OPTS} -i --privileged \
   -e COSIGN_EXPERIMENTAL=1 \
   -e COSIGN_TLOG_UPLOAD=false \
   -e COSIGN_PRIVATE_INFRASTRUCTURE=true \
-  -e CONTAINERD_ADDRESS=/var/run/docker/containerd/containerd.sock \
   -v /var/log/harbor/:/var/log/harbor/ \
   -v "${OUTPUT_DIR}:/results" \
   -w /drone \
