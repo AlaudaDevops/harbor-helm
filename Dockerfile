@@ -29,7 +29,7 @@ RUN set -eux; \
     ./bin/yq --version && \
     ./bin/kubectl version --client && \
     ./bin/helm version && \
-    ./bin/podman version
+    ./bin/podman --version
 
 
 COPY testing /app
