@@ -5,7 +5,7 @@ metadata:
 spec:
   description: |
     This pipeline can be used for vcluster-based integration testing, supporting installation of prerequisites, automatic collection and uploading of test reports.
-    Use the `docker-in-docker` Task to run test.
+    Use the `podman-in-pod` Task to run test.
   results:
     - name: report-url
       description: report http url for visiting
@@ -625,16 +625,7 @@ spec:
     retries: 0
     onError: continue
     taskRef:
-      resolver: hub
-      params:
-        - name: catalog
-          value: alauda
-        - name: type
-          value: tekton
-        - name: name
-          value: docker-in-docker
-        - name: version
-          value: "0.2"
+      name: podman-in-pod
     workspaces:
     - name: source
       workspace: source
@@ -647,15 +638,6 @@ spec:
     - build-test-image
     when: []
     params:
-    - name: dind-args
-      value:
-        - --default-shm-size=1g
-        - --storage-driver=overlay2
-        - --userland-proxy=false
-        - --debug
-        - --ipv6
-        - --fixed-cidr-v6=2001:db8:1::/64
-        - --registry-mirror=https://docker-mirrors.alauda.cn
     - name: command
       value: |
         # switch current shell to bash

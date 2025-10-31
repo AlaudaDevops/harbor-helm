@@ -2,12 +2,12 @@
 set -ex
 
 # Harbor E2E 测试脚本
-# 用法: ./run-harbor-e2e.sh [HARBOR_HOST_SCHEMA] [HARBOR_HOST] [HARBOR_PASSWORD] [DOCKER_OPTS]
+# 用法: ./run-harbor-e2e.sh [HARBOR_HOST_SCHEMA] [HARBOR_HOST] [HARBOR_PASSWORD] [PODMAN_OPTS]
 
 #
 # 例如:
 # 1. 基本用法: ./run-harbor-e2e.sh http 127.0.0.1  Harbor12345
-# 2. 附加 Docker 选项: ./run-harbor-e2e.sh http 127.0.0.1 Harbor12345 test --network host
+# 2. 附加 Podman 选项: ./run-harbor-e2e.sh http 127.0.0.1 Harbor12345 test --network host
 # 3. 附加环境变量:
 #   - E2E_ENGINE_IMAGE: 指定测试引擎镜像
 #   - E2E_DEPENDS_IMAGE_REGISTRY: 指定依赖镜像仓库, 默认值为 `ghcr.io`.
@@ -38,10 +38,10 @@ HARBOR_HOST=${2:-"127.0.0.1"}
 HARBOR_PASSWORD=${3:-"Harbor12345"}
 INSTANCE_NAME=${4:-"harbor"}
 
-DOCKER_OPTS=""
+PODMAN_OPTS=""
 if [ $# -ge 4 ]; then
     shift 4
-    DOCKER_OPTS="$@"
+    PODMAN_OPTS="$@"
 fi
 
 if [ -z "$RESULT_DIR" ]; then
@@ -91,11 +91,11 @@ echo "Run Harbor e2e..."
 echo "Harbor password: ${HARBOR_PASSWORD}"
 echo "Harbor host: ${HARBOR_HOST}"
 echo "Harbor scheme: ${HARBOR_HOST_SCHEMA}"
-echo "Docker options: ${DOCKER_OPTS}"
+echo "Podman options: ${PODMAN_OPTS}"
 echo "Exclude tags: ${EXCLUDE_TAGS}"
 echo "Output ${OUTPUT_DIR}"
 
-docker run ${DOCKER_OPTS} -i --privileged \
+podman run ${PODMAN_OPTS} -i --privileged \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
@@ -113,8 +113,6 @@ docker run ${DOCKER_OPTS} -i --privileged \
   -v http_get_ca:false \
   -v protocol:"${HARBOR_HOST_SCHEMA}" \
   -v HARBOR_PASSWORD:"${HARBOR_PASSWORD}" \
-  -v DOCKER_USER:"${DOCKER_USER}" \
-  -v DOCKER_PWD:"${DOCKER_PWD}" \
   -d /results \
   /drone/tests/robot-cases/Group1-Nightly/Setup.robot \
   /drone/tests/robot-cases/Group0-BAT/API_DB_SUCCESS.robot
