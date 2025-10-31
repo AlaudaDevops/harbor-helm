@@ -114,6 +114,8 @@ podman run ${PODMAN_OPTS} -i --privileged \
   -v http_get_ca:false \
   -v protocol:"${HARBOR_HOST_SCHEMA}" \
   -v HARBOR_PASSWORD:"${HARBOR_PASSWORD}" \
+  -v DOCKER_USER:"${DOCKER_USER}" \
+  -v DOCKER_PWD:"${DOCKER_PWD}" \
   -d /results \
   /drone/tests/robot-cases/Group1-Nightly/Setup.robot \
   /drone/tests/robot-cases/Group0-BAT/API_DB_SUCCESS.robot
