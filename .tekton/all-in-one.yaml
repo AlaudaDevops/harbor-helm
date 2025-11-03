@@ -184,7 +184,8 @@ spec:
           export IMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export PUSHBASEIMAGE=false
-          export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --output=oci-mediatypes=false --provenance=false --metadata-file .build-metadata.txt"
+          export DOCKERBUILD="podman build --platform=linux/$ARCH --output=oci-mediatypes=false"
+          dnf install -y make
 
       - name: post-build-command
         description: The command to be used to post-build the image.
@@ -538,6 +539,7 @@ spec:
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
+              dnf install -y make
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -563,6 +565,7 @@ spec:
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
+              dnf install -y make
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -589,6 +592,7 @@ spec:
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
+              dnf install -y make
               BUILDPATH=$(realpath .)
               ARCH=x86_64
               
@@ -619,6 +623,7 @@ spec:
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
+              dnf install -y make
               BUILDPATH=$(realpath .)
               ARCH=arm64
               

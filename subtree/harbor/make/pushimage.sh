@@ -77,10 +77,10 @@ if [ -z $4 ]; then
 fi
 
 
-# Check Docker is installed
-if ! type_exists 'docker'; then
-  error "Docker is not installed."
-  info "Please install docker package."
+# Check Podman is installed
+if ! type_exists 'podman'; then
+  error "Podman is not installed."
+  info "Please install podman package."
   exit 1
 fi
 
@@ -89,39 +89,39 @@ IMAGE="$1"
 USERNAME="$2"
 PASSWORD="$3"
 REGISTRY="$4"
-PULL_BASE_FROM_DOCKERHUB="$5"
+PULL_BASE_FROM_PodmanHUB="$5"
 
 set -e
 set -x
 
 # ----- Pushing image(s) -----
 # see documentation :
-#  - https://docs.docker.com/reference/commandline/cli/#login
-#  - https://docs.docker.com/reference/commandline/cli/#push
-#  - https://docs.docker.com/reference/commandline/cli/#logout
+#  - https://docs.podman.io/en/latest/markdown/podman-login.1.html
+#  - https://docs.podman.io/en/latest/markdown/podman-push.1.html
+#  - https://docs.podman.io/en/latest/markdown/podman-logout.1.html
 # ---------------------------
 
-# Push the docker image
-h2 "Pushing image to Docker registry"
+# Push the OCI image
+h2 "Pushing image to OCI registry"
 
-DOCKER_PUSH="docker push $IMAGE"
-info "$DOCKER_PUSH"
-DOCKER_PUSH_OUTPUT=$($DOCKER_PUSH)
+PODMAN_PUSH="podman push $IMAGE"
+info "$PODMAN_PUSH"
+PODMAN_PUSH_OUTPUT=$($PODMAN_PUSH)
 
 if [ $? -ne 0 ];then
-  warn $DOCKER_PUSH_OUTPUT
+  warn $PODMAN_PUSH_OUTPUT
   error "Pushing image $IMAGE failed";
 else
   success "Pushing image $IMAGE succeeded";
 fi
 
-if [ "$PULL_BASE_FROM_DOCKERHUB" == "true" ];then
+if [ "$PULL_BASE_FROM_PodmanHUB" == "true" ];then
   h2 "Remove local goharbor images"
-  DOCKER_RMI="docker rmi -f $(docker images | grep "${IMAGE%:*}" | awk '{print $3}') -f"
-  info "$DOCKER_RMI"
-  DOCKER_RMI_OUTPUT=$($DOCKER_RMI)
+  PODMAN_RMI="podman rmi -f $(podman images | grep "${IMAGE%:*}" | awk '{print $3}') -f"
+  info "$PODMAN_RMI"
+  Podman_RMI_OUTPUT=$($PODMAN_RMI)
   if [ $? -ne 0 ];then
-    warn $DOCKER_RMI_OUTPUT
+    warn $Podman_RMI_OUTPUT
     error "Clean local goharbor images failed";
   else
     success "Clean local goharbor images succeeded";
