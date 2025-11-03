@@ -185,6 +185,7 @@ spec:
           export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export PUSHBASEIMAGE=false
           export DOCKERBUILD="podman build --platform=linux/$ARCH --output=oci-mediatypes=false"
+          git config --global --add safe.directory $(workspaces.source.path)
 
       - name: post-build-command
         description: The command to be used to post-build the image.
@@ -539,6 +540,7 @@ spec:
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
+              git config --global --add safe.directory $(workspaces.source.path)
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -566,6 +568,7 @@ spec:
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
+              git config --global --add safe.directory $(workspaces.source.path)
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
