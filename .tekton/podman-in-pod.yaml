@@ -1,0 +1,91 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  labels:
+    app.kubernetes.io/version: "0.1"
+  name: podman-in-pod
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.56.0"
+    tekton.dev/categories: "CICD"
+    tekton.dev/tags: "Podman"
+    tekton.dev/displayName: "Podman In Pod"
+    tekton.dev/platforms: "linux/amd64,linux/arm64"
+
+spec:
+  description: 使用 podman in pod, 执行 podman 命令
+  workspaces:
+  - description: code source
+    name: source
+  - description: build cache will be placed onto the volume
+    name: cache
+    optional: true
+  - description: gomod cache will be placed onto the volume
+    name: modcache
+    optional: true
+  - description: |
+      Workspace for Docker configuration files, such as `config.json` or `.dockerconfigjson`.
+      This is optional and is used for authentication when pushing images to the registry.
+    name: dockerconfig
+    optional: true
+  - description: An optional workspace for config.
+    name: config
+    optional: true
+  - description: An optional workspace for secret.
+    name: secret
+    optional: true
+  results:
+  - name: string-result
+    description: 'Customizable string result. Defaults to "" when the script does not write results.'
+  - name: array-result
+    type: array
+    description: 'Customizable array result. Defaults to [] when the script does not write results.'
+  - name: object-result
+    type: object
+    description: >-
+      Customizable object result. Defaults to {} when the script does not write results.
+      It includes a default field message, which is provided only for Tekton compatibility purposes and is not mandatory.
+    properties:
+      message: {}
+  params:
+  - name: command
+    description: the command script to be run
+    type: string
+  - name: tools-image
+    description: "image used to run docker commands"
+    default: "registry.alauda.cn:60070/devops/podman:v4.9.3"
+  steps:
+  - name: command
+    image: $(params.tools-image)
+    imagePullPolicy: Always
+    workingDir: $(workspaces.source.path)
+    securityContext:
+      privileged: true
+      runAsUser: 0
+    computeResources:
+      requests:
+        cpu: 1000m
+        memory: 2000Mi
+      limits:
+        cpu: 3000m
+        memory: 4000Mi
+    script: |
+      #!/bin/bash
+      set -ex
+
+      # bind docker config
+      if [ "$(workspaces.dockerconfig.bound)" == "true" ]; then
+        export DOCKER_CONFIG="$(mktemp -d)"
+        # Supports two types of credentials: config.json and .dockerconfigjson
+        echo "==> setting up docker config environment variable: ${DOCKER_CONFIG}/config.json"
+        if [ -f "$(workspaces.dockerconfig.path)/config.json" ]; then
+          cp "$(workspaces.dockerconfig.path)/config.json" ${DOCKER_CONFIG}/config.json
+        elif [ -f "$(workspaces.dockerconfig.path)/.dockerconfigjson" ]; then
+          cp "$(workspaces.dockerconfig.path)/.dockerconfigjson" ${DOCKER_CONFIG}/config.json
+        fi
+      fi
+
+      echo "" > $(results.string-result.path)
+      echo "[]" > $(results.array-result.path)
+      echo "{}" > $(results.object-result.path)
+
+      $(params.command)

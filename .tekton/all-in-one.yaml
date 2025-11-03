@@ -4,6 +4,7 @@ metadata:
   name: harbor-all-in-one
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^(/all-in-one)$"
+    pipelinesascode.tekton.dev/task: .tekton/podman-in-pod.yaml
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
         !last_commit_title.contains("Auto-commit")
@@ -525,16 +526,7 @@ spec:
         timeout: 1h
         retries: 0
         taskRef:
-          resolver: hub
-          params:
-            - name: catalog
-              value: alauda
-            - name: type
-              value: tekton
-            - name: name
-              value: podman-in-pod
-            - name: version
-              value: "0.1"
+          name: podman-in-pod
         params:
           - name: tools-image
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
@@ -553,16 +545,7 @@ spec:
         timeout: 1h
         retries: 0
         taskRef:
-          resolver: hub
-          params:
-            - name: catalog
-              value: alauda
-            - name: type
-              value: tekton
-            - name: name
-              value: podman-in-pod
-            - name: version
-              value: "0.1"
+          name: podman-in-pod
         params:
           - name: tools-image
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
@@ -581,16 +564,7 @@ spec:
         timeout: 60m
         retries: 0
         taskRef:
-          resolver: hub
-          params:
-            - name: catalog
-              value: alauda
-            - name: type
-              value: tekton
-            - name: name
-              value: podman-in-pod
-            - name: version
-              value: "0.1"
+          name: podman-in-pod
         params:
           - name: tools-image
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
@@ -613,16 +587,7 @@ spec:
         timeout: 60m
         retries: 0
         taskRef:
-          resolver: hub
-          params:
-            - name: catalog
-              value: alauda
-            - name: type
-              value: tekton
-            - name: name
-              value: podman-in-pod
-            - name: version
-              value: "0.1"
+          name: podman-in-pod
         params:
           - name: tools-image
             value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
@@ -1458,12 +1423,12 @@ spec:
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
-     podTemplate:
-       securityContext:
-         runAsUser: 65532
-    #     runAsGroup: 65532
-    #     fsGroup: 65532
-    #     fsGroupChangePolicy: "OnRootMismatch"
+    podTemplate:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
   taskRunSpecs:
     - pipelineTaskName: compile-amd64
       computeResources:
