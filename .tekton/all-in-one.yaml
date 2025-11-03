@@ -185,7 +185,6 @@ spec:
           export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export PUSHBASEIMAGE=false
           export DOCKERBUILD="podman build --platform=linux/$ARCH --output=oci-mediatypes=false"
-          dnf install -y make
 
       - name: post-build-command
         description: The command to be used to post-build the image.
@@ -536,10 +535,11 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
-              dnf install -y make
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -562,10 +562,11 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
-              dnf install -y make
               BUILDPATH=$(realpath .) make compile
         workspaces:
           - name: source
@@ -588,11 +589,12 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
-              dnf install -y make
               BUILDPATH=$(realpath .)
               ARCH=x86_64
               
@@ -619,11 +621,12 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: command
             value: |
               set -ex
               cd $(workspaces.source.path)/$(params.build-path)
-              dnf install -y make
               BUILDPATH=$(realpath .)
               ARCH=arm64
               
@@ -657,6 +660,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -707,6 +712,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -757,6 +764,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -807,6 +816,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: skip-trivy-scan
@@ -857,6 +868,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: skip-trivy-scan
@@ -907,6 +920,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -957,6 +972,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -1007,6 +1024,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -1057,6 +1076,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -1107,6 +1128,8 @@ spec:
             - name: version
               value: "0.1"
         params:
+          - name: build-tools-image
+            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
