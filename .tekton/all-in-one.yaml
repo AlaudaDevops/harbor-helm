@@ -531,12 +531,10 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: docker-in-docker
+              value: podman-in-pod
             - name: version
-              value: "0.2"
+              value: "0.1"
         params:
-          - name: tools-image
-            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
@@ -558,12 +556,10 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: docker-in-docker
+              value: podman-in-pod
             - name: version
-              value: "0.2"
+              value: "0.1"
         params:
-          - name: tools-image
-            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               cd $(workspaces.source.path)/$(params.build-path)
@@ -585,12 +581,10 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: docker-in-docker
+              value: podman-in-pod
             - name: version
-              value: "0.2"
+              value: "0.1"
         params:
-          - name: tools-image
-            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               set -ex
@@ -617,12 +611,10 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: docker-in-docker
+              value: podman-in-pod
             - name: version
-              value: "0.2"
+              value: "0.1"
         params:
-          - name: tools-image
-            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               set -ex
@@ -646,7 +638,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -656,7 +648,7 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -696,7 +688,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -706,7 +698,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -746,7 +738,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -756,7 +748,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -796,7 +788,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -806,7 +798,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -846,7 +838,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -856,7 +848,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -896,7 +888,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -906,7 +898,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -946,7 +938,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -956,7 +948,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -996,7 +988,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -1006,7 +998,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -1046,7 +1038,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -1056,7 +1048,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:
@@ -1096,7 +1088,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: dind-build-merge-scan
+          name: pinp-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -1106,7 +1098,7 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: dind-build-merge-scan
+              value: pinp-build-merge-scan
             - name: version
               value: "0.1"
         params:

@@ -625,7 +625,16 @@ spec:
     retries: 0
     onError: continue
     taskRef:
-      name: podman-in-pod
+      resolver: hub
+      params:
+        - name: catalog
+          value: alauda
+        - name: type
+          value: tekton
+        - name: name
+          value: podman-in-pod
+        - name: version
+          value: "0.1"
     workspaces:
     - name: source
       workspace: source

@@ -125,7 +125,7 @@ TRIVY_ADAPTER_VERSION: $(TRIVYADAPTERVERSION)
 endef
 
 # docker parameters
-DOCKERCMD=$(shell which docker)
+DOCKERCMD=$(shell which podman)
 DOCKERBUILD=$(DOCKERCMD) build
 DOCKERRMIMAGE=$(DOCKERCMD) rmi
 DOCKERPULL=$(DOCKERCMD) pull

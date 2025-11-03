@@ -17,7 +17,7 @@ CURL=$(shell which curl)
 TIMESTAMP=$(shell date +"%Y%m%d")
 
 # docker parameters
-DOCKERCMD=$(shell which docker)
+DOCKERCMD=$(shell which podman)
 DOCKERBUILD=$(DOCKERCMD) build --no-cache
 DOCKERBUILD_WITH_PULL_PARA=$(DOCKERBUILD) --pull=$(PULL_BASE_FROM_DOCKERHUB)
 DOCKERRMIMAGE=$(DOCKERCMD) rmi
