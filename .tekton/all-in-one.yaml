@@ -1458,9 +1458,9 @@ spec:
 
   taskRunTemplate:
     # 让所有任务都以非 root 用户运行。
-    # podTemplate:
-    #   securityContext:
-    #     runAsUser: 65532
+     podTemplate:
+       securityContext:
+         runAsUser: 65532
     #     runAsGroup: 65532
     #     fsGroup: 65532
     #     fsGroupChangePolicy: "OnRootMismatch"
