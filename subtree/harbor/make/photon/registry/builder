@@ -35,14 +35,14 @@ cd $cur
 
 echo 'build the registry binary ...'
 cp Dockerfile.binary $TEMP
-podman build -f $TEMP/Dockerfile.binary -t registry-golang $TEMP
+docker build -f $TEMP/Dockerfile.binary -t registry-golang $TEMP
 
 echo 'copy the registry binary to local...'
-ID=$(podman create registry-golang)
-podman cp $ID:/go/src/github.com/docker/distribution/bin/registry binary/registry
+ID=$(docker create registry-golang)
+docker cp $ID:/go/src/github.com/docker/distribution/bin/registry binary/registry
 
-podman rm -f $ID
-podman rmi -f registry-golang
+docker rm -f $ID
+docker rmi -f registry-golang
 
 echo "Build registry binary success, then to build photon image..."
 cd $cur

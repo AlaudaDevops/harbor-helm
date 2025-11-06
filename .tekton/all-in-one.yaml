@@ -4,7 +4,6 @@ metadata:
   name: harbor-all-in-one
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^(/all-in-one)$"
-    pipelinesascode.tekton.dev/task: .tekton/podman-in-pod.yaml
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
         !last_commit_title.contains("Auto-commit")
@@ -185,8 +184,7 @@ spec:
           export IMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export BASEIMAGENAMESPACE="build-harbor.alauda.cn/devops"
           export PUSHBASEIMAGE=false
-          export DOCKERBUILD="podman build --platform=linux/$ARCH --output=oci-mediatypes=false"
-          git config --global --add safe.directory $(workspaces.source.path)
+          export DOCKERBUILD="docker buildx build --platform=linux/$ARCH --builder builder --push --metadata-file --output=oci-mediatypes=false --provenance=false --metadata-file .build-metadata.txt"
 
       - name: post-build-command
         description: The command to be used to post-build the image.
@@ -526,13 +524,21 @@ spec:
         timeout: 1h
         retries: 0
         taskRef:
-          name: podman-in-pod
+          resolver: hub
+          params:
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: docker-in-docker
+            - name: version
+              value: "0.2"
         params:
           - name: tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
+            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
-              git config --global --add safe.directory $(workspaces.source.path)
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -545,13 +551,21 @@ spec:
         timeout: 1h
         retries: 0
         taskRef:
-          name: podman-in-pod
+          resolver: hub
+          params:
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: docker-in-docker
+            - name: version
+              value: "0.2"
         params:
           - name: tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
+            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
-              git config --global --add safe.directory $(workspaces.source.path)
               cd $(workspaces.source.path)/$(params.build-path)
               BUILDPATH=$(realpath .) make compile
         workspaces:
@@ -564,10 +578,19 @@ spec:
         timeout: 60m
         retries: 0
         taskRef:
-          name: podman-in-pod
+          resolver: hub
+          params:
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: docker-in-docker
+            - name: version
+              value: "0.2"
         params:
           - name: tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
+            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               set -ex
@@ -587,10 +610,19 @@ spec:
         timeout: 60m
         retries: 0
         taskRef:
-          name: podman-in-pod
+          resolver: hub
+          params:
+            - name: catalog
+              value: alauda
+            - name: type
+              value: tekton
+            - name: name
+              value: docker-in-docker
+            - name: version
+              value: "0.2"
         params:
           - name: tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
+            value: registry.alauda.cn:60080/devops/alauda-docker-buildx:latest
           - name: command
             value: |
               set -ex
@@ -614,7 +646,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -624,12 +656,10 @@ spec:
             - name: type
               value: tekton
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -666,7 +696,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -676,12 +706,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -718,7 +746,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -728,12 +756,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -770,7 +796,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -780,12 +806,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: skip-trivy-scan
@@ -822,7 +846,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -832,12 +856,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: skip-trivy-scan
@@ -874,7 +896,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -884,12 +906,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -926,7 +946,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -936,12 +956,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -978,7 +996,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -988,12 +1006,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -1030,7 +1046,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -1040,12 +1056,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
@@ -1082,7 +1096,7 @@ spec:
         taskRef:
           apiVersion: tekton.dev/v1
           kind: Pipeline
-          name: pinp-build-merge-scan
+          name: dind-build-merge-scan
           resolver: hub
           params:
             - name: catalog
@@ -1092,12 +1106,10 @@ spec:
             - name: kind
               value: pipeline
             - name: name
-              value: pinp-build-merge-scan
+              value: dind-build-merge-scan
             - name: version
               value: "0.1"
         params:
-          - name: build-tools-image
-            value: registry.alauda.cn:60070/test/podman:v4.9.3-dev
           - name: reuse-artifact
             value: $(params.reuse-artifact)
           - name: trivy-args
