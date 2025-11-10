@@ -1,8 +1,8 @@
 module harbor
 
-go 1.23.7
+go 1.23.12
 
-toolchain go1.24.2
+toolchain go1.24.10
 
 require (
 	github.com/AlaudaDevops/bdd v0.0.0-20250520092225-08e5f21c96bc
