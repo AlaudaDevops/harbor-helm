@@ -25,7 +25,7 @@ change_base_image "make/photon"
 # swagger
 
 # renovate: datasource=golang-version depName=go
-export GOLANG_IMAGE_VERSION=1.25.3
+export GOLANG_IMAGE_VERSION=1.25.4
 
 sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
 sed -i 's/BUILDBIN=true/BUILDBIN=false/g' "Makefile"

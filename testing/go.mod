@@ -1,6 +1,6 @@
 module harbor
 
-go 1.25.1
+go 1.25.4
 
 require (
 	github.com/AlaudaDevops/bdd v1.4.0
