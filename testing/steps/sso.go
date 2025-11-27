@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -35,6 +36,8 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 		ssoParams.Timeout = 10 * time.Minute
 	}
 
+	outDir := "allure-results"
+
 	// 安装 playwright
 	if err := playwright.Install(&playwright.RunOptions{
 		Browsers: []string{"chromium"},
@@ -65,6 +68,9 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 	// 创建新的上下文
 	browserCtx, err := browser.NewContext(playwright.BrowserNewContextOptions{
 		IgnoreHttpsErrors: playwright.Bool(true),
+		Locale:            playwright.String("zh-CN"),
+
+		RecordVideo: &playwright.RecordVideo{Dir: outDir},
 	})
 	if err != nil {
 		log.Error("创建浏览器上下文失败", zap.Error(err))
@@ -72,33 +78,23 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 	}
 	defer browserCtx.Close()
 
+	// 开启trace
+	traceFile := filepath.Join(outDir, "trace-20251119-attachment.zip")
+	if err := browserCtx.Tracing().Start(playwright.TracingStartOptions{
+		Screenshots: playwright.Bool(true),
+		Snapshots:   playwright.Bool(true),
+		Sources:     playwright.Bool(true),
+	}); err != nil {
+		log.Error("开启 trace 失败", zap.Error(err))
+		return ctx, err
+	}
+
 	// 创建新的页面
 	page, err := browserCtx.NewPage()
 	if err != nil {
 		log.Error("创建新页面失败: %v", zap.Error(err))
 		return ctx, err
 	}
-
-	screenshotPath := "output/images/harbor-sso-screenshot.png"
-	defer func() {
-		if _, err := page.Screenshot(playwright.PageScreenshotOptions{
-			Path: playwright.String(screenshotPath),
-		}); err != nil {
-			log.Error("截图失败", zap.Error(err))
-		} else {
-			imageData, err := os.ReadFile(screenshotPath)
-			if err == nil {
-				ctx2 = godog.Attach(ctx2, godog.Attachment{
-					Body:      imageData,
-					FileName:  "harbor-sso-screenshot.png",
-					MediaType: "image/png",
-				})
-				log.Info(fmt.Sprintf("保存截图成功: %s", screenshotPath))
-			} else {
-				log.Error("无法读取截图文件", zap.Error(err))
-			}
-		}
-	}()
 
 	// 执行登录流程
 	if err := loginACP(ctx, page, ssoParams); err != nil {
@@ -110,6 +106,37 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 		log.Error("Harbor 登录失败: %v", zap.Error(err))
 		return ctx, err
 	}
+
+	// 6. 在 case 还没结束时立即截图并 attach
+	screenshotPath := filepath.Join(outDir, "harbor-20251119-attachment.png")
+	imgData, _ := page.Screenshot(playwright.PageScreenshotOptions{Path: playwright.String(screenshotPath)})
+	if len(imgData) > 0 {
+		ctx = godog.Attach(ctx, godog.Attachment{
+			FileName:  "harbor-20251119-attachment.png",
+			MediaType: "image/png",
+			Body:      imgData,
+		})
+		log.Info("截图已附加", zap.String("path", screenshotPath))
+	}
+
+	// 7. 立即停 trace 并 attach
+	if stopErr := browserCtx.Tracing().Stop(traceFile); stopErr != nil {
+		log.Error("停止 tracing 失败", zap.Error(stopErr))
+	} else {
+		log.Info("trace 已写入", zap.String("path", traceFile))
+	}
+	if zipBytes, readErr := os.ReadFile(traceFile); readErr == nil {
+		ctx = godog.Attach(ctx, godog.Attachment{
+			FileName:  "trace-20251119-attachment.zip",
+			MediaType: "application/zip",
+			Body:      zipBytes,
+		})
+		log.Info("trace 已作为附件上传")
+	} else {
+		log.Error("读取 trace 文件失败", zap.Error(readErr))
+	}
+
+	log.Info("SSO 测试成功！")
 
 	return ctx, nil
 }
@@ -131,7 +158,9 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 	}
 
 	// 检查是否在第三方登录页面
-	buttonLocator := page.Locator(".dex-page-title:has-text(\"第三方用户登录\")")
+	log.Info("等待登录表单出现...")
+	// 检查是否在第三方登录页面
+	buttonLocator := page.Locator(".connectors")
 	isVisible, err := buttonLocator.IsVisible()
 	if err != nil {
 		return fmt.Errorf("检查第三方登录页面失败: %v", err)
@@ -142,7 +171,14 @@ func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error
 		if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
 			Name: "切换本地用户登录",
 		}).Click(); err != nil {
-			return fmt.Errorf("点击切换本地用户登录按钮失败: %v", err)
+			log.Info("点击 切换本地用户登陆 按钮失败，错误信息: %v", zap.Error(err))
+			log.Info("尝试点击 Log in with a local account 按钮...")
+			if err := page.GetByRole("button", playwright.PageGetByRoleOptions{
+				Name:  "Log in with a local account",
+				Exact: playwright.Bool(true),
+			}).Click(); err != nil {
+				return fmt.Errorf("点击 Log in with a local account 按钮失败: %v", err)
+			}
 		}
 	} else {
 		log.Info("已是本地用户登录页")

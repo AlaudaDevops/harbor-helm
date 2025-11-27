@@ -97,7 +97,9 @@ echo "Output ${OUTPUT_DIR}"
 
 mkdir -p /var/log/harbor
 
-podman run ${PODMAN_OPTS} -i --privileged \
+podman network create --subnet 2001:db8:1::/64 --ipv6 harbor
+
+podman run ${PODMAN_OPTS} -i --privileged --network=harbor \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
