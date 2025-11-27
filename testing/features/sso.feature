@@ -16,7 +16,6 @@
         并且 执行 "sso 配置" 脚本成功
             | command                                                                                                                                                                 |
             | bash ./testdata/script/prepare-sso-config.sh '<config.{{.acp.baseUrl}}>' '<config.{{.acp.token}}>' '<config.{{.acp.cluster}}>' 'http://<node.ip.random.readable>:<nodeport.http>' |
-            | mkdir -p output/images                                                                                                                                                  |
         当 使用 helm 部署实例到 "testing-harbor-sso-<template.{{randAlphaNum 4 | toLower}}>" 命名空间
             """
             chartPath: ../

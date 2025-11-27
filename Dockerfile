@@ -1,4 +1,6 @@
-FROM docker-mirrors.alauda.cn/library/golang:1.25.1-bookworm AS builder
+# renovate: datasource=docker depName=golang
+ARG GOLANG_VERSION=1.25.3-bookworm
+FROM docker-mirrors.alauda.cn/library/golang:${GOLANG_VERSION} AS builder
 
 WORKDIR /tools
 RUN mkdir -p /tools/bin
