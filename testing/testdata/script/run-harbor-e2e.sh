@@ -97,9 +97,17 @@ echo "Output ${OUTPUT_DIR}"
 
 mkdir -p /var/log/harbor
 
-podman network create --subnet 2001:db8:1::/64 --ipv6 "$INSTANCE_NAME"
+PODMAN_NETWORK_NAME="harbor"
 
-podman run ${PODMAN_OPTS} -i --privileged --network="$INSTANCE_NAME" \
+# ensures the podman network exists and reuses an existing one if present.
+if podman network exists $PODMAN_NETWORK_NAME; then
+    echo "Reusing existing podman network: harbor"
+else
+    echo "Created podman network: harbor"
+    podman network create --subnet 2001:db8:1::/64 --ipv6 "$PODMAN_NETWORK_NAME"
+fi
+
+podman run ${PODMAN_OPTS} -i --privileged --network="$PODMAN_NETWORK_NAME" \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
