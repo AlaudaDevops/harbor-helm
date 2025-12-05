@@ -30,7 +30,7 @@ is_ipv6() {
 
 # 该镜像的默认值会由 `.tekton/all-in-one.yaml` 流水线中的 `update-image-tags` 自动更新
 # 如需修改，请同步更新 Makefile 中的 `update-e2e-image-tag`
-TEST_IMAGE=${E2E_ENGINE_IMAGE:-"registry.alauda.cn:60070/devops/harbor-e2e-engine:2.12.4-g05d81b3"}
+TEST_IMAGE=${E2E_ENGINE_IMAGE:-"registry.alauda.cn:60070/devops/harbor-e2e-engine:2.12.4-g96a39eb"}
 DEPENDS_IMAGE_REGISTRY=${E2E_DEPENDS_IMAGE_REGISTRY:-"ghcr.io"}
 
 HARBOR_HOST_SCHEMA=${1:-"http"}
@@ -97,9 +97,17 @@ echo "Output ${OUTPUT_DIR}"
 
 mkdir -p /var/log/harbor
 
-podman network create --subnet 2001:db8:1::/64 --ipv6 harbor
+PODMAN_NETWORK_NAME="harbor"
 
-podman run ${PODMAN_OPTS} -i --privileged --network=harbor \
+# ensures the podman network exists and reuses an existing one if present.
+if podman network exists $PODMAN_NETWORK_NAME; then
+    echo "Reusing existing podman network: harbor"
+else
+    echo "Created podman network: harbor"
+    podman network create --subnet 2001:db8:1::/64 --ipv6 "$PODMAN_NETWORK_NAME"
+fi
+
+podman run ${PODMAN_OPTS} -i --privileged --network="$PODMAN_NETWORK_NAME" \
   -e HARBOR_PASSWORD="${HARBOR_PASSWORD}" \
   -e HARBOR_HOST_SCHEMA="${HARBOR_HOST_SCHEMA}" \
   -e HARBOR_HOST="${HARBOR_HOST}" \
