@@ -5,54 +5,54 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     trivyOfflineDB:
       repository: devops/goharbor-trivy-offline-db
-      tag: alauda-v2.12.0-acad78a3
+      tag: alauda-v2.12.0-c7878f30
       support_arm: true
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.12.4-g0b16051
+      tag: 2.12.4-g6d4854a
       support_arm: true
       thirdparty: true
       digest: ""
