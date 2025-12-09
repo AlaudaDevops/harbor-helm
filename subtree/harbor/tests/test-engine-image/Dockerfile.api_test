@@ -7,7 +7,8 @@ ENV COSIGN_EXPERIMENTAL=1
 ENV COSIGN_OCI_EXPERIMENTAL=1
 ENV NOTATION_EXPERIMENTAL=1
 
-ARG ARCH=amd64
+# ARCH: target architecture; defaults to host architecture when unset.
+ARG ARCH
 
 COPY --from=tool_builder /tool/tools.tar.gz /usr/local/bin
 
@@ -33,14 +34,18 @@ RUN tdnf makecache && tdnf update -y && tdnf install -y \
     tdnf clean all
 
 RUN pwd && ls && \
-    case "${ARCH}" in \
+    # ARCH_VALUE stores the resolved architecture from the build arg or host detection.
+    ARCH_VALUE=${ARCH:-$(uname -m)} && \
+    # DOCKER_ARCH normalizes the architecture name for Docker binary downloads.
+    case "${ARCH_VALUE}" in \
       "amd64") DOCKER_ARCH="x86_64" ;; \
       "arm64") DOCKER_ARCH="aarch64" ;; \
-      *) echo "Unsupported architecture: ${ARCH}" && exit 1 ;; \
+      *) echo "Unsupported architecture: ${ARCH_VALUE}" && exit 1 ;; \
     esac && \
-    DOCKER_VERSION=28.1.1 && wget https://download.docker.com/linux/static/stable/${DOCKER_ARCH}/docker-$DOCKER_VERSION.tgz && \
-    tar --strip-components=1 -xvzf docker-$DOCKER_VERSION.tgz -C /usr/bin &&  \
-    rm docker-$DOCKER_VERSION.tgz
+    # DOCKER_VERSION pins the Docker CLI version for testing.
+    DOCKER_VERSION=28.1.1 && wget https://download.docker.com/linux/static/stable/${DOCKER_ARCH}/docker-${DOCKER_VERSION}.tgz && \
+    tar --strip-components=1 -xvzf docker-${DOCKER_VERSION}.tgz -C /usr/bin &&  \
+    rm docker-${DOCKER_VERSION}.tgz
 
 COPY containerd_config.toml /etc/containerd/config.toml
 COPY busybox.tar /
