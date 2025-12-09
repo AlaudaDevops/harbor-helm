@@ -38,8 +38,8 @@ RUN pwd && ls && \
     ARCH_VALUE=${ARCH:-$(uname -m)} && \
     # DOCKER_ARCH normalizes the architecture name for Docker binary downloads.
     case "${ARCH_VALUE}" in \
-      "amd64") DOCKER_ARCH="x86_64" ;; \
-      "arm64") DOCKER_ARCH="aarch64" ;; \
+      "amd64"|"x86_64") DOCKER_ARCH="x86_64" ;; \
+      "arm64"|"aarch64") DOCKER_ARCH="aarch64" ;; \
       *) echo "Unsupported architecture: ${ARCH_VALUE}" && exit 1 ;; \
     esac && \
     # DOCKER_VERSION pins the Docker CLI version for testing.
