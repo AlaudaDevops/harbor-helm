@@ -28,7 +28,7 @@ RUN tdnf makecache && tdnf update -y && tdnf install -y \
     tdnf install -y python3 python3-pip python3-setuptools httpd && \
     pip3 install --upgrade pip pyasn1 google-apitools==0.5.31 gsutil python-dateutil \
     robotframework==6.0.1 robotframework-sshlibrary robotframework-httplibrary \
-    requests dbbot robotframework-seleniumlibrary robotframework-pabot \
+    urllib3==1.* requests dbbot robotframework-seleniumlibrary robotframework-pabot \
     robotframework-JSONLibrary hurry.filesize --upgrade && \
     tdnf clean all
 
