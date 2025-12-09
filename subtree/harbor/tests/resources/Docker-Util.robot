@@ -130,9 +130,9 @@ Start Docker Daemon Locally
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
     END
-    # Fail fast if dockerd never becomes ready within the wait window
+    # Fail fast and abort the entire test run if dockerd never becomes ready within the wait window
     Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
-    Run Keyword If  '${pid}' == '${EMPTY}'  Fail  Docker daemon failed to start within timeout
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  Docker daemon failed to start within timeout
     Sleep  2s
     [Return]  ${handle}
 
@@ -147,9 +147,9 @@ Start Containerd Daemon Locally
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
     END
-    # Fail fast if containerd never becomes ready within the wait window
+    # Fail fast and abort the entire test run if containerd never becomes ready within the wait window
     Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
-    Run Keyword If  '${pid}' == '${EMPTY}'  Fail  containerd daemon failed to start within timeout
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  containerd daemon failed to start within timeout
     Sleep  2s
     [Return]  ${handle}
 
