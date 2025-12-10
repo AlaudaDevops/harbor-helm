@@ -130,6 +130,9 @@ Start Docker Daemon Locally
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
     END
+    # Fail fast and abort the entire test run if dockerd never becomes ready within the wait window
+    Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  Docker daemon failed to start within timeout
     Sleep  2s
     [Return]  ${handle}
 
@@ -144,8 +147,17 @@ Start Containerd Daemon Locally
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
     END
+    # Fail fast and abort the entire test run if containerd never becomes ready within the wait window
+    Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  containerd daemon failed to start within timeout
     Sleep  2s
     [Return]  ${handle}
+
+Log Daemon Local Log
+    [Documentation]  Output daemon-local.log contents to console when daemon startup fails
+    ${daemon_log}=  OperatingSystem.Get File  ./daemon-local.log
+    # ${daemon_log} contains daemon startup output for debugging failures
+    Log To Console  daemon-local.log contents:\n${daemon_log}
 
 Restart Process Locally
     [Arguments]  ${process}
