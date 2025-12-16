@@ -76,7 +76,7 @@ spec:
         image:
           repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
           # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
-          tag: 2.12.4-gd411908
+          tag: 2.12.4-g1eb348b
       resources:
         requests:
           cpu: 100m
@@ -92,7 +92,7 @@ spec:
         image:
           repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon
           # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
-          tag: 2.12.4-gd411908
+          tag: 2.12.4-g1eb348b
         extraEnvVars:
           - name: ALLOW_EMPTY_PASSWORD
             value: "yes"
@@ -103,8 +103,8 @@ spec:
         cpu: 100m
         memory: 256Mi
       persistence:
-          enabled: true
-          storageClass: <storage-class>
+        enabled: true
+        storageClass: <storage-class>
     existingSecretAdminPassword: "harbor-password"
     existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
     expose:
