@@ -1227,6 +1227,13 @@ spec:
               make update-yaml-value FILE=${base_values_file} VALUE=${image_tag} KEY=redis.internal.image.tag
               cat ${base_values_file}
               
+              # update image tag in harbor.yaml for integration test
+              harbor_file=testing/testdata/harbor.yaml
+              echo "update image tag in ${harbor_file}"
+              make update-yaml-value FILE=${harbor_file} VALUE=${image_tag} KEY=spec.helmValues.database.internal.image.tag
+              make update-yaml-value FILE=${harbor_file} VALUE=${image_tag} KEY=spec.helmValues.redis.internal.image.tag
+              cat ${harbor_file}
+              
               # update e2e image
               e2e_script=testdata/script/run-harbor-e2e.sh
               echo "update e2e image in ${e2e_script}"
@@ -1303,6 +1310,7 @@ spec:
               git stash push --keep-index -- \
                 testing/testdata/script/run-harbor-e2e.sh \
                 testing/testdata/snippets/base-values.yaml \
+                testing/testdata/harbor.yaml \
                 values.yaml
               git restore .
               git stash pop
