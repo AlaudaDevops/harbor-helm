@@ -177,8 +177,6 @@ _build_nginx:
 
 _build_registry:
 	@$(call _build_base,$(REGISTRY),$(DOCKERFILEPATH_REG))
-	@if [ "$(BUILDBIN)" != "true" ] ; then \
-		echo "skip build registry bin..."; \
 	@if [ "$(BUILDREG)" != "true" ] ; then \
 		# rm -rf $(DOCKERFILEPATH_REG)/binary && mkdir -p $(DOCKERFILEPATH_REG)/binary && \
 		# $(call _get_binary, $(REGISTRYURL), $(DOCKERFILEPATH_REG)/binary/registry); \
