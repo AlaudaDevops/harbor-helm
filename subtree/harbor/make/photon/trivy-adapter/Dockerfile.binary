@@ -1,9 +1,8 @@
-FROM golang:1.24.6
+ARG golang_image
+FROM ${golang_image}
 
 ADD .   /go/src/github.com/goharbor/harbor-scanner-trivy/
 WORKDIR /go/src/github.com/goharbor/harbor-scanner-trivy/
 
-RUN set -ex && export GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct' GOOS=linux GO111MODULE=on CGO_ENABLED=0 && \
-    go get github.com/redis/go-redis/v9@v9.6.3 && \
-    go mod tidy && \
-    go build -o scanner-trivy cmd/scanner-trivy/main.go
+RUN export GOOS=linux GO111MODULE=on CGO_ENABLED=0 && \
+	go build -o scanner-trivy cmd/scanner-trivy/main.go

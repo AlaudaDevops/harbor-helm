@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/beego/beego/v2/client/orm"
-	
+
 	"github.com/goharbor/harbor/src/common/models"
 	"github.com/goharbor/harbor/src/lib/log"
 	libOrm "github.com/goharbor/harbor/src/lib/orm"
@@ -29,7 +29,7 @@ import (
 
 var testCtx context.Context
 
-func execUpdate(o orm.TxOrmer, sql string, params ...interface{}) error {
+func execUpdate(o orm.TxOrmer, sql string, params ...any) error {
 	p, err := o.Raw(sql).Prepare()
 	if err != nil {
 		return err

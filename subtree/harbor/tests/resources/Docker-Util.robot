@@ -17,6 +17,12 @@ Documentation  This resource provides helper functions for docker operations
 Library  OperatingSystem
 Library  Process
 
+*** Variables ***
+# Define variables for start dockerd within private network
+${DOCKERD_CMD}    dockerd
+${DOCKERD_ARGS}   --iptables=false
+${LOG_FILE}       ./docker-daemon.log
+
 *** Keywords ***
 Run Docker Info
     [Arguments]  ${docker-params}
@@ -115,6 +121,8 @@ Get Container IP
 # docker:1.13-dind
 # If you are running this keyword in a container, make sure it is run with --privileged turned on
 Start Docker Daemon Locally
+    ${test_network_type}=  Get Environment Variable  NETWORK_TYPE  public
+    Log To Console   current test_network_type: ${test_network_type}
     ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/dockerd | awk '{print $2}' | head -1
     ${rc}  ${output}=  Run And Return Rc And Output  ./tests/robot-cases/Group0-Util/docker_config.sh
     Log To Console  output: ${output}
@@ -122,6 +130,14 @@ Start Docker Daemon Locally
     Log To Console  pid: ${pid}
     Return From Keyword If  '${pid}' != '${EMPTY}'
     OperatingSystem.File Should Exist  /usr/local/bin/dockerd-entrypoint.sh
+    ${handle}=    Set Variable    ""
+    IF    '${test_network_type}' == 'private'
+        Log To Console  network type is private
+        ${handle}=    Start Process    ${DOCKERD_CMD}    ${DOCKERD_ARGS}   stdout=${LOG_FILE}    stderr=${LOG_FILE}   shell=Tr
+    ELSE IF    '${test_network_type}' == 'public'
+        Log To Console  network type is public
+        ${handle}=  Start Process  /usr/local/bin/dockerd-entrypoint.sh dockerd>./daemon-docker-local.log 2>&1  shell=True
+    END
     ${handle}=  Start Process  /usr/local/bin/dockerd-entrypoint.sh dockerd>./daemon-local.log 2>&1  shell=True
     Process Should Be Running  ${handle}
     FOR  ${IDX}  IN RANGE  20
@@ -201,8 +217,6 @@ Prepare Docker Cert In Ubuntu
     Wait Unitl Command Success  mkdir -p /etc/docker/certs.d/${ip}
     Wait Unitl Command Success  cp ${cert} /etc/docker/certs.d/${ip}
     Wait Unitl Command Success  cp ${cert} /usr/local/share/ca-certificates/
-    #Add pivotal ecs cert for docker manifest push test.
-    Wait Unitl Command Success  cp /ecs_ca/vmwarecert.crt /usr/local/share/ca-certificates/
     Wait Unitl Command Success  update-ca-certificates
 
 Prepare Docker Cert In Photon
