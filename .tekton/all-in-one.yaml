@@ -119,7 +119,7 @@ spec:
     - name: build-path
       value: subtree/harbor
     - name: tag-template
-      value: 2.12.4-g$ShortSha
+      value: 2.14.1-g$ShortSha
     - name: skip-e2e
       value: "{{ skip_e2e }}"
 
