@@ -1,0 +1,148 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: harbor-integration-test
+  annotations:
+    pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/integration-test)|(/test-multi.*\ integration-test.*))"
+    pipelinesascode.tekton.dev/max-keep-runs: "30"
+    pipelinesascode.tekton.dev/pipeline: .tekton/pipeline/dind-integration-test.yaml
+spec:
+  timeouts:
+    pipeline: 3h
+    tasks: 2h
+  taskRunTemplate:
+    podTemplate:
+      securityContext:
+        fsGroup: 65532
+        fsGroupChangePolicy: "OnRootMismatch"
+  taskRunSpecs:
+    - pipelineTaskName: run-test
+      computeResources:
+        limits:
+          cpu: "4"
+          memory: 8Gi
+  pipelineRef:
+    name: dind-integration-test
+  params:
+    - name: git-revision
+      value:
+        url: "{{ repo_url }}"
+        branch: "{{ source_branch }}"
+        commit: "{{ revision }}"
+        pull-request-number: "{{ pull_request_number }}"
+        pull-request-source: "{{ source_branch }}"
+        pull-request-target: "{{ target_branch }}"
+    - name: reuse-artifact
+      value: "true"
+    - name: file-list-for-commit-sha
+      value:
+        - testing
+        - Dockerfile
+        - .tekton/integration-test
+    - name: build-test-image
+      value:
+        image-repository: build-harbor.alauda.cn/devops/harbor-ce-test
+        dockerfile-path: Dockerfile
+    - name: test
+      value:
+        command: |
+          set -x
+          cd $(workspaces.source.path)/testing
+          
+          export PATH=$(pwd)/bin:$PATH
+          export YQ_VERSION=4.25.2
+          export KUBECTL_VERSION=1.28.2
+          export HELM_VERSION=3.12.3
+          
+          yq --version
+          kubectl version --client
+          helm version
+          
+          export KUBECONFIG=$(workspaces.config.path)/vcluster-config
+          kubectl config view
+          
+          export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
+          export GOMAXPROCS=4
+          
+          # Control whether to execute the e2e script
+          # By default, e2e will be executed. It will be skipped only in two cases:
+          # 1. The skip_e2e parameter is configured and its value is true
+          # 2. Triggered by the all-in-one pipeline, and the harbor source code has not been modified (only chart changes do not require e2e)
+          if [ "{{ skip_e2e }}" = "true" ] || [ "{{ source_code_changed }}" != "true" ]; then
+            echo "Skip e2e test"
+            export RUN_E2E_TEST=false
+          else
+            echo "Run e2e test"
+            export RUN_E2E_TEST=true
+          fi
+          
+          # This dir is excluded by .helmignore
+          export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
+          mkdir -p $RESULT_DIR
+          
+          echo "run integration tests..."
+          export GODOG_ARGS="--godog.format=allure"
+          export TEST_SUITE=daily
+          make test-smoke
+    - name: vcluster
+      value:
+        custom-config: |
+          sync:
+            toHost:
+              ingresses:
+                enabled: true
+            fromHost:
+              storageClasses:
+                enabled: true
+              ingressClasses:
+                enabled: true
+    - name: report
+      value:
+        command: |
+          cd $(workspaces.source.path)/testing
+          allure generate --clean
+
+          echo "Listing contents of report directory"
+          ls -al
+        path: testing/allure-report
+        pre-upload-script: |
+          if [ -d "harbor-e2e-reports" ]; then
+            echo "harbor e2e report exists, copying to report directory"
+            cp -R harbor-e2e-reports $FOLDER_NAME
+          else
+            echo "harbor e2e report does not exist"
+          fi
+
+  workspaces:
+    - name: kube-config
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 50Mi
+    - name: cache
+      persistentVolumeClaim:
+        claimName: build-cache
+      subPath: golang
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 1Gi
+    - name: upload-conf
+      secret:
+        secretName: upload-allure-report-conf
+    - name: dockerconfig
+      secret:
+        secretName: build-harbor.kauto.docfj
+    - name: basic-auth
+      secret:
+        secretName: github-credentials
+    - name: gitversion-config
+      configMap:
+        name: gitversion-config
