@@ -66,7 +66,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.35.0
 	go.pinniped.dev v0.37.0
 	go.uber.org/ratelimit v0.3.1
-	golang.org/x/crypto v0.40.0
+	golang.org/x/crypto v0.45.0
 	golang.org/x/net v0.41.0
 	golang.org/x/oauth2 v0.28.0
 	golang.org/x/sync v0.16.0
