@@ -28,7 +28,8 @@ export GOLANG_IMAGE_VERSION=1.25.5
 
 sed -i 's/node:16.18.0/docker-mirrors.alauda.cn\/library\/node:16.18.0/' "Makefile"
 sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
-sed -i 's/BUILDBIN=true/BUILDBIN=false/g' "Makefile"
+sed -i 's/BUILDREG=true/BUILDREG=false/g' "Makefile"
+sed -i 's/BUILDTRIVYADP=true/BUILDTRIVYADP=false/g' "Makefile"
 sed -i 's/PUSHBASEIMAGE=false/PUSHBASEIMAGE=true/g' "Makefile"
 sed -i 's/BASEIMAGENAMESPACE=goharbor/BASEIMAGENAMESPACE \?= goharbor/g' "Makefile"
 sed -i 's/IMAGENAMESPACE=goharbor/IMAGENAMESPACE \?= goharbor/g' "Makefile"
