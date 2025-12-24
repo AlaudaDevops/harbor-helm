@@ -4,6 +4,7 @@ metadata:
   name: harbor-all-in-one
   annotations:
     pipelinesascode.tekton.dev/on-comment: "^(/all-in-one)$"
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
     pipelinesascode.tekton.dev/on-cel-expression: |-
       (
         !last_commit_title.contains("Auto-commit")
@@ -118,7 +119,7 @@ spec:
     - name: build-path
       value: subtree/harbor
     - name: tag-template
-      value: 2.12.4-g$ShortSha
+      value: 2.14.1-g$ShortSha
     - name: skip-e2e
       value: "{{ skip_e2e }}"
 
@@ -199,10 +200,13 @@ spec:
           # download trivy and scanner-trivy
           
           # renovate: datasource=github-releases depName=trivy packageName=AlaudaDevops/trivy
-          TRIVY_VERSION=v0.62.2-alauda-25
+          TRIVY_VERSION=v0.66.1-alauda-1
           
           # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
-          TRIVY_ADAPTER_VERSION=v0.33.2-alauda-16
+          TRIVY_ADAPTER_VERSION=v0.34.2-alauda-1
+          
+          # renovate: datasource=golang-version depName=go
+          export GOLANG_IMAGE_VERSION=1.25.5
           
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
@@ -219,9 +223,10 @@ spec:
           mv /tmp/alauda-scanner-trivy ${TRIVY_BINARY_PATH}/scanner-trivy
           
           # compile registry
-          REGISTRY_SRC=https://github.com/distribution/distribution.git
-          REGISTRY_SRC_TAG=v2.8.3
-          cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} && cd -
+          REGISTRY_SRC=https://github.com/goharbor/distribution.git
+          REGISTRY_SRC_TAG=release/2.8
+          DOCKERNETWORK=default
+          cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} docker-mirrors.alauda.cn/library/golang:${GOLANG_IMAGE_VERSION} ${DOCKERNETWORK} && cd -
       - name: trivy-args
         type: string
         default: >-
@@ -1499,7 +1504,7 @@ spec:
             - ReadWriteMany
           resources:
             requests:
-              storage: 1Gi
+              storage: 2Gi
     - name: source-arm64
       volumeClaimTemplate:
         spec:
@@ -1507,7 +1512,7 @@ spec:
             - ReadWriteMany
           resources:
             requests:
-              storage: 1Gi
+              storage: 2Gi
     - name: dockerconfig
       secret:
         secretName: build-harbor.kauto.docfj

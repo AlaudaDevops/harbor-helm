@@ -5,54 +5,54 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     trivyOfflineDB:
       repository: devops/goharbor-trivy-offline-db
-      tag: alauda-v2.12.0-c7878f30
+      tag: alauda-v2.14.0-f5b6be41
       support_arm: true
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.12.4-g1eb348b
+      tag: 2.14.1-g1d0e6c5
       support_arm: true
       thirdparty: true
       digest: ""
@@ -121,13 +121,13 @@ expose:
   route:
     labels: {}
     annotations: {}
-      # - name: envoy-internal
-      #   namespace: networking
-      #   sectionName: https
-      #   group: gateway.networking.k8s.io
-      #   kind: Gateway
+    # - name: envoy-internal
+    #   namespace: networking
+    #   sectionName: https
+    #   group: gateway.networking.k8s.io
+    #   kind: Gateway
     parentRefs: {}
-      # - "harbor.example.com"
+    # - "harbor.example.com"
     hosts: []
   clusterIP:
     # The name of ClusterIP service
@@ -421,12 +421,10 @@ ipFamily:
   # ipv4Enabled set to true if ipv4 is enabled in cluster, currently it affected the nginx related component
   ipv4:
     enabled: true
-
   # Sets the IP family policy for services to be able to configure dual-stack; see [Configure dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services).
   policy: ""
   # A list of IP families for services that should be supported, in the order in which they should be applied to ClusterIP. Can be "IPv4" and/or "IPv6".
   families: []
-
 imagePullPolicy: IfNotPresent
 # Use this set to assign a list of default pullSecrets
 imagePullSecrets:
