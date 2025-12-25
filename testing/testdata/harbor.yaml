@@ -1,6 +1,8 @@
 apiVersion: operator.alaudadevops.io/v1alpha1
 kind: Harbor
 metadata:
+  annotations:
+    operator.alaudadevops.io/pg-version-check: disable
   name: harbor-operator
 spec:
   helmValues:
