@@ -1,4 +1,4 @@
-FROM docker-mirrors.alauda.cn/library/golang:1.24.11
+FROM docker-mirrors.alauda.cn/library/golang:1.25.5
 
 ADD .   /go/src/github.com/aquasecurity/trivy/
 WORKDIR /go/src/github.com/aquasecurity/trivy/
