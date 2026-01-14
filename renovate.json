@@ -14,9 +14,8 @@
     "yuzichen12123"
   ],
   "ignorePaths": [
-    "**/Dockerfile",
-    "**/Dockerfile.base",
-    "**/Dockerfile.binary"
+    "subtree/**/*Dockerfile*",
+    "testing/**/*Dockerfile*"
   ],
   "customManagers": [
     {
