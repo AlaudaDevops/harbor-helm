@@ -5,37 +5,37 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
@@ -46,13 +46,13 @@ global:
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.12.4-g83b46a9
+      tag: 2.12.4-gb68294d
       support_arm: true
       thirdparty: true
       digest: ""
@@ -166,8 +166,8 @@ expose:
     labels: {}
     sourceRanges: []
 # The external URL for Harbor core service. It is used to
-# 1) populate the docker/helm commands showed on portal
-# 2) populate the token service URL returned to docker client
+# 1) populate the podman/helm commands showed on portal
+# 2) populate the token service URL returned to oci client
 #
 # Format: protocol://domain[:port]. Usually:
 # 1) if "expose.type" is "ingress", the "domain" should be
@@ -413,7 +413,7 @@ ipFamily:
 imagePullPolicy: IfNotPresent
 # Use this set to assign a list of default pullSecrets
 imagePullSecrets:
-#  - name: docker-registry-secret
+#  - name: image-registry-secret
 #  - name: internal-registry-secret
 
 # The update strategy for deployments with persistent volumes(jobservice, registry): "RollingUpdate" or "Recreate"
