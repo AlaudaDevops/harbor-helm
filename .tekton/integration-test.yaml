@@ -37,33 +37,33 @@ spec:
     - name: file-list-for-commit-sha
       value:
         - testing
-        - Dockerfile
+        - Containerfile
         - .tekton/integration-test
     - name: build-test-image
       value:
         image-repository: build-harbor.alauda.cn/devops/harbor-ce-test
-        dockerfile-path: Dockerfile
+        containerfile-path: Containerfile
     - name: test
       value:
         command: |
           set -x
           cd $(workspaces.source.path)/testing
-          
+
           export PATH=$(pwd)/bin:$PATH
           export YQ_VERSION=4.25.2
           export KUBECTL_VERSION=1.28.2
           export HELM_VERSION=3.12.3
-          
+
           yq --version
           kubectl version --client
           helm version
-          
+
           export KUBECONFIG=$(workspaces.config.path)/vcluster-config
           kubectl config view
-          
+
           export GOPROXY=https://build-nexus.alauda.cn/repository/golang/,direct
           export GOMAXPROCS=4
-          
+
           # Control whether to execute the e2e script
           # By default, e2e will be executed. It will be skipped only in two cases:
           # 1. The skip_e2e parameter is configured and its value is true
@@ -79,7 +79,7 @@ spec:
           # This dir is excluded by .helmignore
           export RESULT_DIR=$(workspaces.source.path)/harbor-e2e-reports
           mkdir -p $RESULT_DIR
-          
+
           echo "run integration tests..."
           export GODOG_ARGS="--godog.format=allure"
           export TEST_SUITE=daily
@@ -137,7 +137,7 @@ spec:
     - name: upload-conf
       secret:
         secretName: upload-allure-report-conf
-    - name: dockerconfig
+    - name: registryconfig
       secret:
         secretName: build-harbor.kauto.docfj
     - name: basic-auth

@@ -166,8 +166,8 @@ expose:
     labels: {}
     sourceRanges: []
 # The external URL for Harbor core service. It is used to
-# 1) populate the docker/helm commands showed on portal
-# 2) populate the token service URL returned to docker client
+# 1) populate the podman/helm commands showed on portal
+# 2) populate the token service URL returned to oci client
 #
 # Format: protocol://domain[:port]. Usually:
 # 1) if "expose.type" is "ingress", the "domain" should be
@@ -413,7 +413,7 @@ ipFamily:
 imagePullPolicy: IfNotPresent
 # Use this set to assign a list of default pullSecrets
 imagePullSecrets:
-#  - name: docker-registry-secret
+#  - name: image-registry-secret
 #  - name: internal-registry-secret
 
 # The update strategy for deployments with persistent volumes(jobservice, registry): "RollingUpdate" or "Recreate"

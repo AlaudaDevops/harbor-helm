@@ -15,7 +15,7 @@
   ],
   "ignorePaths": [
     "subtree/**/*Dockerfile*",
-    "testing/**/*Dockerfile*"
+    "testing/**/*Containerfile*"
   ],
   "customManagers": [
     {
