@@ -58,12 +58,7 @@ harbor 的组件主要分为以下几类：
 
 e2e 镜像也是在 [all-in-one 流水线](.tekton/all-in-one.yaml) 中构建的，构建成功后会自动更新 [e2e 脚本](testing/testdata/script/run-harbor-e2e.sh) 中的镜像 tag。
 
-执行 [e2e 脚本](testing/testdata/script/run-harbor-e2e.sh) 需要 docker 环境，所以无法直接使用 edge-devops-task 中的 `vcluster-integration-test`。
-
-新增了一条基于 `docker-in-docker` 的[集成测试流水线](.tekton/pipeline/dind-integration-test.yaml)，与 `vcluster-integration-test` 区别主要在于：
-
-- run-test 是基于 `docker-in-docker` Task 运行的
-- upload-allure-report 支持 pre-upload-script 参数，用于上传 harbor 脚本
+执行 [e2e 脚本](testing/testdata/script/run-harbor-e2e.sh) 需要 container 环境，使用 .tekton/pipeline/dind-integration-test.yaml) 流水线执行。
 
 e2e 日志会输出在 `harbor-e2e-reports` 目录并上传到 minio，可以通过 pipeline result 中的 url 访问。
 
