@@ -54,9 +54,9 @@ spec:
       url: { type: string }
       branch: { type: string }
       commit: { type: string }
-      pull-request-number: { } # Pull request number.
-      pull-request-source: { } # Pull request source.
-      pull-request-target: { } # Pull request target branch.
+      pull-request-number: {} # Pull request number.
+      pull-request-source: {} # Pull request source.
+      pull-request-target: {} # Pull request target branch.
     default:
       pull-request-number: ""
       pull-request-source: ""
@@ -95,16 +95,16 @@ spec:
     description: |
       Params to build test image
       * image-repository: If you want to build test image, specify the Image repository address, like build-harbor.alauda.cn/test/image-repo
-      * dockerfile-path: If you want to build test image, specify the path to the Dockerfile used to build you image i.e ./Dockerfile
-      * context: If you want to build test image, specify the path to the directory to use as context in docker build
+      * containerfile-path: If you want to build test image, specify the path to the Containerfile used to build you image i.e ./Containerfile
+      * context: If you want to build test image, specify the path to the directory to use as context in container build
     type: object
     properties:
       image-repository: { type: string }
-      dockerfile-path: { type: string }
+      containerfile-path: { type: string }
       context: { type: string }
     default:
       image-repository: ""
-      dockerfile-path: ./Dockerfile
+      containerfile-path: ./Containerfile
       context: "."
   - name: commit-test-image
     description: |
@@ -177,9 +177,9 @@ spec:
     description: |
       A Workspace containing a gitversion-config file. This file is used to set the git version.
       You should specify this workspace when you want to build test image.
-  - name: dockerconfig
+  - name: registryconfig
     description: |
-      Workspace for Docker configuration files, such as `config.json` or `.dockerconfigjson`.
+      Workspace for Container configuration files, such as `config.json` or `.dockerconfigjson`.
       This is optional and is used for authentication when pushing images to the registry when you build test image.
     optional: true
   - name: signkey
@@ -338,7 +338,7 @@ spec:
     retries: 0
     params:
       - name: image
-        value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+        value: registry.alauda.cn:60080/devops/nonroot/alauda-buildx:latest
       - name: args
         value:
           - $(tasks.git-version.results.variables.FullSemVer)
@@ -454,7 +454,7 @@ spec:
       values:
       - ""
       - " "
-    - input: $(params.build-test-image.dockerfile-path)
+    - input: $(params.build-test-image.containerfile-path)
       operator: notin
       values:
       - ""
@@ -475,22 +475,22 @@ spec:
     workspaces:
     - name: source
       workspace: source
-    - name: dockerconfig
-      workspace: dockerconfig
+    - name: registryconfig
+      workspace: registryconfig
     - name: signkey
       workspace: signkey
     params:
     - name: reuse-artifact
       value: $(params.reuse-artifact)
     - name: buildx-image
-      value: registry.alauda.cn:60080/devops/nonroot/alauda-docker-buildx:latest
+      value: registry.alauda.cn:60080/devops/nonroot/alauda-buildx:latest
     - name: image-url
       value: $(params.build-test-image.image-repository)
     - name: image-tags
       value:
       - $(tasks.adjust-semver.results.object-result.ImageVersion)
-    - name: dockerfile
-      value: $(params.build-test-image.dockerfile-path)
+    - name: containerfile
+      value: $(params.build-test-image.containerfile-path)
     - name: context
       value: $(params.build-test-image.context)
     - name: platform
@@ -703,7 +703,7 @@ spec:
         set -ex
         TEST_STATUS="passed"
         if [ "$(tasks.run-test.results.string-result)" != "passed" ]; then
-           TEST_STATUS="failed"
+          TEST_STATUS="failed"
         fi
 
         # set log dir environment variable, so user can use it in the report command

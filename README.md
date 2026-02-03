@@ -38,8 +38,8 @@ The following items can be set via `--set` flag during installation or configure
 
 The external URL for Harbor core service is used to:
 
-1. populate the docker/helm commands showed on portal
-2. populate the token service URL returned to docker client
+1. populate the podman/helm commands showed on portal
+2. populate the token service URL returned to oci client
 
 Format: `protocol://domain[:port]`. Usually:
 
