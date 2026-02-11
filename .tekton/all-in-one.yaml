@@ -206,7 +206,7 @@ spec:
           TRIVY_ADAPTER_VERSION=v0.34.2-alauda-3
           
           # renovate: datasource=golang-version depName=go
-          export GOLANG_IMAGE_VERSION=1.25.7
+          export GOLANG_IMAGE_VERSION=1.26.0
           
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
