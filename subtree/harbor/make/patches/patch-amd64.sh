@@ -9,7 +9,7 @@ change_base_image () {
             change_base_image $1"/"$file
         elif [[ $file == *Dockerfile* ]]
         then
-            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202511251100/' $1"/"$file
+            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202602061100/' $1"/"$file
 
             echo $1"/"$file
         elif [[ $file == "docker-healthcheck.sh" ]]
@@ -24,7 +24,7 @@ change_base_image "make/photon"
 # swagger
 
 # renovate: datasource=golang-version depName=go
-export GOLANG_IMAGE_VERSION=1.25.5
+export GOLANG_IMAGE_VERSION=1.25.7
 
 sed -i 's/node:16.18.0/docker-mirrors.alauda.cn\/library\/node:16.18.0/' "Makefile"
 sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
