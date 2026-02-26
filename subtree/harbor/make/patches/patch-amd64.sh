@@ -9,7 +9,7 @@ change_base_image () {
             change_base_image $1"/"$file
         elif [[ $file == *Dockerfile* ]]
         then
-            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202602061100/' $1"/"$file
+            sed -i 's/photon:5.0/build-harbor.alauda.cn\/ops\/photon:5-alauda-202602261100/' $1"/"$file
 
             echo $1"/"$file
         elif [[ $file == "docker-healthcheck.sh" ]]
