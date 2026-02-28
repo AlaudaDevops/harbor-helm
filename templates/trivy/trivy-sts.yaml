@@ -209,7 +209,7 @@ spec:
         hostPath:
           path: {{ .Values.persistence.hostPath.trivy.path }}
           type: DirectoryOrCreate
-      {{- else if $trivy.storageClass }}
+      {{- else if $trivy.existingClaim }}
         persistentVolumeClaim:
           claimName: {{ $trivy.existingClaim }}
       {{- else }}
