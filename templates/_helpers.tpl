@@ -664,6 +664,7 @@ app: "{{ template "harbor.name" . }}"
 
 {{- define "harbor.jobservice.permission" -}}
 {{- $mountPath := "/var/log/jobs" }}
+{{- if .Values.global.permission.initContainer.enabled }}
 {{ $subPath := .Values.persistence.persistentVolumeClaim.jobservice.subPath }}
 - name: change-permission
   image: {{ include "harbor.image" (dict "values" .Values "image" "initContainer") }}
@@ -681,10 +682,12 @@ app: "{{ template "harbor.name" . }}"
     mountPath: {{ $mountPath }}
     subPath: {{ $subPath }}
 {{- end -}}
+{{- end -}}
 
 {{- define "harbor.registry.permission" -}}
 {{- $mountPath := .Values.persistence.imageChartStorage.filesystem.rootdirectory }}
 {{ $subPath := .Values.persistence.persistentVolumeClaim.registry.subPath }}
+{{- if .Values.global.permission.initContainer.enabled }}
 - name: change-permission
   image: {{ include "harbor.image" (dict "values" .Values "image" "initContainer") }}
   imagePullPolicy: {{ .Values.imagePullPolicy }}
@@ -701,10 +704,12 @@ app: "{{ template "harbor.name" . }}"
     mountPath: {{ $mountPath }}
     subPath: {{ $subPath }}
 {{- end -}}
+{{- end -}}
 
 {{- define "harbor.trivy.permission" -}}
 {{- $mountPath := "/home/scanner/.cache" }}
 {{ $subPath := .Values.persistence.persistentVolumeClaim.trivy.subPath }}
+{{- if .Values.global.permission.initContainer.enabled }}
 - name: "change-permission"
   image: {{ include "harbor.image" (dict "values" .Values "image" "initContainer") }}
   imagePullPolicy: {{ .Values.imagePullPolicy }}
@@ -725,6 +730,7 @@ app: "{{ template "harbor.name" . }}"
   - name: data
     mountPath: {{ $mountPath }}
     subPath: {{ $subPath }}
+{{- end -}}
 {{- end -}}
 
 {{- define "harbor.trivy.offilineDB"}}
@@ -747,8 +753,9 @@ app: "{{ template "harbor.name" . }}"
           tar -zxf trivy-offline.db.tgz -C {{ $mountPath }}/trivy/db
       fi;
       chown -R 10000:10000 {{ $mountPath }}
-  securityContext:
-    runAsUser: 0
+  {{- if not (empty .Values.containerSecurityContext) }}
+  securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 4 }}
+  {{- end }}
   volumeMounts:
     - name: data
       mountPath: {{ $mountPath }}

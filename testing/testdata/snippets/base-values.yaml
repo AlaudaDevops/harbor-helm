@@ -1,4 +1,7 @@
 global:
+  permission:
+    initContainer:
+      enabled: false
   registry:
     address: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>
 persistence:
