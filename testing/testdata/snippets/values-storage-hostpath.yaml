@@ -1,3 +1,7 @@
+global:
+  permission:
+    initContainer:
+      enabled: true
 persistence:
   enabled: true
   hostPath:
