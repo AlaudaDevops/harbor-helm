@@ -25,11 +25,12 @@ type ssoParams struct {
 }
 
 func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Context, err error) {
+	ctx2 = ctx
 	log := logger.LoggerFromContext(ctx)
 
-	ssoParams := ssoParams{}
-	if err := yaml.Unmarshal([]byte(params.Content), &ssoParams); err != nil {
-		return ctx, err
+	var ssoParams ssoParams
+	if err = yaml.Unmarshal([]byte(params.Content), &ssoParams); err != nil {
+		return ctx2, err
 	}
 
 	if ssoParams.Timeout == 0 {
@@ -37,108 +38,122 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 	}
 
 	outDir := "allure-results"
+	_ = os.MkdirAll(outDir, 0755)
 
 	// 安装 playwright
-	if err := playwright.Install(&playwright.RunOptions{
+	if err = playwright.Install(&playwright.RunOptions{
 		Browsers: []string{"chromium"},
 	}); err != nil {
 		log.Error("安装 playwright 失败", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 
 	// 初始化 playwright
-	pw, err := playwright.Run()
+	var pw *playwright.Playwright
+	pw, err = playwright.Run()
 	if err != nil {
 		log.Error("无法启动 playwright", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 	defer pw.Stop()
 
 	// 启动浏览器
-	browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{
+	var browser playwright.Browser
+	browser, err = pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{
 		Headless: playwright.Bool(ssoParams.Headless),
 		Args:     []string{"--ignore-certificate-errors"},
 	})
 	if err != nil {
 		log.Error("无法启动浏览器", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 	defer browser.Close()
 
-	// 创建新的上下文
-	browserCtx, err := browser.NewContext(playwright.BrowserNewContextOptions{
+	// 创建浏览器上下文
+	var browserCtx playwright.BrowserContext
+	browserCtx, err = browser.NewContext(playwright.BrowserNewContextOptions{
 		IgnoreHttpsErrors: playwright.Bool(true),
 		Locale:            playwright.String("zh-CN"),
-
-		RecordVideo: &playwright.RecordVideo{Dir: outDir},
+		RecordVideo:       &playwright.RecordVideo{Dir: outDir},
 	})
 	if err != nil {
 		log.Error("创建浏览器上下文失败", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 	defer browserCtx.Close()
 
-	// 开启trace
-	traceFile := filepath.Join(outDir, "trace-20251119-attachment.zip")
-	if err := browserCtx.Tracing().Start(playwright.TracingStartOptions{
+	// === 开启 trace ===
+	if err = browserCtx.Tracing().Start(playwright.TracingStartOptions{
 		Screenshots: playwright.Bool(true),
 		Snapshots:   playwright.Bool(true),
 		Sources:     playwright.Bool(true),
 	}); err != nil {
 		log.Error("开启 trace 失败", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 
-	// 创建新的页面
-	page, err := browserCtx.NewPage()
+	// 创建页面
+	var page playwright.Page
+	page, err = browserCtx.NewPage()
 	if err != nil {
-		log.Error("创建新页面失败: %v", zap.Error(err))
-		return ctx, err
+		log.Error("创建新页面失败", zap.Error(err))
+		return ctx2, err
 	}
 
-	// 执行登录流程
-	if err := loginACP(ctx, page, ssoParams); err != nil {
+	defer func() {
+		if err == nil {
+			return
+		}
+
+		ts := time.Now().Format("20060102-150405")
+
+		// --- 截图 ---
+		screenshotPath := filepath.Join(outDir, fmt.Sprintf("failed-%s.png", ts))
+		img, shotErr := page.Screenshot(playwright.PageScreenshotOptions{
+			Path: playwright.String(screenshotPath),
+		})
+		if shotErr == nil {
+			ctx2 = godog.Attach(ctx2, godog.Attachment{
+				FileName:  filepath.Base(screenshotPath),
+				MediaType: "image/png",
+				Body:      img,
+			})
+			log.Error("失败截图已附加", zap.String("path", screenshotPath))
+		} else {
+			log.Error("失败截图失败", zap.Error(shotErr))
+		}
+
+		// --- 停止 trace ---
+		tracePath := filepath.Join(outDir, fmt.Sprintf("trace-%s.zip", ts))
+		if stopErr := browserCtx.Tracing().Stop(tracePath); stopErr != nil {
+			log.Error("停止 tracing 失败", zap.Error(stopErr))
+			return
+		}
+
+		if zipBytes, readErr := os.ReadFile(tracePath); readErr == nil {
+			ctx2 = godog.Attach(ctx2, godog.Attachment{
+				FileName:  filepath.Base(tracePath),
+				MediaType: "application/zip",
+				Body:      zipBytes,
+			})
+			log.Error("trace 已作为附件上传")
+		} else {
+			log.Error("读取 trace 文件失败", zap.Error(readErr))
+		}
+	}()
+
+	if err = loginACP(ctx2, page, ssoParams); err != nil {
 		log.Error("ACP 登录失败", zap.Error(err))
-		return ctx, err
+		return ctx2, err
 	}
 
-	if err := loginHarbor(ctx, page, ssoParams); err != nil {
-		log.Error("Harbor 登录失败: %v", zap.Error(err))
-		return ctx, err
-	}
-
-	// 6. 在 case 还没结束时立即截图并 attach
-	screenshotPath := filepath.Join(outDir, "harbor-20251119-attachment.png")
-	imgData, _ := page.Screenshot(playwright.PageScreenshotOptions{Path: playwright.String(screenshotPath)})
-	if len(imgData) > 0 {
-		ctx = godog.Attach(ctx, godog.Attachment{
-			FileName:  "harbor-20251119-attachment.png",
-			MediaType: "image/png",
-			Body:      imgData,
-		})
-		log.Info("截图已附加", zap.String("path", screenshotPath))
-	}
-
-	// 7. 立即停 trace 并 attach
-	if stopErr := browserCtx.Tracing().Stop(traceFile); stopErr != nil {
-		log.Error("停止 tracing 失败", zap.Error(stopErr))
-	} else {
-		log.Info("trace 已写入", zap.String("path", traceFile))
-	}
-	if zipBytes, readErr := os.ReadFile(traceFile); readErr == nil {
-		ctx = godog.Attach(ctx, godog.Attachment{
-			FileName:  "trace-20251119-attachment.zip",
-			MediaType: "application/zip",
-			Body:      zipBytes,
-		})
-		log.Info("trace 已作为附件上传")
-	} else {
-		log.Error("读取 trace 文件失败", zap.Error(readErr))
+	if err = loginHarbor(ctx2, page, ssoParams); err != nil {
+		log.Error("Harbor 登录失败", zap.Error(err))
+		return ctx2, err
 	}
 
 	log.Info("SSO 测试成功！")
-
-	return ctx, nil
+	return ctx2, nil
 }
 
 func loginACP(ctx context.Context, page playwright.Page, params ssoParams) error {
