@@ -1,0 +1,120 @@
+apiVersion: operator.alaudadevops.io/v1alpha1
+kind: Harbor
+metadata:
+  annotations:
+    operator.alaudadevops.io/pg-version-check: disable
+  name: harbor-operator
+spec:
+  version: <tpl.{{env "HARBOR_VERSION"}}>
+  helmValues:
+    externalURL: http://<node.ip.random.readable>:<nodeport.http>
+    global:
+      registry:
+        address: <config.{{.registry.cluster | default "152-231-registry.alauda.cn:60070"}}>
+    persistence:
+      persistentVolumeClaim:
+        redis:
+          storageClass: <storage-class>
+        database:
+          storageClass: <storage-class>
+        registry:
+          storageClass: <storage-class.rwm>
+          accessMode: ReadWriteMany
+          size: 10Gi
+        jobservice:
+          jobLog:
+            storageClass: <storage-class.rwm>
+            accessMode: ReadWriteMany
+            size: 1Gi
+        trivy:
+          storageClass: <storage-class.rwm>
+          accessMode: ReadWriteMany
+          size: 5Gi
+    core:
+      gcTimeWindowHours: 0
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+    jobservice:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+    registry:
+      registry:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+      controller:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+    trivy:
+      skipUpdate: true
+      offlineScan: true
+      resources:
+        requests:
+          cpu: 200m
+          memory: 1Gi
+        limits:
+          cpu: 200m
+          memory: 1Gi
+    database:
+      internal:
+        image:
+          repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-harbor-db
+          # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
+          tag: 2.14.1-gbc5440f
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+      persistence:
+        enabled: true
+        storageClass: <storage-class>
+    redis:
+      internal:
+        image:
+          repository: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon
+          # The default values of image tag will be automatically updated by `update-image-tags` in the `.tekton/all-in-one.yaml` pipeline.
+          tag: 2.14.1-gbc5440f
+        extraEnvVars:
+          - name: ALLOW_EMPTY_PASSWORD
+            value: "yes"
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      persistence:
+        enabled: true
+        storageClass: <storage-class>
+    existingSecretAdminPassword: "harbor-password"
+    existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+    expose:
+      type: nodePort
+      nodePort:
+        name: harbor
+        ports:
+          http:
+            port: 80
+            nodePort: <nodeport.http>

@@ -7,6 +7,11 @@ source ${SCRIPT_DIR}/../testdata/script/common.sh
 default_test_command="go test -timeout=1h -v -count 1 ./"
 test_command=${TEST_COMMAND:-${default_test_command}}
 
+if [ -z "$HARBOR_VERSION" ]; then
+    echo "HARBOR_VERSION environment is not set"
+    exit 1
+fi
+
 # Main execution starts here
 main() {
     create_temp_dir
@@ -34,6 +39,7 @@ main() {
     export KUBECONFIG=${kubeconfig_file}
     cd ${SCRIPT_DIR}/..
     kubectl create ns bdd-testing || true
+    export INSECURE_SKIP_TLS_VERIFY=true
     ${test_command} ${GODOG_ARGS} --godog.tags="@e2e"
 }
 
