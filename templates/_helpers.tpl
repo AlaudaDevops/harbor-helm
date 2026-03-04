@@ -752,7 +752,7 @@ app: "{{ template "harbor.name" . }}"
           mkdir -p {{ $mountPath }}/trivy/db
           tar -zxf trivy-offline.db.tgz -C {{ $mountPath }}/trivy/db
       fi;
-      chown -R 10000:10000 {{ $mountPath }}
+      chown -R 10000:10000 {{ $mountPath }}/*
   {{- if not (empty .Values.containerSecurityContext) }}
   securityContext: {{ .Values.containerSecurityContext | toYaml | nindent 4 }}
   {{- end }}
