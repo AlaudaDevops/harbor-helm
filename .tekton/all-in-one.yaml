@@ -1239,6 +1239,12 @@ spec:
               make update-yaml-value FILE=${harbor_file} VALUE=${image_tag} KEY=spec.helmValues.redis.internal.image.tag
               cat ${harbor_file}
               
+              # update image tag in redis-tls-server.yaml for integration test
+              redis_tls_server_file=testing/testdata/resources/redis-tls-server.yaml
+              echo "update redis-tls-server image in ${redis_tls_server_file}"
+              sed -i "s|goharbor-redis-photon:.*|goharbor-redis-photon:${image_tag}|g" ${redis_tls_server_file}
+              cat ${redis_tls_server_file}
+              
               # update e2e image
               e2e_script=testdata/script/run-harbor-e2e.sh
               echo "update e2e image in ${e2e_script}"

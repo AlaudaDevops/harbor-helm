@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: harbor-test-redis-tls
+spec:
+  serviceName: harbor-test-redis-tls
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-tls
+  template:
+    metadata:
+      labels:
+        app: redis-tls
+    spec:
+      containers:
+      - name: redis
+        image: <config.{{.registry.test | default "152-231-registry.alauda.cn:60070"}}>/devops/goharbor-redis-photon:2.14.1-g129827a
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: harbor-redis
+              key: REDIS_PASSWORD
+        command:
+        - sh
+        - -c
+        - |
+          redis-server \
+          --tls-port 6379 \
+          --port 0 \
+          --tls-cert-file /etc/redis/ssl/tls.crt \
+          --tls-key-file /etc/redis/ssl/tls.key \
+          --tls-ca-cert-file /etc/redis/ssl/ca.crt \
+          --tls-auth-clients no \
+          --requirepass "$REDIS_PASSWORD" \
+
+        volumeMounts:
+        - name: ssl
+          mountPath: /etc/redis/ssl
+          readOnly: true
+      volumes:
+      - name: ssl
+        secret:
+          secretName: redis-tls-assets
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: harbor-test-redis-tls
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: redis-tls
