@@ -102,7 +102,7 @@ metadata:
 spec:
   timeouts:
     pipeline: 3h
-    tasks: 1h
+    tasks: 2h
 
   params:
     - name: git-url
