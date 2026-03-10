@@ -44,7 +44,7 @@ global:
       digest: ""
     trivyOfflineDB:
       repository: devops/goharbor-trivy-offline-db
-      tag: alauda-v2.14.0-f5b6be41
+      tag: alauda-v2.14.0-148182a7
       support_arm: true
       thirdparty: true
     nginx:
