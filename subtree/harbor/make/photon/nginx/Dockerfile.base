@@ -3,6 +3,6 @@ FROM photon:5.0
 RUN tdnf makecache && tdnf install -y shadow &&  groupadd -r -g 10000 nginx && useradd -s /sbin/nologin --no-log-init -r -g 10000 -u 10000 nginx \
     && tdnf  install -y nginx >> /dev/null \
     && tdnf clean all \
-    && groupmod -g 10000 nginx && usermod -g 10000 -u 10000 -d /home/nginx -s /bin/bash nginx \
+    && groupmod -g 10000 nginx && usermod -g 10000 -u 10000 -d /home/nginx -s /sbin/nologin nginx \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
