@@ -1,0 +1,11 @@
+redis:
+  type: external
+  external:
+    addr: "harbor-test-redis-tls:6379"
+    username: "default"
+    existingSecret: "harbor-redis"
+    existingSecretKey: "REDIS_PASSWORD"
+    tlsOptions:
+      enable: true
+
+caBundleSecretName: "redis-tls-assets"
