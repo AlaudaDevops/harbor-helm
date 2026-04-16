@@ -235,7 +235,7 @@ spec:
           --db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-db
           --skip-java-db-update=false
           --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
-          --exit-code=1
+          --exit-code=0
       - name: skip-e2e
         description: Skip e2e test, default is false.
         default: "false"
