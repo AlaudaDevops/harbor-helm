@@ -166,7 +166,7 @@ class TestManifest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestManifest))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestManifest)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Manifest test failed: {}".format(result))
