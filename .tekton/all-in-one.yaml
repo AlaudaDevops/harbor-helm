@@ -203,10 +203,10 @@ spec:
           TRIVY_VERSION=v0.66.1-alauda-15
           
           # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
-          TRIVY_ADAPTER_VERSION=v0.34.2-alauda-6
+          TRIVY_ADAPTER_VERSION=v0.34.2-alauda-7
           
           # renovate: datasource=golang-version depName=go
-          export GOLANG_IMAGE_VERSION=1.26.1
+          export GOLANG_IMAGE_VERSION=1.26.2
           
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
