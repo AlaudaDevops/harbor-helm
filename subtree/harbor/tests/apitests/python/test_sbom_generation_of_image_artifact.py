@@ -81,7 +81,7 @@ class TestSBOMGeneration(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestSBOMGeneration))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestSBOMGeneration)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"SBOM generation test failed: {}".format(result))

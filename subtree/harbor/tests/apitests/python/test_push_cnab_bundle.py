@@ -141,7 +141,7 @@ class TestCNAB(unittest.TestCase):
         self.do_tearDown()
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestCNAB))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCNAB)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"CNAB test failed: {}".format(result))
