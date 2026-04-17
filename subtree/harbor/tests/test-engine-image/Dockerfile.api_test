@@ -25,15 +25,8 @@ RUN tdnf makecache && tdnf update -y && tdnf install -y \
     which \
     procps-ng \
     gzip && \
-    # Pin Python to 3.12 because unittest.makeSuite is unavailable in Python 3.13+.
-    tdnf install -y python3.12 python3.12-pip python3.12-setuptools httpd && \
-    ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
-    ln -sf /usr/bin/python3.12 /usr/bin/python && \
-    ln -sf /usr/bin/pip3.12 /usr/bin/pip3 && \
-    ln -sf /usr/bin/pip3.12 /usr/bin/pip && \
-    python --version && \
-    python --version | grep -E '^Python 3\\.12\\.' && \
-    python -m pip install --upgrade pip pyasn1 google-apitools==0.5.31 gsutil python-dateutil \
+    tdnf install -y python3 python3-pip python3-setuptools httpd && \
+    pip3 install --upgrade pip pyasn1 google-apitools==0.5.31 gsutil python-dateutil \
     robotframework==6.0.1 robotframework-sshlibrary robotframework-httplibrary \
     urllib3==1.26.20 requests dbbot robotframework-seleniumlibrary robotframework-pabot \
     robotframework-JSONLibrary hurry.filesize --upgrade && \
@@ -67,6 +60,6 @@ RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh && \
 
 RUN tdnf makecache && tdnf install -y podman && tdnf clean all
 
-RUN cd /drone && python -m pip uninstall setuptools -y && python -m pip install -U pip setuptools && make swagger_client
+RUN cd /drone && pip uninstall setuptools -y && pip install -U pip setuptools && make swagger_client
 
 VOLUME /var/lib/docker

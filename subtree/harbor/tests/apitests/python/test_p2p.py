@@ -89,7 +89,7 @@ class TestP2P(unittest.TestCase):
         self.do_validate("harbor")
 
     def suite():
-        suite = unittest.TestSuite(unittest.makeSuite(TestP2P))
+        suite = unittest.TestLoader().loadTestsFromTestCase(TestP2P)
         return suite
 
 if __name__ == '__main__':
