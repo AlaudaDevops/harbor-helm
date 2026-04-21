@@ -123,10 +123,11 @@ Get Container IP
 Start Docker Daemon Locally
     ${test_network_type}=  Get Environment Variable  NETWORK_TYPE  public
     Log To Console   current test_network_type: ${test_network_type}
-    ${pid}=  Run  pidof dockerd
-    #${rc}  ${output}=  Run And Return Rc And Output  ./tests/robot-cases/Group0-Util/docker_config.sh
-    #Log  ${output}
-    #Should Be Equal As Integers  ${rc}  0
+    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/dockerd | awk '{print $2}' | head -1
+    ${rc}  ${output}=  Run And Return Rc And Output  ./tests/robot-cases/Group0-Util/docker_config.sh
+    Log To Console  output: ${output}
+    Should Be Equal As Integers  ${rc}  0
+    Log To Console  pid: ${pid}
     Return From Keyword If  '${pid}' != '${EMPTY}'
     OperatingSystem.File Should Exist  /usr/local/bin/dockerd-entrypoint.sh
     ${handle}=    Set Variable    ""
@@ -139,24 +140,40 @@ Start Docker Daemon Locally
     END
     ${handle}=  Start Process  /usr/local/bin/dockerd-entrypoint.sh dockerd>./daemon-local.log 2>&1  shell=True
     Process Should Be Running  ${handle}
-    FOR  ${IDX}  IN RANGE  5
-        ${pid}=  Run  pidof dockerd
-        Exit For Loop If  '${pid}' != '${EMPTY}'
-        Sleep  2s
-    END
-    Sleep  2s
-    [Return]  ${handle}
-
-Start Containerd Daemon Locally
-    ${handle}=  Start Process  /usr/local/bin/containerd > ./daemon-local.log 2>&1 &  shell=True
-    FOR  ${IDX}  IN RANGE  5
-        ${pid}=  Run  pidof /usr/local/bin/containerd
+    FOR  ${IDX}  IN RANGE  20
+        ${pid}=  Run  ps aux | grep -v grep | grep -v sh | grep dockerd | awk '{print $2}' | head -1
         Log To Console  pid: ${pid}
         Exit For Loop If  '${pid}' != '${EMPTY}'
         Sleep  2s
     END
+    # Fail fast and abort the entire test run if dockerd never becomes ready within the wait window
+    Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  Docker daemon failed to start within timeout
     Sleep  2s
     [Return]  ${handle}
+
+Start Containerd Daemon Locally
+    ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}' | head -1
+    Log To Console  pid: ${pid}
+    Return From Keyword If  '${pid}' != '${EMPTY}'
+    ${handle}=  Start Process  /usr/local/bin/containerd > ./daemon-local.log 2>&1 &  shell=True
+    FOR  ${IDX}  IN RANGE  20
+        ${pid}=  Run  ps aux | grep -v grep | grep /usr/local/bin/containerd | awk '{print $2}' | head -1
+        Log To Console  pid: ${pid}
+        Exit For Loop If  '${pid}' != '${EMPTY}'
+        Sleep  2s
+    END
+    # Fail fast and abort the entire test run if containerd never becomes ready within the wait window
+    Run Keyword If  '${pid}' == '${EMPTY}'  Log Daemon Local Log
+    Run Keyword If  '${pid}' == '${EMPTY}'  Fatal Error  containerd daemon failed to start within timeout
+    Sleep  2s
+    [Return]  ${handle}
+
+Log Daemon Local Log
+    [Documentation]  Output daemon-local.log contents to console when daemon startup fails
+    ${daemon_log}=  OperatingSystem.Get File  ./daemon-local.log
+    # ${daemon_log} contains daemon startup output for debugging failures
+    Log To Console  daemon-local.log contents:\n${daemon_log}
 
 Restart Process Locally
     [Arguments]  ${process}

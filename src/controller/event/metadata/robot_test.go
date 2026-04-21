@@ -61,7 +61,7 @@ func (t *tagEventTestSuite) TestResolveOfDeleteRobotEventMetadata() {
 		common.RobotPrefix: "robot$",
 	}
 	config.InitWithSettings(cfg)
-	
+
 	e := &event.Event{}
 	metadata := &DeleteRobotEventMetadata{
 		Ctx: context.Background(),

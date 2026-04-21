@@ -85,7 +85,7 @@ class TestStopScan(unittest.TestCase):
         self.do_tearDown()
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestStopScan))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestStopScan)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Stop Scan test failed: {}".format(result))

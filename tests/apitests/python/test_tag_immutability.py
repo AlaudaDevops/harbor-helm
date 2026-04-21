@@ -292,7 +292,7 @@ class TestTagImmutability(unittest.TestCase):
         self.tag_immutability.create_tag_immutability_policy_rule(self.project_id, **self.exsiting_rule, expect_status_code = 409, **self.USER_CLIENT)
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestTagImmutability))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestTagImmutability)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Tag immutability test failed: {}".format(result))

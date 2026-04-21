@@ -85,7 +85,7 @@ class TestStopSBOMGeneration(unittest.TestCase):
         self.do_tearDown()
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestStopSBOMGeneration))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestStopSBOMGeneration)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Stop SBOM generation test failed: {}".format(result))

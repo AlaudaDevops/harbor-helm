@@ -5,7 +5,7 @@ import time
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
 from testutils import TEARDOWN
-from testutils import harbor_server
+from testutils import harbor_url, harbor_server
 from library.repository import push_special_image_to_project
 from library.docker_api import list_image_tags
 from library.retention import Retention
@@ -76,11 +76,11 @@ class TestProjects(unittest.TestCase):
 
         tag_data_artifact2_image2 = self.artifact.get_reference_info(TestProjects.project_src_repo_name, self.repo_name_2, "latest", **TestProjects.USER_RA_CLIENT)
 
-        tags = list_image_tags(harbor_server, TestProjects.project_src_repo_name+"/"+self.repo_name_1, user_ra_name, user_ra_password)
+        tags = list_image_tags(harbor_url, TestProjects.project_src_repo_name+"/"+self.repo_name_1, user_ra_name, user_ra_password)
         #Delete all 2 tags of "artifact3" in repostory "image1";
         self.artifact.delete_tag(TestProjects.project_src_repo_name, self.repo_name_1, "3.0", "latest", **TestProjects.USER_RA_CLIENT)
         self.artifact.delete_tag(TestProjects.project_src_repo_name, self.repo_name_1, "3.0", "3.0", **TestProjects.USER_RA_CLIENT)
-        tags = list_image_tags(harbor_server, TestProjects.project_src_repo_name+"/"+self.repo_name_1, user_ra_name, user_ra_password)
+        tags = list_image_tags(harbor_url, TestProjects.project_src_repo_name+"/"+self.repo_name_1, user_ra_name, user_ra_password)
 
         resp=self.repo.list_repositories(TestProjects.project_src_repo_name, **TestProjects.USER_RA_CLIENT)
         self.assertEqual(len(resp), 4)

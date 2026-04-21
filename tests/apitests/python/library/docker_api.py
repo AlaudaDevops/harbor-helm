@@ -31,7 +31,7 @@ def docker_login_cmd(harbor_host, username, password, cfg_file = "./tests/apites
             raise Exception("Failed to update docker config.")
 
 def docker_manifest_create(index, manifests):
-    command = ["docker","manifest","create", "--amend", index]
+    command = ["docker","manifest","create","--insecure","--amend", index]
     command.extend(manifests)
     base.run_command(command)
 
@@ -52,7 +52,7 @@ def docker_image_clean_all():
     docker_images_all_list()
 
 def docker_manifest_push(index):
-    command = ["docker","manifest","push",index]
+    command = ["docker","manifest","push","--insecure", index]
     ret = base.run_command(command)
     index_sha256=""
     manifest_list=[]
@@ -68,24 +68,24 @@ def docker_manifest_push_to_harbor(index, manifests, harbor_server, username, pa
     docker_manifest_create(index, manifests)
     return docker_manifest_push(index)
 
-def list_repositories(harbor_host, username, password, n = None, last = None):
+def list_repositories(harbor_url, username, password, n = None, last = None):
     if n is not None and last is not None:
-        command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/_catalog"+"?n=%d"%n+"&last="+last, "--insecure"]
+        command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/_catalog"+"?n=%d"%n+"&last="+last, "--insecure"]
     elif n is not None:
-            command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/_catalog"+"?n=%d"%n, "--insecure"]
+            command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/_catalog"+"?n=%d"%n, "--insecure"]
     else:
-        command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/_catalog", "--insecure"]
+        command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/_catalog", "--insecure"]
     ret = base.run_command(command)
     repos = json.loads(ret).get("repositories","")
     return repos
 
-def list_image_tags(harbor_host, repository, username, password, n = None, last = None):
+def list_image_tags(harbor_url, repository, username, password, n = None, last = None):
     if n is not None and last is not None:
-        command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/"+repository+"/tags/list"+"?n=%d"%n+"&last="+last, "--insecure"]
+        command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/"+repository+"/tags/list"+"?n=%d"%n+"&last="+last, "--insecure"]
     elif n is not None:
-        command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/"+repository+"/tags/list"+"?n=%d"%n, "--insecure"]
+        command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/"+repository+"/tags/list"+"?n=%d"%n, "--insecure"]
     else:
-        command = ["curl", "-s", "-u", username+":"+password, "https://"+harbor_host+"/v2/"+repository+"/tags/list", "--insecure"]
+        command = ["curl", "-s", "-u", username+":"+password, harbor_url+"/v2/"+repository+"/tags/list", "--insecure"]
     ret = base.run_command(command)
     tags = json.loads(ret).get("tags","")
     return tags

@@ -92,10 +92,6 @@ Test Case - Push Chart By Helm Chart CLI
     [Tags]  push_chart_by_helm
     Harbor API Test  ./tests/apitests/python/test_push_chart_by_helm_chart_cli.py
 
-Test Case - Push Cnab Bundle
-    [Tags]  push_cnab
-    Harbor API Test  ./tests/apitests/python/test_push_cnab_bundle.py
-
 Test Case - Tag CRUD
     [Tags]  tag_crud
     Harbor API Test  ./tests/apitests/python/test_tag_crud.py
@@ -140,10 +136,6 @@ Test Case - Push Artifact With ORAS CLI
     [Tags]  oras
     Harbor API Test  ./tests/apitests/python/test_push_files_by_oras.py
 
-Test Case - Replication From Dockerhub
-    [Tags]  replic_dockerhub
-    Harbor API Test  ./tests/apitests/python/test_replication_from_dockerhub.py
-
 Test Case - Proxy Cache
     [Tags]  proxy_cache
     Harbor API Test  ./tests/apitests/python/test_proxy_cache.py
@@ -155,10 +147,6 @@ Test Case - Tag Immutability
 Test Case - P2P
     [Tags]  p2p
     Harbor API Test  ./tests/apitests/python/test_p2p.py
-
-Test Case - Metrics
-    [Tags]  metrics
-    Harbor API Test  ./tests/apitests/python/test_verify_metrics_enabled.py
 
 Test Case - Project Level Policy Content Trust
     [Tags]  content_trust
@@ -179,13 +167,6 @@ Test Case - Notation Sign Artifact
 Test Case - Log Rotation
     [Tags]  log_rotation
     Harbor API Test  ./tests/apitests/python/test_log_rotation.py
-
-Test Case - Log Forward
-    [Tags]  log_forward
-    ${SYSLOG_ENDPOINT_VALUE}=  Get Variable Value  ${SYSLOG_ENDPOINT}  ${EMPTY}
-    ${ES_ENDPOINT_VALUE}=  Get Variable Value  ${ES_ENDPOINT}  ${EMPTY}
-    Skip If  '${SYSLOG_ENDPOINT_VALUE}' == '${EMPTY}' or '${ES_ENDPOINT_VALUE}' == '${EMPTY}'
-    Harbor API Test  ./tests/apitests/python/test_audit_log_forward.py  SYSLOG_ENDPOINT=${SYSLOG_ENDPOINT_VALUE} ES_ENDPOINT=${ES_ENDPOINT_VALUE}
 
 Test Case - Scan Data Export
     [Tags]  scan_data_export

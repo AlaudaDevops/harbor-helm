@@ -128,7 +128,7 @@ class TestProxyCache(unittest.TestCase):
     #    self.do_validate("docker-hub")
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestProxyCache))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestProxyCache)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Proxy cache test failed: ".format(result))

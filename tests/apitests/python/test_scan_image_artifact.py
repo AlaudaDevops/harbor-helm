@@ -111,7 +111,7 @@ class TestScan(unittest.TestCase):
         self.artifact.check_image_scan_result(self.project_name, image, tag, **self.USER_CLIENT)
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestScan))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestScan)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Scan test failed: {}".format(result))

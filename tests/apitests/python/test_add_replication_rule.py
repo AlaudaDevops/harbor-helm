@@ -2,7 +2,7 @@ from __future__ import absolute_import
 import unittest
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
-from testutils import harbor_server
+from testutils import harbor_url, admin_user, admin_pwd
 from testutils import TEARDOWN
 from library.project import Project
 from library.user import User
@@ -64,7 +64,7 @@ class TestProjects(unittest.TestCase):
             expected_project_id = TestProjects.project_add_rule_id, **TestProjects.USER_add_rule_CLIENT)
 
         #3. Create a new registry
-        TestProjects.registry_id, _ = self.registry.create_registry("https://" + harbor_server,**ADMIN_CLIENT)
+        TestProjects.registry_id, _ = self.registry.create_registry(harbor_url, access_key= admin_user, access_secret = admin_pwd, **ADMIN_CLIENT)
 
         #4. Create a new rule for this registry;
         TestProjects.rule_id, rule_name = self.replication.create_replication_policy(dest_registry=v2_swagger_client.Registry(id=int(TestProjects.registry_id)), **ADMIN_CLIENT)

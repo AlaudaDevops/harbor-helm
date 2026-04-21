@@ -146,13 +146,16 @@ _build_log:
 _build_trivy_adapter:
 	@if [ "$(TRIVYFLAG)" = "true" ] ; then \
 		$(call _build_base,$(TRIVY_ADAPTER),$(DOCKERFILEPATH_TRIVY_ADAPTER)) ; \
-		rm -rf $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary && mkdir -p $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary ; \
-		echo "Downloading Trivy scanner $(TRIVYVERSION)..." ; \
-		$(call _extract_archive, $(TRIVY_DOWNLOAD_URL), $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary/) ; \
-		if [ "$(BUILDTRIVYADP)" != "true" ] ; then \
-			echo "Downloading Trivy adapter $(TRIVYADAPTERVERSION)..." ; \
-			$(call _extract_archive, $(TRIVY_ADAPTER_DOWNLOAD_URL), $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary/) ; \
+		# rm -rf $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary && mkdir -p $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary ; \
+        # echo "Downloading Trivy scanner $(TRIVYVERSION)..." ; \
+        # $(call _extract_archive, $(TRIVY_DOWNLOAD_URL), $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary/) ; \
+        if [ "$(BUILDTRIVYADP)" != "true" ] ; then \
+        	# echo "Downloading Trivy adapter $(TRIVYADAPTERVERSION)..." ; \
+        	# $(call _extract_archive, $(TRIVY_ADAPTER_DOWNLOAD_URL), $(DOCKERFILEPATH_TRIVY_ADAPTER)/binary/) ; \
+			echo "skip build Trivy adapter bin..."; \
 		else \
+		    echo "Building Trivy $(TRIVYVERSION) from sources..." ; \
+            cd $(DOCKERFILEPATH_TRIVY_ADAPTER) && $(DOCKERFILEPATH_TRIVY_ADAPTER)/builder.trivy.sh $(TRIVYVERSION) && cd - ; \
 			echo "Building Trivy adapter $(TRIVYADAPTERVERSION) from sources..." ; \
 			cd $(DOCKERFILEPATH_TRIVY_ADAPTER) && $(DOCKERFILEPATH_TRIVY_ADAPTER)/builder.sh $(TRIVYADAPTERVERSION) $(GOBUILDIMAGE) $(DOCKERNETWORK) && cd - ; \
 		fi ; \
@@ -175,8 +178,9 @@ _build_nginx:
 _build_registry:
 	@$(call _build_base,$(REGISTRY),$(DOCKERFILEPATH_REG))
 	@if [ "$(BUILDREG)" != "true" ] ; then \
-		rm -rf $(DOCKERFILEPATH_REG)/binary && mkdir -p $(DOCKERFILEPATH_REG)/binary && \
-		$(call _get_binary, $(REGISTRYURL), $(DOCKERFILEPATH_REG)/binary/registry); \
+		# rm -rf $(DOCKERFILEPATH_REG)/binary && mkdir -p $(DOCKERFILEPATH_REG)/binary && \
+		# $(call _get_binary, $(REGISTRYURL), $(DOCKERFILEPATH_REG)/binary/registry); \
+		echo "skip build registry bin..."; \
 	else \
 		cd $(DOCKERFILEPATH_REG) && $(DOCKERFILEPATH_REG)/builder $(REGISTRY_SRC_TAG) $(DISTRIBUTION_SRC) $(GOBUILDIMAGE) $(DOCKERNETWORK) && cd - ; \
 	fi
@@ -188,13 +192,18 @@ _build_registryctl:
 	@$(call _build_base,$(REGISTRYCTL),$(DOCKERFILEPATH_REGISTRYCTL))
 	@echo "building registry controller for photon..."
 	@$(DOCKERBUILD_WITH_PULL_PARA) --build-arg harbor_base_image_version=$(BASEIMAGETAG) --build-arg harbor_base_namespace=$(BASEIMAGENAMESPACE) -f $(DOCKERFILEPATH_REGISTRYCTL)/$(DOCKERFILENAME_REGISTRYCTL) -t $(DOCKERIMAGENAME_REGISTRYCTL):$(VERSIONTAG) .
-	@rm -rf $(DOCKERFILEPATH_REG)/binary
+#	@rm -rf $(DOCKERFILEPATH_REG)/binary
 	@echo "Done."
 
 _build_redis:
 	@$(call _build_base,$(REDIS),$(DOCKERFILEPATH_REDIS))
 	@echo "building redis container for photon..."
 	@$(DOCKERBUILD_WITH_PULL_PARA) --build-arg harbor_base_image_version=$(BASEIMAGETAG) --build-arg harbor_base_namespace=$(BASEIMAGENAMESPACE) -f $(DOCKERFILEPATH_REDIS)/$(DOCKERFILENAME_REDIS) -t $(DOCKERIMAGENAME_REDIS):$(VERSIONTAG) .
+	@echo "Done."
+
+_build_bitnami_redis:
+	@echo "building redis container for photon..."
+	@$(DOCKERBUILD_WITH_PULL_PARA) -f $(DOCKERFILEPATH_REDIS)/$(DOCKERFILENAME_REDIS).bitnami -t $(DOCKERIMAGENAME_REDIS):$(VERSIONTAG) .
 	@echo "Done."
 
 _build_standalone_db_migrator:
@@ -222,7 +231,7 @@ define _build_base
 	if [ "$(BUILD_BASE)" = "true" ] ; then \
 		echo "building base image for $(1)...";\
 		if [ -n "$(REGISTRYUSER)"  ] && [ -n "$(REGISTRYPASSWORD)" ] ; then \
-			docker login -u $(REGISTRYUSER) -p $(REGISTRYPASSWORD) ; \
+			$(DOCKERCMD) login -u $(REGISTRYUSER) -p $(REGISTRYPASSWORD) ; \
 		else \
 			echo "No docker credentials provided, please be aware of privileges to access docker hub!" ; \
 		fi ;\
@@ -241,7 +250,7 @@ endif
 
 build: buildcompt
 	@if [ -n "$(REGISTRYUSER)"  ] && [ -n "$(REGISTRYPASSWORD)" ] ; then \
-		docker logout ; \
+		$(DOCKERCMD) logout ; \
 	fi
 
 cleanimage:

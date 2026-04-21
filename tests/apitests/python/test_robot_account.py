@@ -342,7 +342,7 @@ class TestRobotAccount(unittest.TestCase):
         self.verify_repository_pushable(project_access_list, SYSTEM_RA_CLIENT_COVER_ALL)
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestRobotAccount))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestRobotAccount)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Robot account test failed: {}".format(result))

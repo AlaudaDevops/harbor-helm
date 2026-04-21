@@ -34,7 +34,7 @@ def oras_push(harbor_server, user, password, project, repo, tag):
 
 def oras_push_cmd(harbor_server, project, repo, tag):
     try:
-        ret = base.run_command( [oras_cmd, "push", harbor_server + "/" + project + "/" + repo+":"+ tag,
+        ret = base.run_command( [oras_cmd, "push", *insecure_opt(), harbor_server + "/" + project + "/" + repo+":"+ tag,
                              "--config", "config.json:application/vnd.acme.rocket.config.v1+json", \
                              file_artifact+":application/vnd.acme.rocket.layer.v1+txt", \
                              file_readme +":application/vnd.acme.rocket.docs.layer.v1+json"] )
@@ -44,7 +44,7 @@ def oras_push_cmd(harbor_server, project, repo, tag):
         return e
 
 def oras_login(harbor_server, user, password):
-     ret = base.run_command([oras_cmd, "login", "-u", user, "-p", password, harbor_server])
+     ret = base.run_command([oras_cmd, "login", *insecure_opt(), "-u", user, "-p", password, harbor_server])
 
 def oras_pull(harbor_server, user, password, project, repo, tag):
     try:
@@ -56,7 +56,14 @@ def oras_pull(harbor_server, user, password, project, repo, tag):
         os.chdir(cwd)
     except Exception as e:
         raise Exception('Error: Exited with error {}',format(e))
-    ret = base.run_command([oras_cmd, "pull", harbor_server + "/" + project + "/" + repo+":"+ tag])
+    ret = base.run_command([oras_cmd, "pull", *insecure_opt(), harbor_server + "/" + project + "/" + repo+":"+ tag])
     assert os.path.exists(file_artifact)
     assert os.path.exists(file_readme)
     return base.run_command( ["md5sum", file_artifact] ).split(' ')[0], base.run_command( [ "md5sum", file_readme] ).split(' ')[0]
+
+def insecure_opt():
+    schema = os.environ.get("HARBOR_HOST_SCHEMA", "https")
+    if schema == "http":
+        return  ["--plain-http"]
+
+    return ["--insecure"]

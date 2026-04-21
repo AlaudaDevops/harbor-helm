@@ -3,7 +3,7 @@
 import base
 import v2_swagger_client
 from v2_swagger_client.rest import ApiException
-
+import time
 
 class User(base.Base, object):
 
@@ -12,10 +12,11 @@ class User(base.Base, object):
 
     def create_user(self, name=None,
                     email=None, user_password=None, realname=None, expect_status_code=201, **kwargs):
+        timestamp = int(round(time.time() * 1000))
         if name is None:
-            name = base._random_name("user")
+            name = "%s-%d" % ("user", timestamp)
         if realname is None:
-            realname = base._random_name("realname")
+            realname = "%s-%d" % ("realname", timestamp)
         if email is None:
             email = '%s@%s.com' % (realname, "harbortest")
         if user_password is None:

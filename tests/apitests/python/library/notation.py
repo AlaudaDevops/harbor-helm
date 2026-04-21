@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import base
 
 def generate_cert():
@@ -6,5 +7,10 @@ def generate_cert():
     base.run_command(command)
 
 def sign_artifact(artifact):
-    command = ["notation", "sign", "-d", "--allow-referrers-api", artifact]
+    if os.environ.get("HARBOR_HOST_SCHEMA") == "http":
+        insecure = ["--insecure-registry"]
+    else:
+        insecure = []
+
+    command = ["notation", "sign", *insecure, "-d", "--allow-referrers-api", artifact]
     base.run_command(command)

@@ -18,8 +18,7 @@ cur=$PWD
 
 # The temporary directory to clone Trivy adapter source code
 TEMP=$(mktemp -d ${TMPDIR-/tmp}/trivy-adapter.XXXXXX)
-git clone https://github.com/goharbor/harbor-scanner-trivy.git $TEMP
-cd $TEMP; git checkout $VERSION; cd -
+git clone --depth=1 -b $VERSION https://github.com/goharbor/harbor-scanner-trivy.git $TEMP
 
 echo "Building Trivy adapter binary ..."
 cp Dockerfile.binary $TEMP

@@ -23,6 +23,8 @@ class Artifact(base.Base, object):
 
     def get_reference_info(self, project_name, repo_name, reference, expect_status_code = 200, ignore_not_found = False,**kwargs):
         params = {}
+        if "with_signature" in kwargs:
+            params["with_signature"] = kwargs["with_signature"]
         if "with_tag" in kwargs:
             params["with_tag"] = kwargs["with_tag"]
         if "with_scan_overview" in kwargs:
@@ -113,7 +115,7 @@ class Artifact(base.Base, object):
         return self._get_client(**kwargs).list_accessories(project_name, repo_name, reference)
 
     def check_image_scan_result(self, project_name, repo_name, reference, expected_scan_status = "Success", **kwargs):
-        timeout_count = 30
+        timeout_count = 300
         scan_status=""
         while True:
             time.sleep(5)

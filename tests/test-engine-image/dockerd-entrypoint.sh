@@ -27,7 +27,6 @@ if [ "$#" -eq 0 -o "${1#-}" != "$1" ]; then
 	# add our default arguments
 	set -- dockerd \
 		--storage-driver=vfs \
-		--insecure-registry=0.0.0.0/0 \
                 --pidfile=/var/run/docker-local.pid \
 		"$@"
 fi
@@ -35,7 +34,7 @@ fi
 if [ "$1" = 'dockerd' ]; then
 	# if we're running Docker, let's pipe through dind
 	# (and we'll run dind explicitly with "sh" since its shebang is /bin/bash)
-	set -- sh "$(which dind)" "$@" "--insecure-registry=0.0.0.0/0"
+	set -- sh "$(which dind)" "$@"
 fi
 
 echo "$@"

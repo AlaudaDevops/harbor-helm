@@ -10,4 +10,6 @@ set -e
 
 /home/harbor/install_cert.sh
 
+source /home/harbor/exports_env_in_dir.sh /etc/env-files/
+
 exec /usr/bin/registry_DO_NOT_USE_GC serve /etc/registry/config.yml

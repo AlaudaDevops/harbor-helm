@@ -34,7 +34,7 @@ Get And Setup Harbor CA
 
 Nightly Test Setup In Photon
     [Arguments]  ${ip}  ${HARBOR_PASSWORD}  ${ip1}==${EMPTY}
-    Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In Photon  ip1=${ip1}
+    # Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In Photon  ip1=${ip1}
     Prepare Test Tools
     Log To Console  Start Docker Daemon Locally ...
     Start Docker Daemon Locally
@@ -43,14 +43,14 @@ Nightly Test Setup In Photon
 
 Nightly Test Setup In Ubuntu
     [Arguments]  ${ip}  ${HARBOR_PASSWORD}  ${ip1}==${EMPTY}
-    Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In ubuntu  ip1=${ip1}
+    # Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In ubuntu  ip1=${ip1}
     Prepare Test Tools
     Log To Console  Start Docker Daemon Locally ...
     Run Keyword  Start Docker Daemon Locally
 
 Nightly Test Setup In Ubuntu For Upgrade
     [Arguments]  ${ip}  ${HARBOR_PASSWORD}  ${ip1}==${EMPTY}
-    Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In ubuntu  ip1=${ip1}
+    # Get And Setup Harbor CA  ${ip}  ${HARBOR_PASSWORD}  CA Setup In ubuntu  ip1=${ip1}
     Prepare Test Tools
     Log To Console  Start Docker Daemon Locally ...
     Run Keyword  Start Docker Daemon Locally

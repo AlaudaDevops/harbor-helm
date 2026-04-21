@@ -4,7 +4,7 @@ import sys
 import unittest
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
-from testutils import harbor_server
+from testutils import harbor_server, admin_user, admin_pwd
 from testutils import TEARDOWN
 import library.repository
 import library.docker_api
@@ -85,8 +85,8 @@ class TestManifest(unittest.TestCase):
         TestManifest.project_id, TestManifest.project_name = TestManifest.project.create_project(metadata = {"public": "false"}, **TestManifest.USER_CLIENT)
 
         #3. Create 2 new repositorys(RA,RB) in project(PA) by user(UA);
-        repo_name_a, tag_a = push_self_build_image_to_project(TestManifest.project_name, harbor_server, 'admin', 'Harbor12345', TestManifest.image_a, "latest")
-        repo_name_b, tag_b = push_self_build_image_to_project(TestManifest.project_name, harbor_server, 'admin', 'Harbor12345', TestManifest.image_b, "latest")
+        repo_name_a, tag_a = push_self_build_image_to_project(TestManifest.project_name, harbor_server, admin_user, admin_pwd, TestManifest.image_a, "latest")
+        repo_name_b, tag_b = push_self_build_image_to_project(TestManifest.project_name, harbor_server, admin_user, admin_pwd, TestManifest.image_b, "latest")
 
         #4. Push an index(IA) to Harbor by docker manifest CLI successfully;
         manifests = [harbor_server+"/"+repo_name_a+":"+tag_a, harbor_server+"/"+repo_name_b+":"+tag_b]
@@ -166,7 +166,7 @@ class TestManifest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite(unittest.makeSuite(TestManifest))
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestManifest)
     result = unittest.TextTestRunner(sys.stdout, verbosity=2, failfast=True).run(suite)
     if not result.wasSuccessful():
         raise Exception(r"Manifest test failed: {}".format(result))

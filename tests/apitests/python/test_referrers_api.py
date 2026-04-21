@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 import unittest
 
-from testutils import harbor_server, files_directory, ADMIN_CLIENT, suppress_urllib3_warning
+from testutils import harbor_server, harbor_url, files_directory, ADMIN_CLIENT, suppress_urllib3_warning
 from library import cosign, referrers_api
 from library.project import Project
 from library.user import User
@@ -73,7 +73,7 @@ class TestReferrersApi(unittest.TestCase):
         cosign.sign_artifact("{}/{}/{}@{}".format(harbor_server, project_name, self.image, sbom_digest))
 
         # 7. Call the referrers api successfully
-        res_json = referrers_api.call(harbor_server, project_name, self.image, artifact_digest, **user_client).json()
+        res_json = referrers_api.call(harbor_url, project_name, self.image, artifact_digest, **user_client).json()
         self.assertEqual(len(res_json["manifests"]), 2)
         for  manifest in res_json["manifests"]:
             self.assertIn(manifest["digest"], [signature_digest, sbom_digest])
@@ -81,7 +81,7 @@ class TestReferrersApi(unittest.TestCase):
             self.assertIsNotNone(manifest["mediaType"])
             self.assertIsNotNone(manifest["size"])
 
-        res_json = referrers_api.call(harbor_server, project_name, self.image, sbom_digest, **user_client).json()
+        res_json = referrers_api.call(harbor_url, project_name, self.image, sbom_digest, **user_client).json()
         self.assertEqual(len(res_json["manifests"]), 1)
         manifest = res_json["manifests"][0]
         self.assertIsNotNone(manifest["digest"])
@@ -90,7 +90,7 @@ class TestReferrersApi(unittest.TestCase):
         self.assertIsNotNone(manifest["size"])
 
         # 8. Call the referrers api and filter artifact_type
-        res = referrers_api.call(harbor_server, project_name, self.image, artifact_digest, self.sbom_artifact_type, **user_client)
+        res = referrers_api.call(harbor_url, project_name, self.image, artifact_digest, self.sbom_artifact_type, **user_client)
         self.assertEqual(res.headers["Oci-Filters-Applied"], "artifactType")
         res_json = res.json()
         self.assertEqual(len(res_json["manifests"]), 1)
@@ -100,7 +100,7 @@ class TestReferrersApi(unittest.TestCase):
         self.assertIsNotNone(manifest["mediaType"])
         self.assertIsNotNone(manifest["size"])
 
-        res = referrers_api.call(harbor_server, project_name, self.image, artifact_digest, self.signature_artifact_type, **user_client)
+        res = referrers_api.call(harbor_url, project_name, self.image, artifact_digest, self.signature_artifact_type, **user_client)
         self.assertEqual(res.headers["Oci-Filters-Applied"], "artifactType")
         res_json = res.json()
         self.assertEqual(len(res_json["manifests"]), 1)
