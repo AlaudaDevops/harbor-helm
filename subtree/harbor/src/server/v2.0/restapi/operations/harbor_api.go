@@ -86,618 +86,618 @@ func NewHarborAPI(spec *loads.Document) *HarborAPI {
 		JSONProducer: runtime.JSONProducer(),
 		TxtProducer:  runtime.TextProducer(),
 
-		ArtifactCopyArtifactHandler: artifact.CopyArtifactHandlerFunc(func(params artifact.CopyArtifactParams, principal *any) middleware.Responder {
+		ArtifactCopyArtifactHandler: artifact.CopyArtifactHandlerFunc(func(params artifact.CopyArtifactParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.CopyArtifact has not yet been implemented")
 		}),
-		ImmutableCreateImmuRuleHandler: immutable.CreateImmuRuleHandlerFunc(func(params immutable.CreateImmuRuleParams, principal *any) middleware.Responder {
+		ImmutableCreateImmuRuleHandler: immutable.CreateImmuRuleHandlerFunc(func(params immutable.CreateImmuRuleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation immutable.CreateImmuRule has not yet been implemented")
 		}),
-		PreheatCreateInstanceHandler: preheat.CreateInstanceHandlerFunc(func(params preheat.CreateInstanceParams, principal *any) middleware.Responder {
+		PreheatCreateInstanceHandler: preheat.CreateInstanceHandlerFunc(func(params preheat.CreateInstanceParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.CreateInstance has not yet been implemented")
 		}),
-		LabelCreateLabelHandler: label.CreateLabelHandlerFunc(func(params label.CreateLabelParams, principal *any) middleware.Responder {
+		LabelCreateLabelHandler: label.CreateLabelHandlerFunc(func(params label.CreateLabelParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation label.CreateLabel has not yet been implemented")
 		}),
-		PreheatCreatePolicyHandler: preheat.CreatePolicyHandlerFunc(func(params preheat.CreatePolicyParams, principal *any) middleware.Responder {
+		PreheatCreatePolicyHandler: preheat.CreatePolicyHandlerFunc(func(params preheat.CreatePolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.CreatePolicy has not yet been implemented")
 		}),
-		RobotCreateRobotHandler: robot.CreateRobotHandlerFunc(func(params robot.CreateRobotParams, principal *any) middleware.Responder {
+		RobotCreateRobotHandler: robot.CreateRobotHandlerFunc(func(params robot.CreateRobotParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.CreateRobot has not yet been implemented")
 		}),
-		WebhookCreateWebhookPolicyOfProjectHandler: webhook.CreateWebhookPolicyOfProjectHandlerFunc(func(params webhook.CreateWebhookPolicyOfProjectParams, principal *any) middleware.Responder {
+		WebhookCreateWebhookPolicyOfProjectHandler: webhook.CreateWebhookPolicyOfProjectHandlerFunc(func(params webhook.CreateWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.CreateWebhookPolicyOfProject has not yet been implemented")
 		}),
-		ImmutableDeleteImmuRuleHandler: immutable.DeleteImmuRuleHandlerFunc(func(params immutable.DeleteImmuRuleParams, principal *any) middleware.Responder {
+		ImmutableDeleteImmuRuleHandler: immutable.DeleteImmuRuleHandlerFunc(func(params immutable.DeleteImmuRuleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation immutable.DeleteImmuRule has not yet been implemented")
 		}),
-		PreheatDeleteInstanceHandler: preheat.DeleteInstanceHandlerFunc(func(params preheat.DeleteInstanceParams, principal *any) middleware.Responder {
+		PreheatDeleteInstanceHandler: preheat.DeleteInstanceHandlerFunc(func(params preheat.DeleteInstanceParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.DeleteInstance has not yet been implemented")
 		}),
-		LabelDeleteLabelHandler: label.DeleteLabelHandlerFunc(func(params label.DeleteLabelParams, principal *any) middleware.Responder {
+		LabelDeleteLabelHandler: label.DeleteLabelHandlerFunc(func(params label.DeleteLabelParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation label.DeleteLabel has not yet been implemented")
 		}),
-		PreheatDeletePolicyHandler: preheat.DeletePolicyHandlerFunc(func(params preheat.DeletePolicyParams, principal *any) middleware.Responder {
+		PreheatDeletePolicyHandler: preheat.DeletePolicyHandlerFunc(func(params preheat.DeletePolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.DeletePolicy has not yet been implemented")
 		}),
-		RobotDeleteRobotHandler: robot.DeleteRobotHandlerFunc(func(params robot.DeleteRobotParams, principal *any) middleware.Responder {
+		RobotDeleteRobotHandler: robot.DeleteRobotHandlerFunc(func(params robot.DeleteRobotParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.DeleteRobot has not yet been implemented")
 		}),
-		WebhookDeleteWebhookPolicyOfProjectHandler: webhook.DeleteWebhookPolicyOfProjectHandlerFunc(func(params webhook.DeleteWebhookPolicyOfProjectParams, principal *any) middleware.Responder {
+		WebhookDeleteWebhookPolicyOfProjectHandler: webhook.DeleteWebhookPolicyOfProjectHandlerFunc(func(params webhook.DeleteWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.DeleteWebhookPolicyOfProject has not yet been implemented")
 		}),
-		PreheatGetExecutionHandler: preheat.GetExecutionHandlerFunc(func(params preheat.GetExecutionParams, principal *any) middleware.Responder {
+		PreheatGetExecutionHandler: preheat.GetExecutionHandlerFunc(func(params preheat.GetExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.GetExecution has not yet been implemented")
 		}),
-		PreheatGetInstanceHandler: preheat.GetInstanceHandlerFunc(func(params preheat.GetInstanceParams, principal *any) middleware.Responder {
+		PreheatGetInstanceHandler: preheat.GetInstanceHandlerFunc(func(params preheat.GetInstanceParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.GetInstance has not yet been implemented")
 		}),
-		LabelGetLabelByIDHandler: label.GetLabelByIDHandlerFunc(func(params label.GetLabelByIDParams, principal *any) middleware.Responder {
+		LabelGetLabelByIDHandler: label.GetLabelByIDHandlerFunc(func(params label.GetLabelByIDParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation label.GetLabelByID has not yet been implemented")
 		}),
-		WebhookGetLogsOfWebhookTaskHandler: webhook.GetLogsOfWebhookTaskHandlerFunc(func(params webhook.GetLogsOfWebhookTaskParams, principal *any) middleware.Responder {
+		WebhookGetLogsOfWebhookTaskHandler: webhook.GetLogsOfWebhookTaskHandlerFunc(func(params webhook.GetLogsOfWebhookTaskParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.GetLogsOfWebhookTask has not yet been implemented")
 		}),
-		PreheatGetPolicyHandler: preheat.GetPolicyHandlerFunc(func(params preheat.GetPolicyParams, principal *any) middleware.Responder {
+		PreheatGetPolicyHandler: preheat.GetPolicyHandlerFunc(func(params preheat.GetPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.GetPolicy has not yet been implemented")
 		}),
-		PreheatGetPreheatLogHandler: preheat.GetPreheatLogHandlerFunc(func(params preheat.GetPreheatLogParams, principal *any) middleware.Responder {
+		PreheatGetPreheatLogHandler: preheat.GetPreheatLogHandlerFunc(func(params preheat.GetPreheatLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.GetPreheatLog has not yet been implemented")
 		}),
-		RobotGetRobotByIDHandler: robot.GetRobotByIDHandlerFunc(func(params robot.GetRobotByIDParams, principal *any) middleware.Responder {
+		RobotGetRobotByIDHandler: robot.GetRobotByIDHandlerFunc(func(params robot.GetRobotByIDParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.GetRobotByID has not yet been implemented")
 		}),
-		WebhookGetSupportedEventTypesHandler: webhook.GetSupportedEventTypesHandlerFunc(func(params webhook.GetSupportedEventTypesParams, principal *any) middleware.Responder {
+		WebhookGetSupportedEventTypesHandler: webhook.GetSupportedEventTypesHandlerFunc(func(params webhook.GetSupportedEventTypesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.GetSupportedEventTypes has not yet been implemented")
 		}),
-		WebhookGetWebhookPolicyOfProjectHandler: webhook.GetWebhookPolicyOfProjectHandlerFunc(func(params webhook.GetWebhookPolicyOfProjectParams, principal *any) middleware.Responder {
+		WebhookGetWebhookPolicyOfProjectHandler: webhook.GetWebhookPolicyOfProjectHandlerFunc(func(params webhook.GetWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.GetWebhookPolicyOfProject has not yet been implemented")
 		}),
-		WebhookLastTriggerHandler: webhook.LastTriggerHandlerFunc(func(params webhook.LastTriggerParams, principal *any) middleware.Responder {
+		WebhookLastTriggerHandler: webhook.LastTriggerHandlerFunc(func(params webhook.LastTriggerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.LastTrigger has not yet been implemented")
 		}),
-		PreheatListExecutionsHandler: preheat.ListExecutionsHandlerFunc(func(params preheat.ListExecutionsParams, principal *any) middleware.Responder {
+		PreheatListExecutionsHandler: preheat.ListExecutionsHandlerFunc(func(params preheat.ListExecutionsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListExecutions has not yet been implemented")
 		}),
-		WebhookListExecutionsOfWebhookPolicyHandler: webhook.ListExecutionsOfWebhookPolicyHandlerFunc(func(params webhook.ListExecutionsOfWebhookPolicyParams, principal *any) middleware.Responder {
+		WebhookListExecutionsOfWebhookPolicyHandler: webhook.ListExecutionsOfWebhookPolicyHandlerFunc(func(params webhook.ListExecutionsOfWebhookPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.ListExecutionsOfWebhookPolicy has not yet been implemented")
 		}),
-		ImmutableListImmuRulesHandler: immutable.ListImmuRulesHandlerFunc(func(params immutable.ListImmuRulesParams, principal *any) middleware.Responder {
+		ImmutableListImmuRulesHandler: immutable.ListImmuRulesHandlerFunc(func(params immutable.ListImmuRulesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation immutable.ListImmuRules has not yet been implemented")
 		}),
-		PreheatListInstancesHandler: preheat.ListInstancesHandlerFunc(func(params preheat.ListInstancesParams, principal *any) middleware.Responder {
+		PreheatListInstancesHandler: preheat.ListInstancesHandlerFunc(func(params preheat.ListInstancesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListInstances has not yet been implemented")
 		}),
-		LabelListLabelsHandler: label.ListLabelsHandlerFunc(func(params label.ListLabelsParams, principal *any) middleware.Responder {
+		LabelListLabelsHandler: label.ListLabelsHandlerFunc(func(params label.ListLabelsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation label.ListLabels has not yet been implemented")
 		}),
-		PreheatListPoliciesHandler: preheat.ListPoliciesHandlerFunc(func(params preheat.ListPoliciesParams, principal *any) middleware.Responder {
+		PreheatListPoliciesHandler: preheat.ListPoliciesHandlerFunc(func(params preheat.ListPoliciesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListPolicies has not yet been implemented")
 		}),
-		PreheatListProvidersHandler: preheat.ListProvidersHandlerFunc(func(params preheat.ListProvidersParams, principal *any) middleware.Responder {
+		PreheatListProvidersHandler: preheat.ListProvidersHandlerFunc(func(params preheat.ListProvidersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListProviders has not yet been implemented")
 		}),
-		PreheatListProvidersUnderProjectHandler: preheat.ListProvidersUnderProjectHandlerFunc(func(params preheat.ListProvidersUnderProjectParams, principal *any) middleware.Responder {
+		PreheatListProvidersUnderProjectHandler: preheat.ListProvidersUnderProjectHandlerFunc(func(params preheat.ListProvidersUnderProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListProvidersUnderProject has not yet been implemented")
 		}),
-		RobotListRobotHandler: robot.ListRobotHandlerFunc(func(params robot.ListRobotParams, principal *any) middleware.Responder {
+		RobotListRobotHandler: robot.ListRobotHandlerFunc(func(params robot.ListRobotParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.ListRobot has not yet been implemented")
 		}),
-		PreheatListTasksHandler: preheat.ListTasksHandlerFunc(func(params preheat.ListTasksParams, principal *any) middleware.Responder {
+		PreheatListTasksHandler: preheat.ListTasksHandlerFunc(func(params preheat.ListTasksParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ListTasks has not yet been implemented")
 		}),
-		WebhookListTasksOfWebhookExecutionHandler: webhook.ListTasksOfWebhookExecutionHandlerFunc(func(params webhook.ListTasksOfWebhookExecutionParams, principal *any) middleware.Responder {
+		WebhookListTasksOfWebhookExecutionHandler: webhook.ListTasksOfWebhookExecutionHandlerFunc(func(params webhook.ListTasksOfWebhookExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.ListTasksOfWebhookExecution has not yet been implemented")
 		}),
-		SecurityhubListVulnerabilitiesHandler: securityhub.ListVulnerabilitiesHandlerFunc(func(params securityhub.ListVulnerabilitiesParams, principal *any) middleware.Responder {
+		SecurityhubListVulnerabilitiesHandler: securityhub.ListVulnerabilitiesHandlerFunc(func(params securityhub.ListVulnerabilitiesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation securityhub.ListVulnerabilities has not yet been implemented")
 		}),
-		WebhookjobListWebhookJobsHandler: webhookjob.ListWebhookJobsHandlerFunc(func(params webhookjob.ListWebhookJobsParams, principal *any) middleware.Responder {
+		WebhookjobListWebhookJobsHandler: webhookjob.ListWebhookJobsHandlerFunc(func(params webhookjob.ListWebhookJobsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhookjob.ListWebhookJobs has not yet been implemented")
 		}),
-		WebhookListWebhookPoliciesOfProjectHandler: webhook.ListWebhookPoliciesOfProjectHandlerFunc(func(params webhook.ListWebhookPoliciesOfProjectParams, principal *any) middleware.Responder {
+		WebhookListWebhookPoliciesOfProjectHandler: webhook.ListWebhookPoliciesOfProjectHandlerFunc(func(params webhook.ListWebhookPoliciesOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.ListWebhookPoliciesOfProject has not yet been implemented")
 		}),
-		PreheatManualPreheatHandler: preheat.ManualPreheatHandlerFunc(func(params preheat.ManualPreheatParams, principal *any) middleware.Responder {
+		PreheatManualPreheatHandler: preheat.ManualPreheatHandlerFunc(func(params preheat.ManualPreheatParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.ManualPreheat has not yet been implemented")
 		}),
-		PreheatPingInstancesHandler: preheat.PingInstancesHandlerFunc(func(params preheat.PingInstancesParams, principal *any) middleware.Responder {
+		PreheatPingInstancesHandler: preheat.PingInstancesHandlerFunc(func(params preheat.PingInstancesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.PingInstances has not yet been implemented")
 		}),
-		RobotRefreshSecHandler: robot.RefreshSecHandlerFunc(func(params robot.RefreshSecParams, principal *any) middleware.Responder {
+		RobotRefreshSecHandler: robot.RefreshSecHandlerFunc(func(params robot.RefreshSecParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.RefreshSec has not yet been implemented")
 		}),
-		PreheatStopExecutionHandler: preheat.StopExecutionHandlerFunc(func(params preheat.StopExecutionParams, principal *any) middleware.Responder {
+		PreheatStopExecutionHandler: preheat.StopExecutionHandlerFunc(func(params preheat.StopExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.StopExecution has not yet been implemented")
 		}),
-		ImmutableUpdateImmuRuleHandler: immutable.UpdateImmuRuleHandlerFunc(func(params immutable.UpdateImmuRuleParams, principal *any) middleware.Responder {
+		ImmutableUpdateImmuRuleHandler: immutable.UpdateImmuRuleHandlerFunc(func(params immutable.UpdateImmuRuleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation immutable.UpdateImmuRule has not yet been implemented")
 		}),
-		PreheatUpdateInstanceHandler: preheat.UpdateInstanceHandlerFunc(func(params preheat.UpdateInstanceParams, principal *any) middleware.Responder {
+		PreheatUpdateInstanceHandler: preheat.UpdateInstanceHandlerFunc(func(params preheat.UpdateInstanceParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.UpdateInstance has not yet been implemented")
 		}),
-		LabelUpdateLabelHandler: label.UpdateLabelHandlerFunc(func(params label.UpdateLabelParams, principal *any) middleware.Responder {
+		LabelUpdateLabelHandler: label.UpdateLabelHandlerFunc(func(params label.UpdateLabelParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation label.UpdateLabel has not yet been implemented")
 		}),
-		PreheatUpdatePolicyHandler: preheat.UpdatePolicyHandlerFunc(func(params preheat.UpdatePolicyParams, principal *any) middleware.Responder {
+		PreheatUpdatePolicyHandler: preheat.UpdatePolicyHandlerFunc(func(params preheat.UpdatePolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation preheat.UpdatePolicy has not yet been implemented")
 		}),
-		RobotUpdateRobotHandler: robot.UpdateRobotHandlerFunc(func(params robot.UpdateRobotParams, principal *any) middleware.Responder {
+		RobotUpdateRobotHandler: robot.UpdateRobotHandlerFunc(func(params robot.UpdateRobotParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation robot.UpdateRobot has not yet been implemented")
 		}),
-		WebhookUpdateWebhookPolicyOfProjectHandler: webhook.UpdateWebhookPolicyOfProjectHandlerFunc(func(params webhook.UpdateWebhookPolicyOfProjectParams, principal *any) middleware.Responder {
+		WebhookUpdateWebhookPolicyOfProjectHandler: webhook.UpdateWebhookPolicyOfProjectHandlerFunc(func(params webhook.UpdateWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.UpdateWebhookPolicyOfProject has not yet been implemented")
 		}),
-		JobserviceActionGetJobLogHandler: jobservice.ActionGetJobLogHandlerFunc(func(params jobservice.ActionGetJobLogParams, principal *any) middleware.Responder {
+		JobserviceActionGetJobLogHandler: jobservice.ActionGetJobLogHandlerFunc(func(params jobservice.ActionGetJobLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.ActionGetJobLog has not yet been implemented")
 		}),
-		JobserviceActionPendingJobsHandler: jobservice.ActionPendingJobsHandlerFunc(func(params jobservice.ActionPendingJobsParams, principal *any) middleware.Responder {
+		JobserviceActionPendingJobsHandler: jobservice.ActionPendingJobsHandlerFunc(func(params jobservice.ActionPendingJobsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.ActionPendingJobs has not yet been implemented")
 		}),
-		ArtifactAddLabelHandler: artifact.AddLabelHandlerFunc(func(params artifact.AddLabelParams, principal *any) middleware.Responder {
+		ArtifactAddLabelHandler: artifact.AddLabelHandlerFunc(func(params artifact.AddLabelParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.AddLabel has not yet been implemented")
 		}),
-		ProjectMetadataAddProjectMetadatasHandler: project_metadata.AddProjectMetadatasHandlerFunc(func(params project_metadata.AddProjectMetadatasParams, principal *any) middleware.Responder {
+		ProjectMetadataAddProjectMetadatasHandler: project_metadata.AddProjectMetadatasHandlerFunc(func(params project_metadata.AddProjectMetadatasParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project_metadata.AddProjectMetadatas has not yet been implemented")
 		}),
-		GCCreateGCScheduleHandler: gc.CreateGCScheduleHandlerFunc(func(params gc.CreateGCScheduleParams, principal *any) middleware.Responder {
+		GCCreateGCScheduleHandler: gc.CreateGCScheduleHandlerFunc(func(params gc.CreateGCScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.CreateGCSchedule has not yet been implemented")
 		}),
-		ProjectCreateProjectHandler: project.CreateProjectHandlerFunc(func(params project.CreateProjectParams, principal *any) middleware.Responder {
+		ProjectCreateProjectHandler: project.CreateProjectHandlerFunc(func(params project.CreateProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.CreateProject has not yet been implemented")
 		}),
-		MemberCreateProjectMemberHandler: member.CreateProjectMemberHandlerFunc(func(params member.CreateProjectMemberParams, principal *any) middleware.Responder {
+		MemberCreateProjectMemberHandler: member.CreateProjectMemberHandlerFunc(func(params member.CreateProjectMemberParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation member.CreateProjectMember has not yet been implemented")
 		}),
-		PurgeCreatePurgeScheduleHandler: purge.CreatePurgeScheduleHandlerFunc(func(params purge.CreatePurgeScheduleParams, principal *any) middleware.Responder {
+		PurgeCreatePurgeScheduleHandler: purge.CreatePurgeScheduleHandlerFunc(func(params purge.CreatePurgeScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.CreatePurgeSchedule has not yet been implemented")
 		}),
-		RegistryCreateRegistryHandler: registry.CreateRegistryHandlerFunc(func(params registry.CreateRegistryParams, principal *any) middleware.Responder {
+		RegistryCreateRegistryHandler: registry.CreateRegistryHandlerFunc(func(params registry.CreateRegistryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.CreateRegistry has not yet been implemented")
 		}),
-		ReplicationCreateReplicationPolicyHandler: replication.CreateReplicationPolicyHandlerFunc(func(params replication.CreateReplicationPolicyParams, principal *any) middleware.Responder {
+		ReplicationCreateReplicationPolicyHandler: replication.CreateReplicationPolicyHandlerFunc(func(params replication.CreateReplicationPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.CreateReplicationPolicy has not yet been implemented")
 		}),
-		RetentionCreateRetentionHandler: retention.CreateRetentionHandlerFunc(func(params retention.CreateRetentionParams, principal *any) middleware.Responder {
+		RetentionCreateRetentionHandler: retention.CreateRetentionHandlerFunc(func(params retention.CreateRetentionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.CreateRetention has not yet been implemented")
 		}),
-		ScanAllCreateScanAllScheduleHandler: scan_all.CreateScanAllScheduleHandlerFunc(func(params scan_all.CreateScanAllScheduleParams, principal *any) middleware.Responder {
+		ScanAllCreateScanAllScheduleHandler: scan_all.CreateScanAllScheduleHandlerFunc(func(params scan_all.CreateScanAllScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.CreateScanAllSchedule has not yet been implemented")
 		}),
-		ScannerCreateScannerHandler: scanner.CreateScannerHandlerFunc(func(params scanner.CreateScannerParams, principal *any) middleware.Responder {
+		ScannerCreateScannerHandler: scanner.CreateScannerHandlerFunc(func(params scanner.CreateScannerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.CreateScanner has not yet been implemented")
 		}),
-		ArtifactCreateTagHandler: artifact.CreateTagHandlerFunc(func(params artifact.CreateTagParams, principal *any) middleware.Responder {
+		ArtifactCreateTagHandler: artifact.CreateTagHandlerFunc(func(params artifact.CreateTagParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.CreateTag has not yet been implemented")
 		}),
-		UserCreateUserHandler: user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal *any) middleware.Responder {
+		UserCreateUserHandler: user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.CreateUser has not yet been implemented")
 		}),
-		UsergroupCreateUserGroupHandler: usergroup.CreateUserGroupHandlerFunc(func(params usergroup.CreateUserGroupParams, principal *any) middleware.Responder {
+		UsergroupCreateUserGroupHandler: usergroup.CreateUserGroupHandlerFunc(func(params usergroup.CreateUserGroupParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.CreateUserGroup has not yet been implemented")
 		}),
-		ArtifactDeleteArtifactHandler: artifact.DeleteArtifactHandlerFunc(func(params artifact.DeleteArtifactParams, principal *any) middleware.Responder {
+		ArtifactDeleteArtifactHandler: artifact.DeleteArtifactHandlerFunc(func(params artifact.DeleteArtifactParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.DeleteArtifact has not yet been implemented")
 		}),
-		ProjectDeleteProjectHandler: project.DeleteProjectHandlerFunc(func(params project.DeleteProjectParams, principal *any) middleware.Responder {
+		ProjectDeleteProjectHandler: project.DeleteProjectHandlerFunc(func(params project.DeleteProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.DeleteProject has not yet been implemented")
 		}),
-		MemberDeleteProjectMemberHandler: member.DeleteProjectMemberHandlerFunc(func(params member.DeleteProjectMemberParams, principal *any) middleware.Responder {
+		MemberDeleteProjectMemberHandler: member.DeleteProjectMemberHandlerFunc(func(params member.DeleteProjectMemberParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation member.DeleteProjectMember has not yet been implemented")
 		}),
-		ProjectMetadataDeleteProjectMetadataHandler: project_metadata.DeleteProjectMetadataHandlerFunc(func(params project_metadata.DeleteProjectMetadataParams, principal *any) middleware.Responder {
+		ProjectMetadataDeleteProjectMetadataHandler: project_metadata.DeleteProjectMetadataHandlerFunc(func(params project_metadata.DeleteProjectMetadataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project_metadata.DeleteProjectMetadata has not yet been implemented")
 		}),
-		RegistryDeleteRegistryHandler: registry.DeleteRegistryHandlerFunc(func(params registry.DeleteRegistryParams, principal *any) middleware.Responder {
+		RegistryDeleteRegistryHandler: registry.DeleteRegistryHandlerFunc(func(params registry.DeleteRegistryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.DeleteRegistry has not yet been implemented")
 		}),
-		ReplicationDeleteReplicationPolicyHandler: replication.DeleteReplicationPolicyHandlerFunc(func(params replication.DeleteReplicationPolicyParams, principal *any) middleware.Responder {
+		ReplicationDeleteReplicationPolicyHandler: replication.DeleteReplicationPolicyHandlerFunc(func(params replication.DeleteReplicationPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.DeleteReplicationPolicy has not yet been implemented")
 		}),
-		RepositoryDeleteRepositoryHandler: repository.DeleteRepositoryHandlerFunc(func(params repository.DeleteRepositoryParams, principal *any) middleware.Responder {
+		RepositoryDeleteRepositoryHandler: repository.DeleteRepositoryHandlerFunc(func(params repository.DeleteRepositoryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation repository.DeleteRepository has not yet been implemented")
 		}),
-		RetentionDeleteRetentionHandler: retention.DeleteRetentionHandlerFunc(func(params retention.DeleteRetentionParams, principal *any) middleware.Responder {
+		RetentionDeleteRetentionHandler: retention.DeleteRetentionHandlerFunc(func(params retention.DeleteRetentionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.DeleteRetention has not yet been implemented")
 		}),
-		ScannerDeleteScannerHandler: scanner.DeleteScannerHandlerFunc(func(params scanner.DeleteScannerParams, principal *any) middleware.Responder {
+		ScannerDeleteScannerHandler: scanner.DeleteScannerHandlerFunc(func(params scanner.DeleteScannerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.DeleteScanner has not yet been implemented")
 		}),
-		ArtifactDeleteTagHandler: artifact.DeleteTagHandlerFunc(func(params artifact.DeleteTagParams, principal *any) middleware.Responder {
+		ArtifactDeleteTagHandler: artifact.DeleteTagHandlerFunc(func(params artifact.DeleteTagParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.DeleteTag has not yet been implemented")
 		}),
-		UserDeleteUserHandler: user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal *any) middleware.Responder {
+		UserDeleteUserHandler: user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.DeleteUser has not yet been implemented")
 		}),
-		UsergroupDeleteUserGroupHandler: usergroup.DeleteUserGroupHandlerFunc(func(params usergroup.DeleteUserGroupParams, principal *any) middleware.Responder {
+		UsergroupDeleteUserGroupHandler: usergroup.DeleteUserGroupHandlerFunc(func(params usergroup.DeleteUserGroupParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.DeleteUserGroup has not yet been implemented")
 		}),
-		ScanDataExportDownloadScanDataHandler: scan_data_export.DownloadScanDataHandlerFunc(func(params scan_data_export.DownloadScanDataParams, principal *any) middleware.Responder {
+		ScanDataExportDownloadScanDataHandler: scan_data_export.DownloadScanDataHandlerFunc(func(params scan_data_export.DownloadScanDataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_data_export.DownloadScanData has not yet been implemented")
 		}),
-		ScanDataExportExportScanDataHandler: scan_data_export.ExportScanDataHandlerFunc(func(params scan_data_export.ExportScanDataParams, principal *any) middleware.Responder {
+		ScanDataExportExportScanDataHandler: scan_data_export.ExportScanDataHandlerFunc(func(params scan_data_export.ExportScanDataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_data_export.ExportScanData has not yet been implemented")
 		}),
-		ArtifactGetAdditionHandler: artifact.GetAdditionHandlerFunc(func(params artifact.GetAdditionParams, principal *any) middleware.Responder {
+		ArtifactGetAdditionHandler: artifact.GetAdditionHandlerFunc(func(params artifact.GetAdditionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.GetAddition has not yet been implemented")
 		}),
-		ArtifactGetArtifactHandler: artifact.GetArtifactHandlerFunc(func(params artifact.GetArtifactParams, principal *any) middleware.Responder {
+		ArtifactGetArtifactHandler: artifact.GetArtifactHandlerFunc(func(params artifact.GetArtifactParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.GetArtifact has not yet been implemented")
 		}),
-		SysteminfoGetCertHandler: systeminfo.GetCertHandlerFunc(func(params systeminfo.GetCertParams, principal *any) middleware.Responder {
+		SysteminfoGetCertHandler: systeminfo.GetCertHandlerFunc(func(params systeminfo.GetCertParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation systeminfo.GetCert has not yet been implemented")
 		}),
-		ConfigureGetConfigurationsHandler: configure.GetConfigurationsHandlerFunc(func(params configure.GetConfigurationsParams, principal *any) middleware.Responder {
+		ConfigureGetConfigurationsHandler: configure.GetConfigurationsHandlerFunc(func(params configure.GetConfigurationsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation configure.GetConfigurations has not yet been implemented")
 		}),
-		UserGetCurrentUserInfoHandler: user.GetCurrentUserInfoHandlerFunc(func(params user.GetCurrentUserInfoParams, principal *any) middleware.Responder {
+		UserGetCurrentUserInfoHandler: user.GetCurrentUserInfoHandlerFunc(func(params user.GetCurrentUserInfoParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.GetCurrentUserInfo has not yet been implemented")
 		}),
-		UserGetCurrentUserPermissionsHandler: user.GetCurrentUserPermissionsHandlerFunc(func(params user.GetCurrentUserPermissionsParams, principal *any) middleware.Responder {
+		UserGetCurrentUserPermissionsHandler: user.GetCurrentUserPermissionsHandlerFunc(func(params user.GetCurrentUserPermissionsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.GetCurrentUserPermissions has not yet been implemented")
 		}),
-		GCGetGCHandler: gc.GetGCHandlerFunc(func(params gc.GetGCParams, principal *any) middleware.Responder {
+		GCGetGCHandler: gc.GetGCHandlerFunc(func(params gc.GetGCParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.GetGC has not yet been implemented")
 		}),
-		GCGetGCHistoryHandler: gc.GetGCHistoryHandlerFunc(func(params gc.GetGCHistoryParams, principal *any) middleware.Responder {
+		GCGetGCHistoryHandler: gc.GetGCHistoryHandlerFunc(func(params gc.GetGCHistoryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.GetGCHistory has not yet been implemented")
 		}),
-		GCGetGCLogHandler: gc.GetGCLogHandlerFunc(func(params gc.GetGCLogParams, principal *any) middleware.Responder {
+		GCGetGCLogHandler: gc.GetGCLogHandlerFunc(func(params gc.GetGCLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.GetGCLog has not yet been implemented")
 		}),
-		GCGetGCScheduleHandler: gc.GetGCScheduleHandlerFunc(func(params gc.GetGCScheduleParams, principal *any) middleware.Responder {
+		GCGetGCScheduleHandler: gc.GetGCScheduleHandlerFunc(func(params gc.GetGCScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.GetGCSchedule has not yet been implemented")
 		}),
-		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal *any) middleware.Responder {
+		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
 		}),
-		IconGetIconHandler: icon.GetIconHandlerFunc(func(params icon.GetIconParams, principal *any) middleware.Responder {
+		IconGetIconHandler: icon.GetIconHandlerFunc(func(params icon.GetIconParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation icon.GetIcon has not yet been implemented")
 		}),
-		ConfigureGetInternalconfigHandler: configure.GetInternalconfigHandlerFunc(func(params configure.GetInternalconfigParams, principal *any) middleware.Responder {
+		ConfigureGetInternalconfigHandler: configure.GetInternalconfigHandlerFunc(func(params configure.GetInternalconfigParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation configure.GetInternalconfig has not yet been implemented")
 		}),
-		ScanAllGetLatestScanAllMetricsHandler: scan_all.GetLatestScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScanAllMetricsParams, principal *any) middleware.Responder {
+		ScanAllGetLatestScanAllMetricsHandler: scan_all.GetLatestScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScanAllMetricsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.GetLatestScanAllMetrics has not yet been implemented")
 		}),
-		ScanAllGetLatestScheduledScanAllMetricsHandler: scan_all.GetLatestScheduledScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScheduledScanAllMetricsParams, principal *any) middleware.Responder {
+		ScanAllGetLatestScheduledScanAllMetricsHandler: scan_all.GetLatestScheduledScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScheduledScanAllMetricsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.GetLatestScheduledScanAllMetrics has not yet been implemented")
 		}),
-		ProjectGetLogExtsHandler: project.GetLogExtsHandlerFunc(func(params project.GetLogExtsParams, principal *any) middleware.Responder {
+		ProjectGetLogExtsHandler: project.GetLogExtsHandlerFunc(func(params project.GetLogExtsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetLogExts has not yet been implemented")
 		}),
-		ProjectGetLogsHandler: project.GetLogsHandlerFunc(func(params project.GetLogsParams, principal *any) middleware.Responder {
+		ProjectGetLogsHandler: project.GetLogsHandlerFunc(func(params project.GetLogsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetLogs has not yet been implemented")
 		}),
-		PermissionsGetPermissionsHandler: permissions.GetPermissionsHandlerFunc(func(params permissions.GetPermissionsParams, principal *any) middleware.Responder {
+		PermissionsGetPermissionsHandler: permissions.GetPermissionsHandlerFunc(func(params permissions.GetPermissionsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation permissions.GetPermissions has not yet been implemented")
 		}),
-		PingGetPingHandler: ping.GetPingHandlerFunc(func(params ping.GetPingParams, principal *any) middleware.Responder {
+		PingGetPingHandler: ping.GetPingHandlerFunc(func(params ping.GetPingParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation ping.GetPing has not yet been implemented")
 		}),
-		ProjectGetProjectHandler: project.GetProjectHandlerFunc(func(params project.GetProjectParams, principal *any) middleware.Responder {
+		ProjectGetProjectHandler: project.GetProjectHandlerFunc(func(params project.GetProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetProject has not yet been implemented")
 		}),
-		ProjectGetProjectDeletableHandler: project.GetProjectDeletableHandlerFunc(func(params project.GetProjectDeletableParams, principal *any) middleware.Responder {
+		ProjectGetProjectDeletableHandler: project.GetProjectDeletableHandlerFunc(func(params project.GetProjectDeletableParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetProjectDeletable has not yet been implemented")
 		}),
-		MemberGetProjectMemberHandler: member.GetProjectMemberHandlerFunc(func(params member.GetProjectMemberParams, principal *any) middleware.Responder {
+		MemberGetProjectMemberHandler: member.GetProjectMemberHandlerFunc(func(params member.GetProjectMemberParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation member.GetProjectMember has not yet been implemented")
 		}),
-		ProjectMetadataGetProjectMetadataHandler: project_metadata.GetProjectMetadataHandlerFunc(func(params project_metadata.GetProjectMetadataParams, principal *any) middleware.Responder {
+		ProjectMetadataGetProjectMetadataHandler: project_metadata.GetProjectMetadataHandlerFunc(func(params project_metadata.GetProjectMetadataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project_metadata.GetProjectMetadata has not yet been implemented")
 		}),
-		ProjectGetProjectSummaryHandler: project.GetProjectSummaryHandlerFunc(func(params project.GetProjectSummaryParams, principal *any) middleware.Responder {
+		ProjectGetProjectSummaryHandler: project.GetProjectSummaryHandlerFunc(func(params project.GetProjectSummaryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetProjectSummary has not yet been implemented")
 		}),
-		PurgeGetPurgeHistoryHandler: purge.GetPurgeHistoryHandlerFunc(func(params purge.GetPurgeHistoryParams, principal *any) middleware.Responder {
+		PurgeGetPurgeHistoryHandler: purge.GetPurgeHistoryHandlerFunc(func(params purge.GetPurgeHistoryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.GetPurgeHistory has not yet been implemented")
 		}),
-		PurgeGetPurgeJobHandler: purge.GetPurgeJobHandlerFunc(func(params purge.GetPurgeJobParams, principal *any) middleware.Responder {
+		PurgeGetPurgeJobHandler: purge.GetPurgeJobHandlerFunc(func(params purge.GetPurgeJobParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.GetPurgeJob has not yet been implemented")
 		}),
-		PurgeGetPurgeJobLogHandler: purge.GetPurgeJobLogHandlerFunc(func(params purge.GetPurgeJobLogParams, principal *any) middleware.Responder {
+		PurgeGetPurgeJobLogHandler: purge.GetPurgeJobLogHandlerFunc(func(params purge.GetPurgeJobLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.GetPurgeJobLog has not yet been implemented")
 		}),
-		PurgeGetPurgeScheduleHandler: purge.GetPurgeScheduleHandlerFunc(func(params purge.GetPurgeScheduleParams, principal *any) middleware.Responder {
+		PurgeGetPurgeScheduleHandler: purge.GetPurgeScheduleHandlerFunc(func(params purge.GetPurgeScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.GetPurgeSchedule has not yet been implemented")
 		}),
-		QuotaGetQuotaHandler: quota.GetQuotaHandlerFunc(func(params quota.GetQuotaParams, principal *any) middleware.Responder {
+		QuotaGetQuotaHandler: quota.GetQuotaHandlerFunc(func(params quota.GetQuotaParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation quota.GetQuota has not yet been implemented")
 		}),
-		RegistryGetRegistryHandler: registry.GetRegistryHandlerFunc(func(params registry.GetRegistryParams, principal *any) middleware.Responder {
+		RegistryGetRegistryHandler: registry.GetRegistryHandlerFunc(func(params registry.GetRegistryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.GetRegistry has not yet been implemented")
 		}),
-		RegistryGetRegistryInfoHandler: registry.GetRegistryInfoHandlerFunc(func(params registry.GetRegistryInfoParams, principal *any) middleware.Responder {
+		RegistryGetRegistryInfoHandler: registry.GetRegistryInfoHandlerFunc(func(params registry.GetRegistryInfoParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.GetRegistryInfo has not yet been implemented")
 		}),
-		RetentionGetRentenitionMetadataHandler: retention.GetRentenitionMetadataHandlerFunc(func(params retention.GetRentenitionMetadataParams, principal *any) middleware.Responder {
+		RetentionGetRentenitionMetadataHandler: retention.GetRentenitionMetadataHandlerFunc(func(params retention.GetRentenitionMetadataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.GetRentenitionMetadata has not yet been implemented")
 		}),
-		ReplicationGetReplicationExecutionHandler: replication.GetReplicationExecutionHandlerFunc(func(params replication.GetReplicationExecutionParams, principal *any) middleware.Responder {
+		ReplicationGetReplicationExecutionHandler: replication.GetReplicationExecutionHandlerFunc(func(params replication.GetReplicationExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.GetReplicationExecution has not yet been implemented")
 		}),
-		ReplicationGetReplicationLogHandler: replication.GetReplicationLogHandlerFunc(func(params replication.GetReplicationLogParams, principal *any) middleware.Responder {
+		ReplicationGetReplicationLogHandler: replication.GetReplicationLogHandlerFunc(func(params replication.GetReplicationLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.GetReplicationLog has not yet been implemented")
 		}),
-		ReplicationGetReplicationPolicyHandler: replication.GetReplicationPolicyHandlerFunc(func(params replication.GetReplicationPolicyParams, principal *any) middleware.Responder {
+		ReplicationGetReplicationPolicyHandler: replication.GetReplicationPolicyHandlerFunc(func(params replication.GetReplicationPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.GetReplicationPolicy has not yet been implemented")
 		}),
-		ScanGetReportLogHandler: scan.GetReportLogHandlerFunc(func(params scan.GetReportLogParams, principal *any) middleware.Responder {
+		ScanGetReportLogHandler: scan.GetReportLogHandlerFunc(func(params scan.GetReportLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan.GetReportLog has not yet been implemented")
 		}),
-		RepositoryGetRepositoryHandler: repository.GetRepositoryHandlerFunc(func(params repository.GetRepositoryParams, principal *any) middleware.Responder {
+		RepositoryGetRepositoryHandler: repository.GetRepositoryHandlerFunc(func(params repository.GetRepositoryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation repository.GetRepository has not yet been implemented")
 		}),
-		RetentionGetRetentionHandler: retention.GetRetentionHandlerFunc(func(params retention.GetRetentionParams, principal *any) middleware.Responder {
+		RetentionGetRetentionHandler: retention.GetRetentionHandlerFunc(func(params retention.GetRetentionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.GetRetention has not yet been implemented")
 		}),
-		RetentionGetRetentionTaskLogHandler: retention.GetRetentionTaskLogHandlerFunc(func(params retention.GetRetentionTaskLogParams, principal *any) middleware.Responder {
+		RetentionGetRetentionTaskLogHandler: retention.GetRetentionTaskLogHandlerFunc(func(params retention.GetRetentionTaskLogParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.GetRetentionTaskLog has not yet been implemented")
 		}),
-		ScanAllGetScanAllScheduleHandler: scan_all.GetScanAllScheduleHandlerFunc(func(params scan_all.GetScanAllScheduleParams, principal *any) middleware.Responder {
+		ScanAllGetScanAllScheduleHandler: scan_all.GetScanAllScheduleHandlerFunc(func(params scan_all.GetScanAllScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.GetScanAllSchedule has not yet been implemented")
 		}),
-		ScanDataExportGetScanDataExportExecutionHandler: scan_data_export.GetScanDataExportExecutionHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionParams, principal *any) middleware.Responder {
+		ScanDataExportGetScanDataExportExecutionHandler: scan_data_export.GetScanDataExportExecutionHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_data_export.GetScanDataExportExecution has not yet been implemented")
 		}),
-		ScanDataExportGetScanDataExportExecutionListHandler: scan_data_export.GetScanDataExportExecutionListHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionListParams, principal *any) middleware.Responder {
+		ScanDataExportGetScanDataExportExecutionListHandler: scan_data_export.GetScanDataExportExecutionListHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionListParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_data_export.GetScanDataExportExecutionList has not yet been implemented")
 		}),
-		ScannerGetScannerHandler: scanner.GetScannerHandlerFunc(func(params scanner.GetScannerParams, principal *any) middleware.Responder {
+		ScannerGetScannerHandler: scanner.GetScannerHandlerFunc(func(params scanner.GetScannerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.GetScanner has not yet been implemented")
 		}),
-		ScannerGetScannerMetadataHandler: scanner.GetScannerMetadataHandlerFunc(func(params scanner.GetScannerMetadataParams, principal *any) middleware.Responder {
+		ScannerGetScannerMetadataHandler: scanner.GetScannerMetadataHandlerFunc(func(params scanner.GetScannerMetadataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.GetScannerMetadata has not yet been implemented")
 		}),
-		ProjectGetScannerOfProjectHandler: project.GetScannerOfProjectHandlerFunc(func(params project.GetScannerOfProjectParams, principal *any) middleware.Responder {
+		ProjectGetScannerOfProjectHandler: project.GetScannerOfProjectHandlerFunc(func(params project.GetScannerOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.GetScannerOfProject has not yet been implemented")
 		}),
-		ScheduleGetSchedulePausedHandler: schedule.GetSchedulePausedHandlerFunc(func(params schedule.GetSchedulePausedParams, principal *any) middleware.Responder {
+		ScheduleGetSchedulePausedHandler: schedule.GetSchedulePausedHandlerFunc(func(params schedule.GetSchedulePausedParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation schedule.GetSchedulePaused has not yet been implemented")
 		}),
-		SecurityhubGetSecuritySummaryHandler: securityhub.GetSecuritySummaryHandlerFunc(func(params securityhub.GetSecuritySummaryParams, principal *any) middleware.Responder {
+		SecurityhubGetSecuritySummaryHandler: securityhub.GetSecuritySummaryHandlerFunc(func(params securityhub.GetSecuritySummaryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation securityhub.GetSecuritySummary has not yet been implemented")
 		}),
-		StatisticGetStatisticHandler: statistic.GetStatisticHandlerFunc(func(params statistic.GetStatisticParams, principal *any) middleware.Responder {
+		StatisticGetStatisticHandler: statistic.GetStatisticHandlerFunc(func(params statistic.GetStatisticParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation statistic.GetStatistic has not yet been implemented")
 		}),
-		SystemCVEAllowlistGetSystemCVEAllowlistHandler: system_cve_allowlist.GetSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.GetSystemCVEAllowlistParams, principal *any) middleware.Responder {
+		SystemCVEAllowlistGetSystemCVEAllowlistHandler: system_cve_allowlist.GetSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.GetSystemCVEAllowlistParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation system_cve_allowlist.GetSystemCVEAllowlist has not yet been implemented")
 		}),
-		SysteminfoGetSystemInfoHandler: systeminfo.GetSystemInfoHandlerFunc(func(params systeminfo.GetSystemInfoParams, principal *any) middleware.Responder {
+		SysteminfoGetSystemInfoHandler: systeminfo.GetSystemInfoHandlerFunc(func(params systeminfo.GetSystemInfoParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation systeminfo.GetSystemInfo has not yet been implemented")
 		}),
-		UserGetUserHandler: user.GetUserHandlerFunc(func(params user.GetUserParams, principal *any) middleware.Responder {
+		UserGetUserHandler: user.GetUserHandlerFunc(func(params user.GetUserParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.GetUser has not yet been implemented")
 		}),
-		UsergroupGetUserGroupHandler: usergroup.GetUserGroupHandlerFunc(func(params usergroup.GetUserGroupParams, principal *any) middleware.Responder {
+		UsergroupGetUserGroupHandler: usergroup.GetUserGroupHandlerFunc(func(params usergroup.GetUserGroupParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.GetUserGroup has not yet been implemented")
 		}),
-		SysteminfoGetVolumesHandler: systeminfo.GetVolumesHandlerFunc(func(params systeminfo.GetVolumesParams, principal *any) middleware.Responder {
+		SysteminfoGetVolumesHandler: systeminfo.GetVolumesHandlerFunc(func(params systeminfo.GetVolumesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation systeminfo.GetVolumes has not yet been implemented")
 		}),
-		ArtifactGetVulnerabilitiesAdditionHandler: artifact.GetVulnerabilitiesAdditionHandlerFunc(func(params artifact.GetVulnerabilitiesAdditionParams, principal *any) middleware.Responder {
+		ArtifactGetVulnerabilitiesAdditionHandler: artifact.GetVulnerabilitiesAdditionHandlerFunc(func(params artifact.GetVulnerabilitiesAdditionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.GetVulnerabilitiesAddition has not yet been implemented")
 		}),
-		JobserviceGetWorkerPoolsHandler: jobservice.GetWorkerPoolsHandlerFunc(func(params jobservice.GetWorkerPoolsParams, principal *any) middleware.Responder {
+		JobserviceGetWorkerPoolsHandler: jobservice.GetWorkerPoolsHandlerFunc(func(params jobservice.GetWorkerPoolsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.GetWorkerPools has not yet been implemented")
 		}),
-		JobserviceGetWorkersHandler: jobservice.GetWorkersHandlerFunc(func(params jobservice.GetWorkersParams, principal *any) middleware.Responder {
+		JobserviceGetWorkersHandler: jobservice.GetWorkersHandlerFunc(func(params jobservice.GetWorkersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.GetWorkers has not yet been implemented")
 		}),
-		ProjectHeadProjectHandler: project.HeadProjectHandlerFunc(func(params project.HeadProjectParams, principal *any) middleware.Responder {
+		ProjectHeadProjectHandler: project.HeadProjectHandlerFunc(func(params project.HeadProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.HeadProject has not yet been implemented")
 		}),
-		LdapImportLdapUserHandler: ldap.ImportLdapUserHandlerFunc(func(params ldap.ImportLdapUserParams, principal *any) middleware.Responder {
+		LdapImportLdapUserHandler: ldap.ImportLdapUserHandlerFunc(func(params ldap.ImportLdapUserParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation ldap.ImportLdapUser has not yet been implemented")
 		}),
-		ArtifactListAccessoriesHandler: artifact.ListAccessoriesHandlerFunc(func(params artifact.ListAccessoriesParams, principal *any) middleware.Responder {
+		ArtifactListAccessoriesHandler: artifact.ListAccessoriesHandlerFunc(func(params artifact.ListAccessoriesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.ListAccessories has not yet been implemented")
 		}),
-		RepositoryListAllRepositoriesHandler: repository.ListAllRepositoriesHandlerFunc(func(params repository.ListAllRepositoriesParams, principal *any) middleware.Responder {
+		RepositoryListAllRepositoriesHandler: repository.ListAllRepositoriesHandlerFunc(func(params repository.ListAllRepositoriesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation repository.ListAllRepositories has not yet been implemented")
 		}),
-		ArtifactListArtifactsHandler: artifact.ListArtifactsHandlerFunc(func(params artifact.ListArtifactsParams, principal *any) middleware.Responder {
+		ArtifactListArtifactsHandler: artifact.ListArtifactsHandlerFunc(func(params artifact.ListArtifactsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.ListArtifacts has not yet been implemented")
 		}),
-		ProjectListArtifactsOfProjectHandler: project.ListArtifactsOfProjectHandlerFunc(func(params project.ListArtifactsOfProjectParams, principal *any) middleware.Responder {
+		ProjectListArtifactsOfProjectHandler: project.ListArtifactsOfProjectHandlerFunc(func(params project.ListArtifactsOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.ListArtifactsOfProject has not yet been implemented")
 		}),
-		AuditlogListAuditLogEventTypesHandler: auditlog.ListAuditLogEventTypesHandlerFunc(func(params auditlog.ListAuditLogEventTypesParams, principal *any) middleware.Responder {
+		AuditlogListAuditLogEventTypesHandler: auditlog.ListAuditLogEventTypesHandlerFunc(func(params auditlog.ListAuditLogEventTypesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation auditlog.ListAuditLogEventTypes has not yet been implemented")
 		}),
-		AuditlogListAuditLogExtsHandler: auditlog.ListAuditLogExtsHandlerFunc(func(params auditlog.ListAuditLogExtsParams, principal *any) middleware.Responder {
+		AuditlogListAuditLogExtsHandler: auditlog.ListAuditLogExtsHandlerFunc(func(params auditlog.ListAuditLogExtsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation auditlog.ListAuditLogExts has not yet been implemented")
 		}),
-		AuditlogListAuditLogsHandler: auditlog.ListAuditLogsHandlerFunc(func(params auditlog.ListAuditLogsParams, principal *any) middleware.Responder {
+		AuditlogListAuditLogsHandler: auditlog.ListAuditLogsHandlerFunc(func(params auditlog.ListAuditLogsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation auditlog.ListAuditLogs has not yet been implemented")
 		}),
-		JobserviceListJobQueuesHandler: jobservice.ListJobQueuesHandlerFunc(func(params jobservice.ListJobQueuesParams, principal *any) middleware.Responder {
+		JobserviceListJobQueuesHandler: jobservice.ListJobQueuesHandlerFunc(func(params jobservice.ListJobQueuesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.ListJobQueues has not yet been implemented")
 		}),
-		MemberListProjectMembersHandler: member.ListProjectMembersHandlerFunc(func(params member.ListProjectMembersParams, principal *any) middleware.Responder {
+		MemberListProjectMembersHandler: member.ListProjectMembersHandlerFunc(func(params member.ListProjectMembersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation member.ListProjectMembers has not yet been implemented")
 		}),
-		ProjectMetadataListProjectMetadatasHandler: project_metadata.ListProjectMetadatasHandlerFunc(func(params project_metadata.ListProjectMetadatasParams, principal *any) middleware.Responder {
+		ProjectMetadataListProjectMetadatasHandler: project_metadata.ListProjectMetadatasHandlerFunc(func(params project_metadata.ListProjectMetadatasParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project_metadata.ListProjectMetadatas has not yet been implemented")
 		}),
-		ProjectListProjectsHandler: project.ListProjectsHandlerFunc(func(params project.ListProjectsParams, principal *any) middleware.Responder {
+		ProjectListProjectsHandler: project.ListProjectsHandlerFunc(func(params project.ListProjectsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.ListProjects has not yet been implemented")
 		}),
-		QuotaListQuotasHandler: quota.ListQuotasHandlerFunc(func(params quota.ListQuotasParams, principal *any) middleware.Responder {
+		QuotaListQuotasHandler: quota.ListQuotasHandlerFunc(func(params quota.ListQuotasParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation quota.ListQuotas has not yet been implemented")
 		}),
-		RegistryListRegistriesHandler: registry.ListRegistriesHandlerFunc(func(params registry.ListRegistriesParams, principal *any) middleware.Responder {
+		RegistryListRegistriesHandler: registry.ListRegistriesHandlerFunc(func(params registry.ListRegistriesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.ListRegistries has not yet been implemented")
 		}),
-		RegistryListRegistryProviderInfosHandler: registry.ListRegistryProviderInfosHandlerFunc(func(params registry.ListRegistryProviderInfosParams, principal *any) middleware.Responder {
+		RegistryListRegistryProviderInfosHandler: registry.ListRegistryProviderInfosHandlerFunc(func(params registry.ListRegistryProviderInfosParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.ListRegistryProviderInfos has not yet been implemented")
 		}),
-		RegistryListRegistryProviderTypesHandler: registry.ListRegistryProviderTypesHandlerFunc(func(params registry.ListRegistryProviderTypesParams, principal *any) middleware.Responder {
+		RegistryListRegistryProviderTypesHandler: registry.ListRegistryProviderTypesHandlerFunc(func(params registry.ListRegistryProviderTypesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.ListRegistryProviderTypes has not yet been implemented")
 		}),
-		ReplicationListReplicationExecutionsHandler: replication.ListReplicationExecutionsHandlerFunc(func(params replication.ListReplicationExecutionsParams, principal *any) middleware.Responder {
+		ReplicationListReplicationExecutionsHandler: replication.ListReplicationExecutionsHandlerFunc(func(params replication.ListReplicationExecutionsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.ListReplicationExecutions has not yet been implemented")
 		}),
-		ReplicationListReplicationPoliciesHandler: replication.ListReplicationPoliciesHandlerFunc(func(params replication.ListReplicationPoliciesParams, principal *any) middleware.Responder {
+		ReplicationListReplicationPoliciesHandler: replication.ListReplicationPoliciesHandlerFunc(func(params replication.ListReplicationPoliciesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.ListReplicationPolicies has not yet been implemented")
 		}),
-		ReplicationListReplicationTasksHandler: replication.ListReplicationTasksHandlerFunc(func(params replication.ListReplicationTasksParams, principal *any) middleware.Responder {
+		ReplicationListReplicationTasksHandler: replication.ListReplicationTasksHandlerFunc(func(params replication.ListReplicationTasksParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.ListReplicationTasks has not yet been implemented")
 		}),
-		RepositoryListRepositoriesHandler: repository.ListRepositoriesHandlerFunc(func(params repository.ListRepositoriesParams, principal *any) middleware.Responder {
+		RepositoryListRepositoriesHandler: repository.ListRepositoriesHandlerFunc(func(params repository.ListRepositoriesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation repository.ListRepositories has not yet been implemented")
 		}),
-		RetentionListRetentionExecutionsHandler: retention.ListRetentionExecutionsHandlerFunc(func(params retention.ListRetentionExecutionsParams, principal *any) middleware.Responder {
+		RetentionListRetentionExecutionsHandler: retention.ListRetentionExecutionsHandlerFunc(func(params retention.ListRetentionExecutionsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.ListRetentionExecutions has not yet been implemented")
 		}),
-		RetentionListRetentionTasksHandler: retention.ListRetentionTasksHandlerFunc(func(params retention.ListRetentionTasksParams, principal *any) middleware.Responder {
+		RetentionListRetentionTasksHandler: retention.ListRetentionTasksHandlerFunc(func(params retention.ListRetentionTasksParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.ListRetentionTasks has not yet been implemented")
 		}),
-		ProjectListScannerCandidatesOfProjectHandler: project.ListScannerCandidatesOfProjectHandlerFunc(func(params project.ListScannerCandidatesOfProjectParams, principal *any) middleware.Responder {
+		ProjectListScannerCandidatesOfProjectHandler: project.ListScannerCandidatesOfProjectHandlerFunc(func(params project.ListScannerCandidatesOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.ListScannerCandidatesOfProject has not yet been implemented")
 		}),
-		ScannerListScannersHandler: scanner.ListScannersHandlerFunc(func(params scanner.ListScannersParams, principal *any) middleware.Responder {
+		ScannerListScannersHandler: scanner.ListScannersHandlerFunc(func(params scanner.ListScannersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.ListScanners has not yet been implemented")
 		}),
-		ScheduleListSchedulesHandler: schedule.ListSchedulesHandlerFunc(func(params schedule.ListSchedulesParams, principal *any) middleware.Responder {
+		ScheduleListSchedulesHandler: schedule.ListSchedulesHandlerFunc(func(params schedule.ListSchedulesParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation schedule.ListSchedules has not yet been implemented")
 		}),
-		ArtifactListTagsHandler: artifact.ListTagsHandlerFunc(func(params artifact.ListTagsParams, principal *any) middleware.Responder {
+		ArtifactListTagsHandler: artifact.ListTagsHandlerFunc(func(params artifact.ListTagsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.ListTags has not yet been implemented")
 		}),
-		UsergroupListUserGroupsHandler: usergroup.ListUserGroupsHandlerFunc(func(params usergroup.ListUserGroupsParams, principal *any) middleware.Responder {
+		UsergroupListUserGroupsHandler: usergroup.ListUserGroupsHandlerFunc(func(params usergroup.ListUserGroupsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.ListUserGroups has not yet been implemented")
 		}),
-		UserListUsersHandler: user.ListUsersHandlerFunc(func(params user.ListUsersParams, principal *any) middleware.Responder {
+		UserListUsersHandler: user.ListUsersHandlerFunc(func(params user.ListUsersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.ListUsers has not yet been implemented")
 		}),
-		RetentionOperateRetentionExecutionHandler: retention.OperateRetentionExecutionHandlerFunc(func(params retention.OperateRetentionExecutionParams, principal *any) middleware.Responder {
+		RetentionOperateRetentionExecutionHandler: retention.OperateRetentionExecutionHandlerFunc(func(params retention.OperateRetentionExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.OperateRetentionExecution has not yet been implemented")
 		}),
-		LdapPingLdapHandler: ldap.PingLdapHandlerFunc(func(params ldap.PingLdapParams, principal *any) middleware.Responder {
+		LdapPingLdapHandler: ldap.PingLdapHandlerFunc(func(params ldap.PingLdapParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation ldap.PingLdap has not yet been implemented")
 		}),
-		OIDCPingOIDCHandler: oidc.PingOIDCHandlerFunc(func(params oidc.PingOIDCParams, principal *any) middleware.Responder {
+		OIDCPingOIDCHandler: oidc.PingOIDCHandlerFunc(func(params oidc.PingOIDCParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation oidc.PingOIDC has not yet been implemented")
 		}),
-		RegistryPingRegistryHandler: registry.PingRegistryHandlerFunc(func(params registry.PingRegistryParams, principal *any) middleware.Responder {
+		RegistryPingRegistryHandler: registry.PingRegistryHandlerFunc(func(params registry.PingRegistryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.PingRegistry has not yet been implemented")
 		}),
-		ScannerPingScannerHandler: scanner.PingScannerHandlerFunc(func(params scanner.PingScannerParams, principal *any) middleware.Responder {
+		ScannerPingScannerHandler: scanner.PingScannerHandlerFunc(func(params scanner.PingScannerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.PingScanner has not yet been implemented")
 		}),
-		SystemCVEAllowlistPutSystemCVEAllowlistHandler: system_cve_allowlist.PutSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.PutSystemCVEAllowlistParams, principal *any) middleware.Responder {
+		SystemCVEAllowlistPutSystemCVEAllowlistHandler: system_cve_allowlist.PutSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.PutSystemCVEAllowlistParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation system_cve_allowlist.PutSystemCVEAllowlist has not yet been implemented")
 		}),
-		ArtifactRemoveLabelHandler: artifact.RemoveLabelHandlerFunc(func(params artifact.RemoveLabelParams, principal *any) middleware.Responder {
+		ArtifactRemoveLabelHandler: artifact.RemoveLabelHandlerFunc(func(params artifact.RemoveLabelParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation artifact.RemoveLabel has not yet been implemented")
 		}),
-		ScanScanArtifactHandler: scan.ScanArtifactHandlerFunc(func(params scan.ScanArtifactParams, principal *any) middleware.Responder {
+		ScanScanArtifactHandler: scan.ScanArtifactHandlerFunc(func(params scan.ScanArtifactParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan.ScanArtifact has not yet been implemented")
 		}),
-		SearchSearchHandler: search.SearchHandlerFunc(func(params search.SearchParams, principal *any) middleware.Responder {
+		SearchSearchHandler: search.SearchHandlerFunc(func(params search.SearchParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation search.Search has not yet been implemented")
 		}),
-		LdapSearchLdapGroupHandler: ldap.SearchLdapGroupHandlerFunc(func(params ldap.SearchLdapGroupParams, principal *any) middleware.Responder {
+		LdapSearchLdapGroupHandler: ldap.SearchLdapGroupHandlerFunc(func(params ldap.SearchLdapGroupParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation ldap.SearchLdapGroup has not yet been implemented")
 		}),
-		LdapSearchLdapUserHandler: ldap.SearchLdapUserHandlerFunc(func(params ldap.SearchLdapUserParams, principal *any) middleware.Responder {
+		LdapSearchLdapUserHandler: ldap.SearchLdapUserHandlerFunc(func(params ldap.SearchLdapUserParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation ldap.SearchLdapUser has not yet been implemented")
 		}),
-		UsergroupSearchUserGroupsHandler: usergroup.SearchUserGroupsHandlerFunc(func(params usergroup.SearchUserGroupsParams, principal *any) middleware.Responder {
+		UsergroupSearchUserGroupsHandler: usergroup.SearchUserGroupsHandlerFunc(func(params usergroup.SearchUserGroupsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.SearchUserGroups has not yet been implemented")
 		}),
-		UserSearchUsersHandler: user.SearchUsersHandlerFunc(func(params user.SearchUsersParams, principal *any) middleware.Responder {
+		UserSearchUsersHandler: user.SearchUsersHandlerFunc(func(params user.SearchUsersParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.SearchUsers has not yet been implemented")
 		}),
-		UserSetCliSecretHandler: user.SetCliSecretHandlerFunc(func(params user.SetCliSecretParams, principal *any) middleware.Responder {
+		UserSetCliSecretHandler: user.SetCliSecretHandlerFunc(func(params user.SetCliSecretParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.SetCliSecret has not yet been implemented")
 		}),
-		ScannerSetScannerAsDefaultHandler: scanner.SetScannerAsDefaultHandlerFunc(func(params scanner.SetScannerAsDefaultParams, principal *any) middleware.Responder {
+		ScannerSetScannerAsDefaultHandler: scanner.SetScannerAsDefaultHandlerFunc(func(params scanner.SetScannerAsDefaultParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.SetScannerAsDefault has not yet been implemented")
 		}),
-		ProjectSetScannerOfProjectHandler: project.SetScannerOfProjectHandlerFunc(func(params project.SetScannerOfProjectParams, principal *any) middleware.Responder {
+		ProjectSetScannerOfProjectHandler: project.SetScannerOfProjectHandlerFunc(func(params project.SetScannerOfProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.SetScannerOfProject has not yet been implemented")
 		}),
-		UserSetUserSysAdminHandler: user.SetUserSysAdminHandlerFunc(func(params user.SetUserSysAdminParams, principal *any) middleware.Responder {
+		UserSetUserSysAdminHandler: user.SetUserSysAdminHandlerFunc(func(params user.SetUserSysAdminParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.SetUserSysAdmin has not yet been implemented")
 		}),
-		ReplicationStartReplicationHandler: replication.StartReplicationHandlerFunc(func(params replication.StartReplicationParams, principal *any) middleware.Responder {
+		ReplicationStartReplicationHandler: replication.StartReplicationHandlerFunc(func(params replication.StartReplicationParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.StartReplication has not yet been implemented")
 		}),
-		GCStopGCHandler: gc.StopGCHandlerFunc(func(params gc.StopGCParams, principal *any) middleware.Responder {
+		GCStopGCHandler: gc.StopGCHandlerFunc(func(params gc.StopGCParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.StopGC has not yet been implemented")
 		}),
-		PurgeStopPurgeHandler: purge.StopPurgeHandlerFunc(func(params purge.StopPurgeParams, principal *any) middleware.Responder {
+		PurgeStopPurgeHandler: purge.StopPurgeHandlerFunc(func(params purge.StopPurgeParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.StopPurge has not yet been implemented")
 		}),
-		ReplicationStopReplicationHandler: replication.StopReplicationHandlerFunc(func(params replication.StopReplicationParams, principal *any) middleware.Responder {
+		ReplicationStopReplicationHandler: replication.StopReplicationHandlerFunc(func(params replication.StopReplicationParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.StopReplication has not yet been implemented")
 		}),
-		JobserviceStopRunningJobHandler: jobservice.StopRunningJobHandlerFunc(func(params jobservice.StopRunningJobParams, principal *any) middleware.Responder {
+		JobserviceStopRunningJobHandler: jobservice.StopRunningJobHandlerFunc(func(params jobservice.StopRunningJobParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation jobservice.StopRunningJob has not yet been implemented")
 		}),
-		ScanAllStopScanAllHandler: scan_all.StopScanAllHandlerFunc(func(params scan_all.StopScanAllParams, principal *any) middleware.Responder {
+		ScanAllStopScanAllHandler: scan_all.StopScanAllHandlerFunc(func(params scan_all.StopScanAllParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.StopScanAll has not yet been implemented")
 		}),
-		ScanStopScanArtifactHandler: scan.StopScanArtifactHandlerFunc(func(params scan.StopScanArtifactParams, principal *any) middleware.Responder {
+		ScanStopScanArtifactHandler: scan.StopScanArtifactHandlerFunc(func(params scan.StopScanArtifactParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan.StopScanArtifact has not yet been implemented")
 		}),
-		RetentionTriggerRetentionExecutionHandler: retention.TriggerRetentionExecutionHandlerFunc(func(params retention.TriggerRetentionExecutionParams, principal *any) middleware.Responder {
+		RetentionTriggerRetentionExecutionHandler: retention.TriggerRetentionExecutionHandlerFunc(func(params retention.TriggerRetentionExecutionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.TriggerRetentionExecution has not yet been implemented")
 		}),
-		ConfigureUpdateConfigurationsHandler: configure.UpdateConfigurationsHandlerFunc(func(params configure.UpdateConfigurationsParams, principal *any) middleware.Responder {
+		ConfigureUpdateConfigurationsHandler: configure.UpdateConfigurationsHandlerFunc(func(params configure.UpdateConfigurationsParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation configure.UpdateConfigurations has not yet been implemented")
 		}),
-		GCUpdateGCScheduleHandler: gc.UpdateGCScheduleHandlerFunc(func(params gc.UpdateGCScheduleParams, principal *any) middleware.Responder {
+		GCUpdateGCScheduleHandler: gc.UpdateGCScheduleHandlerFunc(func(params gc.UpdateGCScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation gc.UpdateGCSchedule has not yet been implemented")
 		}),
-		ProjectUpdateProjectHandler: project.UpdateProjectHandlerFunc(func(params project.UpdateProjectParams, principal *any) middleware.Responder {
+		ProjectUpdateProjectHandler: project.UpdateProjectHandlerFunc(func(params project.UpdateProjectParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project.UpdateProject has not yet been implemented")
 		}),
-		MemberUpdateProjectMemberHandler: member.UpdateProjectMemberHandlerFunc(func(params member.UpdateProjectMemberParams, principal *any) middleware.Responder {
+		MemberUpdateProjectMemberHandler: member.UpdateProjectMemberHandlerFunc(func(params member.UpdateProjectMemberParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation member.UpdateProjectMember has not yet been implemented")
 		}),
-		ProjectMetadataUpdateProjectMetadataHandler: project_metadata.UpdateProjectMetadataHandlerFunc(func(params project_metadata.UpdateProjectMetadataParams, principal *any) middleware.Responder {
+		ProjectMetadataUpdateProjectMetadataHandler: project_metadata.UpdateProjectMetadataHandlerFunc(func(params project_metadata.UpdateProjectMetadataParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation project_metadata.UpdateProjectMetadata has not yet been implemented")
 		}),
-		PurgeUpdatePurgeScheduleHandler: purge.UpdatePurgeScheduleHandlerFunc(func(params purge.UpdatePurgeScheduleParams, principal *any) middleware.Responder {
+		PurgeUpdatePurgeScheduleHandler: purge.UpdatePurgeScheduleHandlerFunc(func(params purge.UpdatePurgeScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation purge.UpdatePurgeSchedule has not yet been implemented")
 		}),
-		QuotaUpdateQuotaHandler: quota.UpdateQuotaHandlerFunc(func(params quota.UpdateQuotaParams, principal *any) middleware.Responder {
+		QuotaUpdateQuotaHandler: quota.UpdateQuotaHandlerFunc(func(params quota.UpdateQuotaParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation quota.UpdateQuota has not yet been implemented")
 		}),
-		RegistryUpdateRegistryHandler: registry.UpdateRegistryHandlerFunc(func(params registry.UpdateRegistryParams, principal *any) middleware.Responder {
+		RegistryUpdateRegistryHandler: registry.UpdateRegistryHandlerFunc(func(params registry.UpdateRegistryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation registry.UpdateRegistry has not yet been implemented")
 		}),
-		ReplicationUpdateReplicationPolicyHandler: replication.UpdateReplicationPolicyHandlerFunc(func(params replication.UpdateReplicationPolicyParams, principal *any) middleware.Responder {
+		ReplicationUpdateReplicationPolicyHandler: replication.UpdateReplicationPolicyHandlerFunc(func(params replication.UpdateReplicationPolicyParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation replication.UpdateReplicationPolicy has not yet been implemented")
 		}),
-		RepositoryUpdateRepositoryHandler: repository.UpdateRepositoryHandlerFunc(func(params repository.UpdateRepositoryParams, principal *any) middleware.Responder {
+		RepositoryUpdateRepositoryHandler: repository.UpdateRepositoryHandlerFunc(func(params repository.UpdateRepositoryParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation repository.UpdateRepository has not yet been implemented")
 		}),
-		RetentionUpdateRetentionHandler: retention.UpdateRetentionHandlerFunc(func(params retention.UpdateRetentionParams, principal *any) middleware.Responder {
+		RetentionUpdateRetentionHandler: retention.UpdateRetentionHandlerFunc(func(params retention.UpdateRetentionParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation retention.UpdateRetention has not yet been implemented")
 		}),
-		ScanAllUpdateScanAllScheduleHandler: scan_all.UpdateScanAllScheduleHandlerFunc(func(params scan_all.UpdateScanAllScheduleParams, principal *any) middleware.Responder {
+		ScanAllUpdateScanAllScheduleHandler: scan_all.UpdateScanAllScheduleHandlerFunc(func(params scan_all.UpdateScanAllScheduleParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scan_all.UpdateScanAllSchedule has not yet been implemented")
 		}),
-		ScannerUpdateScannerHandler: scanner.UpdateScannerHandlerFunc(func(params scanner.UpdateScannerParams, principal *any) middleware.Responder {
+		ScannerUpdateScannerHandler: scanner.UpdateScannerHandlerFunc(func(params scanner.UpdateScannerParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation scanner.UpdateScanner has not yet been implemented")
 		}),
-		UsergroupUpdateUserGroupHandler: usergroup.UpdateUserGroupHandlerFunc(func(params usergroup.UpdateUserGroupParams, principal *any) middleware.Responder {
+		UsergroupUpdateUserGroupHandler: usergroup.UpdateUserGroupHandlerFunc(func(params usergroup.UpdateUserGroupParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation usergroup.UpdateUserGroup has not yet been implemented")
 		}),
-		UserUpdateUserPasswordHandler: user.UpdateUserPasswordHandlerFunc(func(params user.UpdateUserPasswordParams, principal *any) middleware.Responder {
+		UserUpdateUserPasswordHandler: user.UpdateUserPasswordHandlerFunc(func(params user.UpdateUserPasswordParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.UpdateUserPassword has not yet been implemented")
 		}),
-		UserUpdateUserProfileHandler: user.UpdateUserProfileHandlerFunc(func(params user.UpdateUserProfileParams, principal *any) middleware.Responder {
+		UserUpdateUserProfileHandler: user.UpdateUserProfileHandlerFunc(func(params user.UpdateUserProfileParams, principal any) middleware.Responder {
 			return middleware.NotImplemented("operation user.UpdateUserProfile has not yet been implemented")
 		}),
 
 		// Applies when the Authorization header is set with the Basic scheme
-		BasicAuth: func(user string, pass string) (*any, error) {
+		BasicAuth: func(user string, pass string) (any, error) {
 			return nil, errors.NotImplemented("basic auth  (basic) has not yet been implemented")
 		},
 		// default authorizer is authorized meaning no requests are blocked
@@ -753,7 +753,7 @@ type HarborAPI struct {
 
 	// BasicAuth registers a function that takes username and password and returns a principal
 	// it performs authentication with basic auth
-	BasicAuth func(string, string) (*any, error)
+	BasicAuth func(string, string) (any, error)
 
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
