@@ -955,7 +955,7 @@ database:
   internal:
     image:
       repository: goharbor/harbor-db
-      tag: v2.14.1
+      tag: v2.14.3
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token
@@ -1035,7 +1035,7 @@ redis:
   internal:
     image:
       repository: goharbor/redis-photon
-      tag: v2.14.1
+      tag: v2.14.3
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token
