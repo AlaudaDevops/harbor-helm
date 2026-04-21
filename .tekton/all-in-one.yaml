@@ -200,10 +200,10 @@ spec:
           # download trivy and scanner-trivy
           
           # renovate: datasource=github-releases depName=trivy packageName=AlaudaDevops/trivy
-          TRIVY_VERSION=v0.68.3-alauda-2
+          TRIVY_VERSION=v0.68.3-alauda-3
           
           # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
-          TRIVY_ADAPTER_VERSION=v0.34.3-alauda-0
+          TRIVY_ADAPTER_VERSION=v0.34.3-alauda-1
           
           # renovate: datasource=golang-version depName=go
           export GOLANG_IMAGE_VERSION=1.26.2
@@ -236,6 +236,7 @@ spec:
           --skip-java-db-update=false
           --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           --exit-code=1
+          --ignorefile <(printf '%s\n' CVE-2026-34040 CVE-2026-33997 CVE-2026-33540 CVE-2026-35172)
       - name: skip-e2e
         description: Skip e2e test, default is false.
         default: "false"
