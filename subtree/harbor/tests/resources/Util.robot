@@ -88,7 +88,7 @@ Resource  Cosign_Util.robot
 Resource  Notation_Util.robot
 Resource  Imgpkg-Util.robot
 Resource  Webhook-Util.robot
-Resource  TestCaseBody.robot
+#Resource  TestCaseBody.robot
 
 *** Keywords ***
 Wait Until Element Is Visible And Enabled

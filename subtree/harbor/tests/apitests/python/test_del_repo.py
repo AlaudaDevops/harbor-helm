@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
-from testutils import harbor_server
+from testutils import harbor_server, admin_user, admin_pwd
 from testutils import TEARDOWN
 from library.base import _assert_status_code
 from library.project import Project
@@ -54,7 +54,7 @@ class TestProjects(unittest.TestCase):
         TestProjects.project_del_repo_id, TestProjects.project_del_repo_name = self.project.create_project(metadata = {"public": "false"}, **TestProjects.USER_del_repo_CLIENT)
 
         #3. Create a new repository(RA) in project(PA) by user(UA);
-        repo_name, _ = push_self_build_image_to_project(TestProjects.project_del_repo_name, harbor_server, 'admin', 'Harbor12345', "test_del_repo", "latest", size=512)
+        repo_name, _ = push_self_build_image_to_project(TestProjects.project_del_repo_name, harbor_server, admin_user, admin_pwd, "test_del_repo", "latest", size=16)
 
         #4. Get repository in project(PA), there should be one repository which was created by user(UA);
         repo_data = self.repo.list_repositories(TestProjects.project_del_repo_name, **TestProjects.USER_del_repo_CLIENT)

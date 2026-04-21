@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
 import base
 import json
 import docker_api
 
 def ctr_images_pull(username, password, oci):
-    command = ["ctr", "images", "pull","--snapshotter", "native", "-u", username+":"+password, oci]
+    command = ["ctr", "images", "pull", *insecure_opt(), "--snapshotter", "native", "-u", username+":"+password, oci]
     ret = base.run_command(command)
 
 def ctr_images_list(oci_ref = None):
@@ -15,3 +16,8 @@ def ctr_images_list(oci_ref = None):
         raise Exception(r" Get OCI ref failed, expected ref is [{}], but return ref list is [{}]".format (ret))
 
 
+def insecure_opt():
+    schema = os.environ.get("HARBOR_HOST_SCHEMA", "https")
+    if schema == "http":
+        return  ["--plain-http"]
+    return ["--skip-verify"]

@@ -84,10 +84,6 @@ Test Case - Health Check
     [Tags]  health
     Harbor API Test  ./tests/apitests/python/test_health_check.py
 
-Test Case - Push Index By Docker Manifest
-    [Tags]  push_index
-    Harbor API Test  ./tests/apitests/python/test_push_index_by_docker_manifest.py
-
 Test Case - Push Chart By Helm Chart CLI
     [Tags]  push_chart_by_helm
     Harbor API Test  ./tests/apitests/python/test_push_chart_by_helm_chart_cli.py

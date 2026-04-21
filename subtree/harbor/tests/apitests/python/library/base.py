@@ -3,6 +3,7 @@ import os
 import subprocess
 import time
 
+import logging
 import importlib
 
 try:
@@ -27,7 +28,8 @@ class Credential:
 
 def get_endpoint():
     harbor_server = os.environ.get("HARBOR_HOST", "localhost:8080")
-    return os.environ.get("HARBOR_HOST_SCHEMA", "https")+ "://"+harbor_server+"/api/v2.0"
+    harbor_schema = os.environ.get("HARBOR_HOST_SCHEMA", "https")
+    return harbor_schema+"://"+harbor_server+"/api/v2.0"
 
 def _create_client(server, credential, debug, api_type):
     v2_swagger_client = swagger_module()
@@ -113,22 +115,22 @@ def restart_process(process):
         full_process_name = "/usr/local/bin/containerd"
     else:
         raise Exception("Please input dockerd or containerd for process retarting.")
-    run_command_with_popen("ps aux |grep " + full_process_name)
-    for i in range(10):
-        pid = run_command_with_popen(["pidof " + full_process_name])
-        if pid in [None, ""]:
-            break
-        run_command_with_popen(["kill " + str(pid)])
+
+    pid = run_command_with_popen(f"ps aux | grep -v grep | grep {full_process_name} | awk '{{print $2}}'")
+    if pid:
+        run_command_with_popen("kill " + str(pid))
         time.sleep(3)
 
-    run_command_with_popen("ps aux |grep " + full_process_name)
     run_command_with_popen("rm -rf /var/lib/" + process + "/*")
     run_command_with_popen(full_process_name + " > ./daemon-local.log 2>&1 &")
-    time.sleep(3)
-    pid = run_command_with_popen(["pidof " + full_process_name])
+    for i in range(10):
+        pid = run_command_with_popen(f"ps aux | grep -v grep | grep {full_process_name} | awk '{{print $2}}'")
+        if pid:
+            break
+        time.sleep(3)
+
     if pid in [None, ""]:
         raise Exception("Failed to start process {}.".format(full_process_name))
-    run_command_with_popen("ps aux |grep " + full_process_name)
 
 def run_command_with_popen(command):
     try:
@@ -163,13 +165,16 @@ class Base(object):
             server.verify_ssl = server.verify_ssl == "True"
 
         if credential is None:
-            credential = Credential(type="basic_auth", username="admin", password="Harbor12345")
+            password = os.environ.get("HARBOR_PASSWORD","Harbor12345")
+            credential = Credential(type="basic_auth", username="admin", password=password)
 
         self.server = server
         self.credential = credential
         self.debug = debug
         self.api_type = api_type
         self.client = _create_client(server, credential, debug, api_type=api_type)
+        self.logger = logging.getLogger(__name__)
+
 
     def _get_client(self, **kwargs):
         if len(kwargs) == 0:

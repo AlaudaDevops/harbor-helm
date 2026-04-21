@@ -1,4 +1,5 @@
 import unittest
+import os
 
 from testutils import harbor_server, ADMIN_CLIENT, suppress_urllib3_warning
 from library.project import Project
@@ -18,7 +19,7 @@ class TestSecurityHub(unittest.TestCase):
         self.scan = Scan()
         self.artifact = Artifact()
         self.securityhub = SecurityHub()
-        self.image = "ghcr.io/goharbor/notary-server-photon"
+        self.image = r"{}/goharbor/notary-server-photon".format(os.environ.get("DEPENDS_IMAGE_REGISTRY", 'ghcr.io'))
         self.new_image = "notary-server-photon"
         self.tag = "v2.2.0"
         self.digest = "sha256:379bf2c7cd55b4214ced7f9a885b46f81992eb01abebfd67693f5cb394611ad1"

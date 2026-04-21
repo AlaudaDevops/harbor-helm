@@ -28,7 +28,7 @@ cur=$PWD
 
 # the temp folder to store distribution source code...
 TEMP=`mktemp -d ${TMPDIR-/tmp}/distribution.XXXXXX`
-git clone -b $VERSION $DISTRIBUTION_SRC $TEMP
+git clone --depth=1 -b $VERSION $DISTRIBUTION_SRC $TEMP
 
 cd $cur
 

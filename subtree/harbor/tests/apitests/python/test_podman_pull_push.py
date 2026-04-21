@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
+import os
 import unittest
 
 from testutils import harbor_server, ADMIN_CLIENT, suppress_urllib3_warning
@@ -19,7 +20,7 @@ class TestPodmanPullPush(unittest.TestCase):
         self.artifact = Artifact()
         self.image = "image_test"
         self.tag = "v1"
-        self.source_image = "ghcr.io/goharbor/harbor-core"
+        self.source_image = r"{}/goharbor/harbor-core".format(os.environ.get("DEPENDS_IMAGE_REGISTRY", 'ghcr.io'))
         self.source_tag = "v2.8.2"
 
     def testPodman(self):

@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
-from testutils import harbor_server
+from testutils import harbor_server, admin_user, admin_pwd
 from testutils import TEARDOWN
 import library.repository
 import library.docker_api
@@ -67,7 +67,7 @@ class TestProjects(unittest.TestCase):
         TestProjects.project_id, TestProjects.project_name = self.project.create_project(metadata = {"public": "false"}, **TestProjects.USER_CLIENT)
 
         #3. Push an image(IA) to Harbor by docker successfully;
-        repo_name, tag = push_self_build_image_to_project(TestProjects.project_name, harbor_server, 'admin', 'Harbor12345', self.repo_name, "latest")
+        repo_name, tag = push_self_build_image_to_project(TestProjects.project_name, harbor_server, admin_user, admin_pwd, self.repo_name, "latest")
 
         #4. Create a tag(1.0) for the image(IA)
         self.artifact.create_tag(TestProjects.project_name, self.repo_name, tag, "1.0",**TestProjects.USER_CLIENT)

@@ -2,12 +2,14 @@ FROM photon:5.0
 
 ENV PGDATA /var/lib/postgresql/data
 
-RUN tdnf install -y shadow >> /dev/null \
+RUN tdnf makecache && tdnf install -y shadow >> /dev/null \
     && groupadd -r postgres --gid=999 \
-    && useradd -m -r -g postgres --uid=999 postgres
+    && useradd -m -r -g postgres --uid=999 postgres \
+    && tdnf clean all
 
-RUN tdnf install -y postgresql14-server >> /dev/null
-RUN tdnf install -y gzip postgresql15-server findutils bc >> /dev/null \
+RUN tdnf makecache && tdnf install -y postgresql14-server >> /dev/null \
+    && tdnf clean all
+RUN tdnf makecache && tdnf install -y gzip postgresql15-server findutils bc >> /dev/null \
     && mkdir -p /docker-entrypoint-initdb.d \
     && mkdir -p /run/postgresql \
     && chown -R postgres:postgres /run/postgresql \
@@ -17,4 +19,4 @@ RUN tdnf install -y gzip postgresql15-server findutils bc >> /dev/null \
     && sed -i "s|#unix_socket_directories = '/tmp'.*|unix_socket_directories = '/run/postgresql'|g" /usr/pgsql/15/share/postgresql/postgresql.conf.sample \
     && tdnf clean all
 
-RUN tdnf erase -y toybox && tdnf install -y util-linux net-tools
+RUN tdnf makecache && tdnf erase -y toybox && tdnf install -y util-linux net-tools && tdnf clean all

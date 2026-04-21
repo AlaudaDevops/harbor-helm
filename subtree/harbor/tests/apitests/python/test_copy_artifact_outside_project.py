@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 
 from testutils import ADMIN_CLIENT, suppress_urllib3_warning
-from testutils import harbor_server
+from testutils import harbor_server, admin_user, admin_pwd
 from testutils import TEARDOWN
 from library.base import _assert_status_code
 from library.artifact import Artifact
@@ -83,7 +83,7 @@ class TestProjects(unittest.TestCase):
         self.project.update_project_member_role(TestProjects.project_dst_repo_id, retag_member_id, 3, **ADMIN_CLIENT)
 
         #5. Create a new repository(RA) in project(PA) by user(UA);
-        TestProjects.src_repo_name, tag_name = push_self_build_image_to_project(TestProjects.project_src_repo_name, harbor_server, 'admin', 'Harbor12345', "test_copy", pull_tag_name)
+        TestProjects.src_repo_name, tag_name = push_self_build_image_to_project(TestProjects.project_src_repo_name, harbor_server, admin_user, admin_pwd, "test_copy", pull_tag_name)
 
         #6. Get repository in project(PA), there should be one repository which was created by user(UA);
         src_repo_data = self.repo.list_repositories(TestProjects.project_src_repo_name, **TestProjects.USER_RETAG_CLIENT)

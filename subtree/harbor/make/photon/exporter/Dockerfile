@@ -16,6 +16,7 @@ FROM ${harbor_base_namespace}/harbor-exporter-base:${harbor_base_image_version}
 
 COPY --from=build /out/harbor_exporter /harbor/harbor_exporter
 COPY ./make/photon/exporter/entrypoint.sh ./make/photon/common/install_cert.sh /harbor/
+COPY ./make/photon/common/exports_env_in_dir.sh /harbor/
 
 RUN chown -R harbor:harbor /etc/pki/tls/certs \
     && chown -R harbor:harbor /harbor/ \

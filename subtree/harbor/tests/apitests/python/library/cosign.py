@@ -12,10 +12,10 @@ def generate_key_pair():
     base.run_command(command)
 
 def sign_artifact(artifact):
-    command = ["cosign", "sign", "-y", "--allow-insecure-registry", "--key", "cosign.key", artifact]
+    command = ["cosign", "sign", "-y", "--allow-insecure-registry", "--allow-http-registry", "--key", "cosign.key", artifact]
     base.run_command(command)
 
 def push_artifact_sbom(artifact, sbom_path, type="spdx"):
-    command = ["cosign", "attach", "sbom", "--allow-insecure-registry", "--registry-referrers-mode", "oci-1-1",
+    command = ["cosign", "attach", "sbom", "--allow-insecure-registry", "--allow-http-registry", "--registry-referrers-mode", "oci-1-1",
                "--type", type, "--sbom", sbom_path, artifact]
     base.run_command(command)

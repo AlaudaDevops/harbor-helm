@@ -4,7 +4,7 @@ import time
 import unittest
 import v2_swagger_client
 from library import base
-from testutils import harbor_server, ADMIN_CLIENT, suppress_urllib3_warning
+from testutils import harbor_url, admin_pwd, ADMIN_CLIENT, suppress_urllib3_warning
 from library.jobservice import Jobservice
 from library.gc import GC
 from library.purge import Purge
@@ -197,7 +197,7 @@ class TestJobServiceDashboard(unittest.TestCase, object):
         preheat_policy = self.preheat.get_policy(project_name, preheat_policy_name)
 
         # 5. Create a new registry
-        registry_id, _ = self.registry.create_registry("https://" + harbor_server)
+        registry_id, _ = self.registry.create_registry(url = harbor_url, access_secret = admin_pwd)
 
         # 6. Create a replication policy triggered by schedule
         replication_id, _ = self.replication.create_replication_policy(dest_registry=v2_swagger_client.Registry(id=int(registry_id)), trigger=v2_swagger_client.ReplicationTrigger(type="scheduled",trigger_settings=v2_swagger_client.ReplicationTriggerSettings(cron=self.cron)))

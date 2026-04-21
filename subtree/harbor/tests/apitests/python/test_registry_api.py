@@ -1,9 +1,8 @@
 from __future__ import absolute_import
 import unittest
 
-from testutils import harbor_server, suppress_urllib3_warning
-from testutils import admin_user
-from testutils import admin_pwd
+from testutils import harbor_server, harbor_url, suppress_urllib3_warning
+from testutils import admin_user, admin_pwd
 from testutils import TEARDOWN
 from testutils import ADMIN_CLIENT
 from library.system import System
@@ -80,24 +79,24 @@ class TestProjects(unittest.TestCase):
         for tag in create_tags:
             self.artifact.create_tag(TestProjects.project_Alice_name, image_c, tag_c, tag, **USER_ALICE_CLIENT)
         #4. Call the image_list_tags API
-        tags = list_image_tags(harbor_server,TestProjects.repo_c,user_Alice_name,user_common_password)
+        tags = list_image_tags(harbor_url,TestProjects.repo_c,user_Alice_name,user_common_password)
         for tag in create_tags:
             self.assertTrue(tags.count(tag)>0, "Expect tag: %s is not listed"%tag)
-        page_tags = list_image_tags(harbor_server,TestProjects.repo_c,user_Alice_name,user_common_password,len(tags)/2+1)
-        page_tags += list_image_tags(harbor_server,TestProjects.repo_c,user_Alice_name,user_common_password,len(tags)/2+1,tags[int(len(tags)/2)])
+        page_tags = list_image_tags(harbor_url,TestProjects.repo_c,user_Alice_name,user_common_password,len(tags)/2+1)
+        page_tags += list_image_tags(harbor_url,TestProjects.repo_c,user_Alice_name,user_common_password,len(tags)/2+1,tags[int(len(tags)/2)])
         for tag in create_tags:
             self.assertTrue(page_tags.count(tag)>0, "Expect tag: %s is not listed by the pagination query"%tag)
         #5. Call the catalog API;
-        repos = list_repositories(harbor_server,admin_user,admin_pwd)
+        repos = list_repositories(harbor_url,admin_user,admin_pwd)
         self.assertTrue(repos.count(TestProjects.repo_a)>0 and repos.count(TestProjects.repo_b)>0 and repos.count(TestProjects.repo_c)>0, "Expected repo not found")
         for repo in [TestProjects.repo_a,TestProjects.repo_b,TestProjects.repo_c]:
             self.assertTrue(repos.count(repo)>0,"Expected repo: %s is not listed"%repo)
-        page_repos = list_repositories(harbor_server,admin_user,admin_pwd,len(repos)/2+1)
-        page_repos += list_repositories(harbor_server,admin_user,admin_pwd,len(repos)/2+1,repos[int(len(repos)/2)])
+        page_repos = list_repositories(harbor_url,admin_user,admin_pwd,len(repos)/2+1)
+        page_repos += list_repositories(harbor_url,admin_user,admin_pwd,len(repos)/2+1,repos[int(len(repos)/2)])
         for repo in [TestProjects.repo_a,TestProjects.repo_b,TestProjects.repo_c]:
             self.assertTrue(page_repos.count(repo)>0,"Expected repo: %s is not listed by the pagination query"%repo)
 
-        null_repos = list_repositories(harbor_server,user_Alice_name,user_common_password)
+        null_repos = list_repositories(harbor_url,user_Alice_name,user_common_password)
         self.assertEqual(null_repos, "")
 
 if __name__ == '__main__':
