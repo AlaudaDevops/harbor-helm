@@ -255,7 +255,7 @@ spec:
           --skip-java-db-update=false
           --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           --exit-code=1
-          --ignorefile <(printf '%s\n' CVE-2026-34040 CVE-2026-33997 CVE-2026-33540 CVE-2026-35172)
+          --ignorefile <(printf '%s\n' CVE-2026-34040 CVE-2026-33997)
       - name: skip-e2e
         description: Skip e2e test, default is false.
         default: "false"
