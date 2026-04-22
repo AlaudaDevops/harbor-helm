@@ -8,8 +8,6 @@ filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 h1:bvDV9vkmnHYOMsOr4WLk+Vo07yKIzd94sVoIqshQ4bU=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24/go.mod h1:8o94RPi1/7XTJvwPpRSzSUedZrtlirdB3r9Z20bi2f8=
-github.com/AlaudaDevops/distribution v2.8.3-alauda.1+incompatible h1:gyRAqxXctNETDlV/1bdA6hkUuaCTuFg1jVCLQY0Xc/Q=
-github.com/AlaudaDevops/distribution v2.8.3-alauda.1+incompatible/go.mod h1:fdqRlF4QclamWhX+gkDJ2RuNYISLDCeOhJS7yxP8Mv8=
 github.com/AlaudaDevops/distribution v2.8.3-alauda.2+incompatible h1:8pkJlFq1Syedog1LyA/B23D8SCTq9rMMZh54Y8555AE=
 github.com/AlaudaDevops/distribution v2.8.3-alauda.2+incompatible/go.mod h1:fdqRlF4QclamWhX+gkDJ2RuNYISLDCeOhJS7yxP8Mv8=
 github.com/Azure/azure-sdk-for-go v37.2.0+incompatible h1:LTdcd2GK+cv+e7yhWCN8S7yf3eblBypKFZsPfKjCQ7E=
@@ -123,8 +121,6 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/r
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/dhui/dktest v0.4.3 h1:wquqUxAFdcUgabAVLvSCOKOlag5cIZuaOjYIBOWdsR0=
 github.com/dhui/dktest v0.4.3/go.mod h1:zNK8IwktWzQRm6I/l2Wjp7MakiyaFWv4G1hjmodmMTs=
-github.com/distribution/distribution v2.8.2+incompatible h1:k9+4DKdOG+quPFZXT/mUsiQrGu9vYCp+dXpuPkuqhk8=
-github.com/distribution/distribution v2.8.2+incompatible/go.mod h1:EgLm2NgWtdKgzF9NpMzUKgzmR7AMmb0VQi2B+ZzDRjc=
 github.com/distribution/reference v0.6.0 h1:0IXCQ5g4/QMHHkarYzh5l+u8T3t73zM5QvfrDyIgxBk=
 github.com/distribution/reference v0.6.0/go.mod h1:BbU0aIcezP1/5jX/8MP0YiH4SdvB5Y4f/wlDRiLyi3E=
 github.com/dnaeon/go-vcr v1.2.0 h1:zHCHvJYTMh1N7xnV7zf1m1GPBF9Ad0Jk/whtQ1663qI=
