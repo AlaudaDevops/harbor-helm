@@ -1,5 +1,5 @@
 # photon based image
-FROM build-harbor.alauda.cn/ops/photon:5.0
+FROM photon:5.0
 ENV LANG C.UTF-8
 ENV HELM_EXPERIMENTAL_OCI=1
 ENV COSIGN_PASSWORD=Harbor12345
@@ -11,9 +11,6 @@ ENV NOTATION_EXPERIMENTAL=1
 ARG ARCH
 
 COPY --from=tool_builder /tool/tools.tar.gz /usr/local/bin
-
-# VMware Photon repository has been migrated to Broadcom package hosting.
-RUN sed -i 's#packages.vmware.com/photon#packages.broadcom.com/artifactory/photon#g' /etc/yum.repos.d/*.repo
 
 RUN tdnf makecache && tdnf update -y && tdnf install -y \
     wget \

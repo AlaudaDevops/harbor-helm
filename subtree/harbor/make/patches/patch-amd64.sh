@@ -20,6 +20,7 @@ change_base_image () {
 }
 
 change_base_image "make/photon"
+change_base_image "tests/test-engine-image"
 
 # swagger
 
