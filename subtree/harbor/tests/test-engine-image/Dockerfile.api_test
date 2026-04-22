@@ -12,8 +12,8 @@ ARG ARCH
 
 COPY --from=tool_builder /tool/tools.tar.gz /usr/local/bin
 
-# VMware photon repository has been migrated to Broadcom package hosting.
-RUN sed -i 's#https\\?://packages\\.vmware\\.com/photon#https://packages.broadcom.com/artifactory/photon#g' /etc/yum.repos.d/*.repo
+# VMware Photon repository has been migrated to Broadcom package hosting.
+RUN sed -i 's#packages.vmware.com/photon#packages.broadcom.com/artifactory/photon#g' /etc/yum.repos.d/*.repo
 
 RUN tdnf makecache && tdnf update -y && tdnf install -y \
     wget \
