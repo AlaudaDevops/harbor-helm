@@ -224,7 +224,7 @@ spec:
           
           # download registry binary from AlaudaDevops/goharbor-distribution release
           # renovate: datasource=github-releases depName=goharbor-distribution packageName=AlaudaDevops/goharbor-distribution
-          REGISTRY_VERSION=v2.8.4-alauda-6
+          REGISTRY_VERSION=v2.8.4-alauda-7
 
           # distribution release assets use amd64/arm64 naming
           REGISTRY_ARCH=${ARCH}
