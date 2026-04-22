@@ -22,6 +22,7 @@ RUN tdnf makecache && tdnf update -y && tdnf install -y \
     sed \
     openssl-devel \
     tar \
+    util-linux \
     which \
     procps-ng \
     gzip && \

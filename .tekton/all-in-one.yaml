@@ -1163,6 +1163,7 @@ spec:
 
       - name: build-e2e-image
         runAfter:
+          - patch-amd64
           - generate-tag
         timeout: 60m
         taskRef:
