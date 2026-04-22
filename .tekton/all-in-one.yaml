@@ -225,7 +225,13 @@ spec:
           # download registry binary from AlaudaDevops/goharbor-distribution release
           # renovate: datasource=github-releases depName=goharbor-distribution packageName=AlaudaDevops/goharbor-distribution
           REGISTRY_VERSION=v2.8.4-alauda-6
-          REGISTRY_DOWNLOAD_URL=https://github.com/AlaudaDevops/goharbor-distribution/releases/download/${REGISTRY_VERSION}/registry_Linux_${ARCH}.tar.gz
+
+          # distribution release assets use amd64/arm64 naming
+          REGISTRY_ARCH=${ARCH}
+          if [ "${REGISTRY_ARCH}" = "x86_64" ]; then
+            REGISTRY_ARCH=amd64
+          fi
+          REGISTRY_DOWNLOAD_URL=https://github.com/AlaudaDevops/goharbor-distribution/releases/download/${REGISTRY_VERSION}/registry_Linux_${REGISTRY_ARCH}.tar.gz
 
           REGISTRY_BINARY_PATH=${BUILDPATH}/make/photon/registry/binary
           mkdir -p ${REGISTRY_BINARY_PATH}
