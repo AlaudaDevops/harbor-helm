@@ -222,11 +222,24 @@ spec:
           tar -xzf /tmp/trivy-adapter.tar.gz -C /tmp
           mv /tmp/alauda-scanner-trivy ${TRIVY_BINARY_PATH}/scanner-trivy
           
-          # compile registry
-          REGISTRY_SRC=https://github.com/goharbor/distribution.git
-          REGISTRY_SRC_TAG=release/2.8
-          DOCKERNETWORK=default
-          cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} docker-mirrors.alauda.cn/library/golang:${GOLANG_IMAGE_VERSION} ${DOCKERNETWORK} && cd -
+          # download registry binary from AlaudaDevops/goharbor-distribution release
+          # renovate: datasource=github-releases depName=goharbor-distribution packageName=AlaudaDevops/goharbor-distribution
+          REGISTRY_VERSION=v2.8.4-alauda-6
+          REGISTRY_DOWNLOAD_URL=https://github.com/AlaudaDevops/goharbor-distribution/releases/download/${REGISTRY_VERSION}/registry_Linux_${ARCH}.tar.gz
+
+          REGISTRY_BINARY_PATH=${BUILDPATH}/make/photon/registry/binary
+          mkdir -p ${REGISTRY_BINARY_PATH}
+
+          curl --retry 6 --create-dirs -fLo /tmp/registry.tar.gz ${REGISTRY_DOWNLOAD_URL}
+          tar -xzf /tmp/registry.tar.gz -C /tmp
+          mv /tmp/registry ${REGISTRY_BINARY_PATH}/registry
+          chmod +x ${REGISTRY_BINARY_PATH}/registry
+
+          # old source-build path, keep for future rollback to upstream
+          # REGISTRY_SRC=https://github.com/goharbor/distribution.git
+          # REGISTRY_SRC_TAG=release/2.8
+          # DOCKERNETWORK=default
+          # cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} docker-mirrors.alauda.cn/library/golang:${GOLANG_IMAGE_VERSION} ${DOCKERNETWORK} && cd -
       - name: trivy-args
         type: string
         default: >-
