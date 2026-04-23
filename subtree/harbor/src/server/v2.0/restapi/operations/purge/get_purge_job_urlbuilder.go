@@ -46,7 +46,7 @@ func (o *GetPurgeJobURL) Build() (*url.URL, error) {
 
 	purgeID := swag.FormatInt64(o.PurgeID)
 	if purgeID != "" {
-		_path = strings.Replace(_path, "{purge_id}", purgeID, -1)
+		_path = strings.ReplaceAll(_path, "{purge_id}", purgeID)
 	} else {
 		return nil, errors.New("purgeId is required on GetPurgeJobURL")
 	}

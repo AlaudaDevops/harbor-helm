@@ -28,7 +28,6 @@ func NewStopPurgeParams() StopPurgeParams {
 //
 // swagger:parameters stopPurge
 type StopPurgeParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type StopPurgeParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the purge log
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *StopPurgeParams) bindXRequestID(rawData []string, hasKey bool, formats 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *StopPurgeParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

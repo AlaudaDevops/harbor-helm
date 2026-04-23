@@ -28,7 +28,6 @@ func NewCopyArtifactParams() CopyArtifactParams {
 //
 // swagger:parameters CopyArtifact
 type CopyArtifactParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,16 +36,19 @@ type CopyArtifactParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The artifact from which the new artifact is copied from, the format should be "project/repository:tag" or "project/repository@digest".
 	  Required: true
 	  In: query
 	*/
 	From string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
@@ -62,7 +64,6 @@ func (o *CopyArtifactParams) BindRequest(r *http.Request, route *middleware.Matc
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -110,7 +111,7 @@ func (o *CopyArtifactParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CopyArtifactParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

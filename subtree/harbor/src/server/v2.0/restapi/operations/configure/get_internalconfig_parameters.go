@@ -27,7 +27,6 @@ func NewGetInternalconfigParams() GetInternalconfigParams {
 //
 // swagger:parameters getInternalconfig
 type GetInternalconfigParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *GetInternalconfigParams) bindXRequestID(rawData []string, hasKey bool, 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetInternalconfigParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

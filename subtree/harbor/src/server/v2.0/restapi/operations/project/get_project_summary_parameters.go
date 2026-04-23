@@ -35,7 +35,6 @@ func NewGetProjectSummaryParams() GetProjectSummaryParams {
 //
 // swagger:parameters getProjectSummary
 type GetProjectSummaryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,11 +43,13 @@ type GetProjectSummaryParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -127,7 +128,7 @@ func (o *GetProjectSummaryParams) bindXRequestID(rawData []string, hasKey bool, 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetProjectSummaryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

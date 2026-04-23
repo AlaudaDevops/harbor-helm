@@ -6,6 +6,7 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewUpdateUserProfileParams() UpdateUserProfileParams {
 //
 // swagger:parameters updateUserProfile
 type UpdateUserProfileParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type UpdateUserProfileParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Only email, realname and comment can be modified.
 	  Required: true
 	  In: body
 	*/
 	Profile *models.UserProfile
+
 	/*Registered user ID
 	  Required: true
 	  In: path
@@ -67,10 +69,12 @@ func (o *UpdateUserProfileParams) BindRequest(r *http.Request, route *middleware
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.UserProfile
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("profile", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("profile", "body", "", err))
@@ -125,7 +129,7 @@ func (o *UpdateUserProfileParams) bindXRequestID(rawData []string, hasKey bool, 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateUserProfileParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

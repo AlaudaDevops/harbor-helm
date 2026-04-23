@@ -28,7 +28,6 @@ func NewDeleteRegistryParams() DeleteRegistryParams {
 //
 // swagger:parameters deleteRegistry
 type DeleteRegistryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type DeleteRegistryParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Registry ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *DeleteRegistryParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteRegistryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

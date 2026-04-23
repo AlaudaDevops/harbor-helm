@@ -39,7 +39,6 @@ func NewListReplicationExecutionsParams() ListReplicationExecutionsParams {
 //
 // swagger:parameters listReplicationExecutions
 type ListReplicationExecutionsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,29 +47,35 @@ type ListReplicationExecutionsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
 	  Default: 10
 	*/
 	PageSize *int64
+
 	/*The ID of the policy that the executions belong to.
 	  In: query
 	*/
 	PolicyID *int64
+
 	/*Sort the resource list in ascending or descending order. e.g. sort by field1 in ascending order and field2 in descending order with "sort=field1,-field2"
 	  In: query
 	*/
 	Sort *string
+
 	/*The execution status.
 	  In: query
 	*/
 	Status *string
+
 	/*The trigger mode.
 	  In: query
 	*/
@@ -85,7 +90,6 @@ func (o *ListReplicationExecutionsParams) BindRequest(r *http.Request, route *mi
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -148,7 +152,7 @@ func (o *ListReplicationExecutionsParams) bindXRequestID(rawData []string, hasKe
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListReplicationExecutionsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -210,7 +214,7 @@ func (o *ListReplicationExecutionsParams) bindPageSize(rawData []string, hasKey 
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *ListReplicationExecutionsParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

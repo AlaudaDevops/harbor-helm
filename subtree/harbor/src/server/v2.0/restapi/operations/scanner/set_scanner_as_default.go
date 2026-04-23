@@ -12,16 +12,16 @@ import (
 )
 
 // SetScannerAsDefaultHandlerFunc turns a function with the right signature into a set scanner as default handler
-type SetScannerAsDefaultHandlerFunc func(SetScannerAsDefaultParams, interface{}) middleware.Responder
+type SetScannerAsDefaultHandlerFunc func(SetScannerAsDefaultParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn SetScannerAsDefaultHandlerFunc) Handle(params SetScannerAsDefaultParams, principal interface{}) middleware.Responder {
+func (fn SetScannerAsDefaultHandlerFunc) Handle(params SetScannerAsDefaultParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // SetScannerAsDefaultHandler interface for that can handle valid set scanner as default params
 type SetScannerAsDefaultHandler interface {
-	Handle(SetScannerAsDefaultParams, interface{}) middleware.Responder
+	Handle(SetScannerAsDefaultParams, any) middleware.Responder
 }
 
 // NewSetScannerAsDefault creates a new http.Handler for the set scanner as default operation
@@ -55,9 +55,9 @@ func (o *SetScannerAsDefault) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *SetScannerAsDefault) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

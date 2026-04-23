@@ -12,16 +12,16 @@ import (
 )
 
 // GetWorkersHandlerFunc turns a function with the right signature into a get workers handler
-type GetWorkersHandlerFunc func(GetWorkersParams, interface{}) middleware.Responder
+type GetWorkersHandlerFunc func(GetWorkersParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetWorkersHandlerFunc) Handle(params GetWorkersParams, principal interface{}) middleware.Responder {
+func (fn GetWorkersHandlerFunc) Handle(params GetWorkersParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetWorkersHandler interface for that can handle valid get workers params
 type GetWorkersHandler interface {
-	Handle(GetWorkersParams, interface{}) middleware.Responder
+	Handle(GetWorkersParams, any) middleware.Responder
 }
 
 // NewGetWorkers creates a new http.Handler for the get workers operation
@@ -55,9 +55,9 @@ func (o *GetWorkers) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetWorkers) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

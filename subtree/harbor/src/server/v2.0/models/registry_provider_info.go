@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -50,11 +51,15 @@ func (m *RegistryProviderInfo) validateCredentialPattern(formats strfmt.Registry
 
 	if m.CredentialPattern != nil {
 		if err := m.CredentialPattern.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("credential_pattern")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("credential_pattern")
 			}
+
 			return err
 		}
 	}
@@ -69,11 +74,15 @@ func (m *RegistryProviderInfo) validateEndpointPattern(formats strfmt.Registry) 
 
 	if m.EndpointPattern != nil {
 		if err := m.EndpointPattern.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("endpoint_pattern")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("endpoint_pattern")
 			}
+
 			return err
 		}
 	}
@@ -108,11 +117,15 @@ func (m *RegistryProviderInfo) contextValidateCredentialPattern(ctx context.Cont
 		}
 
 		if err := m.CredentialPattern.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("credential_pattern")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("credential_pattern")
 			}
+
 			return err
 		}
 	}
@@ -129,11 +142,15 @@ func (m *RegistryProviderInfo) contextValidateEndpointPattern(ctx context.Contex
 		}
 
 		if err := m.EndpointPattern.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("endpoint_pattern")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("endpoint_pattern")
 			}
+
 			return err
 		}
 	}

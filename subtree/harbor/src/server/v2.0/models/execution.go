@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -74,11 +75,15 @@ func (m *Execution) validateExtraAttrs(formats strfmt.Registry) error {
 
 	if m.ExtraAttrs != nil {
 		if err := m.ExtraAttrs.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("extra_attrs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("extra_attrs")
 			}
+
 			return err
 		}
 	}
@@ -93,11 +98,15 @@ func (m *Execution) validateMetrics(formats strfmt.Registry) error {
 
 	if m.Metrics != nil {
 		if err := m.Metrics.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("metrics")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("metrics")
 			}
+
 			return err
 		}
 	}
@@ -130,11 +139,15 @@ func (m *Execution) contextValidateExtraAttrs(ctx context.Context, formats strfm
 	}
 
 	if err := m.ExtraAttrs.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("extra_attrs")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("extra_attrs")
 		}
+
 		return err
 	}
 
@@ -150,11 +163,15 @@ func (m *Execution) contextValidateMetrics(ctx context.Context, formats strfmt.R
 		}
 
 		if err := m.Metrics.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("metrics")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("metrics")
 			}
+
 			return err
 		}
 	}

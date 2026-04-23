@@ -49,28 +49,28 @@ func (o *RemoveLabelURL) Build() (*url.URL, error) {
 
 	labelID := swag.FormatInt64(o.LabelID)
 	if labelID != "" {
-		_path = strings.Replace(_path, "{label_id}", labelID, -1)
+		_path = strings.ReplaceAll(_path, "{label_id}", labelID)
 	} else {
 		return nil, errors.New("labelId is required on RemoveLabelURL")
 	}
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on RemoveLabelURL")
 	}
 
 	reference := o.Reference
 	if reference != "" {
-		_path = strings.Replace(_path, "{reference}", reference, -1)
+		_path = strings.ReplaceAll(_path, "{reference}", reference)
 	} else {
 		return nil, errors.New("reference is required on RemoveLabelURL")
 	}
 
 	repositoryName := o.RepositoryName
 	if repositoryName != "" {
-		_path = strings.Replace(_path, "{repository_name}", repositoryName, -1)
+		_path = strings.ReplaceAll(_path, "{repository_name}", repositoryName)
 	} else {
 		return nil, errors.New("repositoryName is required on RemoveLabelURL")
 	}

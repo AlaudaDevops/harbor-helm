@@ -47,28 +47,28 @@ func (o *DeleteTagURL) Build() (*url.URL, error) {
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on DeleteTagURL")
 	}
 
 	reference := o.Reference
 	if reference != "" {
-		_path = strings.Replace(_path, "{reference}", reference, -1)
+		_path = strings.ReplaceAll(_path, "{reference}", reference)
 	} else {
 		return nil, errors.New("reference is required on DeleteTagURL")
 	}
 
 	repositoryName := o.RepositoryName
 	if repositoryName != "" {
-		_path = strings.Replace(_path, "{repository_name}", repositoryName, -1)
+		_path = strings.ReplaceAll(_path, "{repository_name}", repositoryName)
 	} else {
 		return nil, errors.New("repositoryName is required on DeleteTagURL")
 	}
 
 	tagName := o.TagName
 	if tagName != "" {
-		_path = strings.Replace(_path, "{tag_name}", tagName, -1)
+		_path = strings.ReplaceAll(_path, "{tag_name}", tagName)
 	} else {
 		return nil, errors.New("tagName is required on DeleteTagURL")
 	}

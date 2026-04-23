@@ -27,7 +27,6 @@ func NewListProvidersParams() ListProvidersParams {
 //
 // swagger:parameters ListProviders
 type ListProvidersParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *ListProvidersParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListProvidersParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

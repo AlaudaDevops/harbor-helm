@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteProjectMemberHandlerFunc turns a function with the right signature into a delete project member handler
-type DeleteProjectMemberHandlerFunc func(DeleteProjectMemberParams, interface{}) middleware.Responder
+type DeleteProjectMemberHandlerFunc func(DeleteProjectMemberParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteProjectMemberHandlerFunc) Handle(params DeleteProjectMemberParams, principal interface{}) middleware.Responder {
+func (fn DeleteProjectMemberHandlerFunc) Handle(params DeleteProjectMemberParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteProjectMemberHandler interface for that can handle valid delete project member params
 type DeleteProjectMemberHandler interface {
-	Handle(DeleteProjectMemberParams, interface{}) middleware.Responder
+	Handle(DeleteProjectMemberParams, any) middleware.Responder
 }
 
 // NewDeleteProjectMember creates a new http.Handler for the delete project member operation
@@ -53,9 +53,9 @@ func (o *DeleteProjectMember) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -64,6 +64,7 @@ func (o *DeleteProjectMember) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

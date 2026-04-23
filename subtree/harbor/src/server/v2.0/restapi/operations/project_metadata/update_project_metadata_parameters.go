@@ -36,7 +36,6 @@ func NewUpdateProjectMetadataParams() UpdateProjectMetadataParams {
 //
 // swagger:parameters updateProjectMetadata
 type UpdateProjectMetadataParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -45,20 +44,24 @@ type UpdateProjectMetadataParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of metadata.
 	  Required: true
 	  In: path
 	*/
 	MetaName string
+
 	/*
 	  In: body
 	*/
 	Metadata map[string]string
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -89,7 +92,9 @@ func (o *UpdateProjectMetadataParams) BindRequest(r *http.Request, route *middle
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body map[string]string
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("metadata", "body", "", err))
@@ -153,7 +158,7 @@ func (o *UpdateProjectMetadataParams) bindXRequestID(rawData []string, hasKey bo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateProjectMetadataParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

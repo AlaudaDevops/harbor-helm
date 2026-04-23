@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateUserGroupHandlerFunc turns a function with the right signature into a update user group handler
-type UpdateUserGroupHandlerFunc func(UpdateUserGroupParams, interface{}) middleware.Responder
+type UpdateUserGroupHandlerFunc func(UpdateUserGroupParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateUserGroupHandlerFunc) Handle(params UpdateUserGroupParams, principal interface{}) middleware.Responder {
+func (fn UpdateUserGroupHandlerFunc) Handle(params UpdateUserGroupParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateUserGroupHandler interface for that can handle valid update user group params
 type UpdateUserGroupHandler interface {
-	Handle(UpdateUserGroupParams, interface{}) middleware.Responder
+	Handle(UpdateUserGroupParams, any) middleware.Responder
 }
 
 // NewUpdateUserGroup creates a new http.Handler for the update user group operation
@@ -55,9 +55,9 @@ func (o *UpdateUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

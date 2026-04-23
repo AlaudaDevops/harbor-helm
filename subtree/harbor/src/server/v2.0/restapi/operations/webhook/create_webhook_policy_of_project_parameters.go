@@ -6,6 +6,7 @@ package webhook
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -39,7 +40,6 @@ func NewCreateWebhookPolicyOfProjectParams() CreateWebhookPolicyOfProjectParams 
 //
 // swagger:parameters CreateWebhookPolicyOfProject
 type CreateWebhookPolicyOfProjectParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,16 +48,19 @@ type CreateWebhookPolicyOfProjectParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Properties "targets" and "event_types" needed.
 	  Required: true
 	  In: body
 	*/
 	Policy *models.WebhookPolicy
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -83,10 +86,12 @@ func (o *CreateWebhookPolicyOfProjectParams) BindRequest(r *http.Request, route 
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.WebhookPolicy
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("policy", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("policy", "body", "", err))
@@ -164,7 +169,7 @@ func (o *CreateWebhookPolicyOfProjectParams) bindXRequestID(rawData []string, ha
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreateWebhookPolicyOfProjectParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

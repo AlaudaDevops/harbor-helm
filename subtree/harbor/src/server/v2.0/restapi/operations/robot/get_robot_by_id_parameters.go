@@ -28,7 +28,6 @@ func NewGetRobotByIDParams() GetRobotByIDParams {
 //
 // swagger:parameters GetRobotByID
 type GetRobotByIDParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetRobotByIDParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Robot ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetRobotByIDParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetRobotByIDParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

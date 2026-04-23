@@ -6,6 +6,7 @@ package project
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -39,7 +40,6 @@ func NewCreateProjectParams() CreateProjectParams {
 //
 // swagger:parameters createProject
 type CreateProjectParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,11 +48,13 @@ type CreateProjectParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The flag to indicate whether to return the name of the resource in Location. When X-Resource-Name-In-Location is true, the Location will return the name of the resource.
 	  In: header
 	  Default: false
 	*/
 	XResourceNameInLocation *bool
+
 	/*New created project.
 	  Required: true
 	  In: body
@@ -78,10 +80,12 @@ func (o *CreateProjectParams) BindRequest(r *http.Request, route *middleware.Mat
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ProjectReq
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("project", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("project", "body", "", err))
@@ -131,7 +135,7 @@ func (o *CreateProjectParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreateProjectParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

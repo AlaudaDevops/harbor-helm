@@ -27,7 +27,6 @@ func NewListRegistryProviderInfosParams() ListRegistryProviderInfosParams {
 //
 // swagger:parameters listRegistryProviderInfos
 type ListRegistryProviderInfosParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *ListRegistryProviderInfosParams) bindXRequestID(rawData []string, hasKe
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListRegistryProviderInfosParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

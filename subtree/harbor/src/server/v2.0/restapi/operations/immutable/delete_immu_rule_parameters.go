@@ -35,7 +35,6 @@ func NewDeleteImmuRuleParams() DeleteImmuRuleParams {
 //
 // swagger:parameters DeleteImmuRule
 type DeleteImmuRuleParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,16 +43,19 @@ type DeleteImmuRuleParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the immutable rule
 	  Required: true
 	  In: path
 	*/
 	ImmutableRuleID int64
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -137,7 +139,7 @@ func (o *DeleteImmuRuleParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteImmuRuleParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

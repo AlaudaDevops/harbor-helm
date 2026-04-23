@@ -12,16 +12,16 @@ import (
 )
 
 // GetSystemInfoHandlerFunc turns a function with the right signature into a get system info handler
-type GetSystemInfoHandlerFunc func(GetSystemInfoParams, interface{}) middleware.Responder
+type GetSystemInfoHandlerFunc func(GetSystemInfoParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetSystemInfoHandlerFunc) Handle(params GetSystemInfoParams, principal interface{}) middleware.Responder {
+func (fn GetSystemInfoHandlerFunc) Handle(params GetSystemInfoParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetSystemInfoHandler interface for that can handle valid get system info params
 type GetSystemInfoHandler interface {
-	Handle(GetSystemInfoParams, interface{}) middleware.Responder
+	Handle(GetSystemInfoParams, any) middleware.Responder
 }
 
 // NewGetSystemInfo creates a new http.Handler for the get system info operation
@@ -55,9 +55,9 @@ func (o *GetSystemInfo) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetSystemInfo) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

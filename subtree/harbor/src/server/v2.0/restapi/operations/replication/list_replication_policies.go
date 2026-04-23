@@ -12,16 +12,16 @@ import (
 )
 
 // ListReplicationPoliciesHandlerFunc turns a function with the right signature into a list replication policies handler
-type ListReplicationPoliciesHandlerFunc func(ListReplicationPoliciesParams, interface{}) middleware.Responder
+type ListReplicationPoliciesHandlerFunc func(ListReplicationPoliciesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListReplicationPoliciesHandlerFunc) Handle(params ListReplicationPoliciesParams, principal interface{}) middleware.Responder {
+func (fn ListReplicationPoliciesHandlerFunc) Handle(params ListReplicationPoliciesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListReplicationPoliciesHandler interface for that can handle valid list replication policies params
 type ListReplicationPoliciesHandler interface {
-	Handle(ListReplicationPoliciesParams, interface{}) middleware.Responder
+	Handle(ListReplicationPoliciesParams, any) middleware.Responder
 }
 
 // NewListReplicationPolicies creates a new http.Handler for the list replication policies operation
@@ -55,9 +55,9 @@ func (o *ListReplicationPolicies) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListReplicationPolicies) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

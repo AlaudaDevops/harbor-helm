@@ -12,16 +12,16 @@ import (
 )
 
 // RemoveLabelHandlerFunc turns a function with the right signature into a remove label handler
-type RemoveLabelHandlerFunc func(RemoveLabelParams, interface{}) middleware.Responder
+type RemoveLabelHandlerFunc func(RemoveLabelParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn RemoveLabelHandlerFunc) Handle(params RemoveLabelParams, principal interface{}) middleware.Responder {
+func (fn RemoveLabelHandlerFunc) Handle(params RemoveLabelParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // RemoveLabelHandler interface for that can handle valid remove label params
 type RemoveLabelHandler interface {
-	Handle(RemoveLabelParams, interface{}) middleware.Responder
+	Handle(RemoveLabelParams, any) middleware.Responder
 }
 
 // NewRemoveLabel creates a new http.Handler for the remove label operation
@@ -55,9 +55,9 @@ func (o *RemoveLabel) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *RemoveLabel) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

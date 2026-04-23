@@ -27,7 +27,6 @@ func NewGetWorkersParams() GetWorkersParams {
 //
 // swagger:parameters getWorkers
 type GetWorkersParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,6 +35,7 @@ type GetWorkersParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the pool. 'all' stands for all pools
 	  Required: true
 	  In: path
@@ -87,7 +87,7 @@ func (o *GetWorkersParams) bindXRequestID(rawData []string, hasKey bool, formats
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetWorkersParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

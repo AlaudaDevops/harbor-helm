@@ -28,7 +28,6 @@ func NewGetUserParams() GetUserParams {
 //
 // swagger:parameters getUser
 type GetUserParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetUserParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetUserParams) bindXRequestID(rawData []string, hasKey bool, formats st
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetUserParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

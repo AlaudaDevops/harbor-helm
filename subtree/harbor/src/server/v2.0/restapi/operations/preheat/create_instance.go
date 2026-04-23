@@ -12,16 +12,16 @@ import (
 )
 
 // CreateInstanceHandlerFunc turns a function with the right signature into a create instance handler
-type CreateInstanceHandlerFunc func(CreateInstanceParams, interface{}) middleware.Responder
+type CreateInstanceHandlerFunc func(CreateInstanceParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateInstanceHandlerFunc) Handle(params CreateInstanceParams, principal interface{}) middleware.Responder {
+func (fn CreateInstanceHandlerFunc) Handle(params CreateInstanceParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateInstanceHandler interface for that can handle valid create instance params
 type CreateInstanceHandler interface {
-	Handle(CreateInstanceParams, interface{}) middleware.Responder
+	Handle(CreateInstanceParams, any) middleware.Responder
 }
 
 // NewCreateInstance creates a new http.Handler for the create instance operation
@@ -55,9 +55,9 @@ func (o *CreateInstance) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateInstance) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

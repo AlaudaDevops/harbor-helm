@@ -12,16 +12,16 @@ import (
 )
 
 // StopScanArtifactHandlerFunc turns a function with the right signature into a stop scan artifact handler
-type StopScanArtifactHandlerFunc func(StopScanArtifactParams, interface{}) middleware.Responder
+type StopScanArtifactHandlerFunc func(StopScanArtifactParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn StopScanArtifactHandlerFunc) Handle(params StopScanArtifactParams, principal interface{}) middleware.Responder {
+func (fn StopScanArtifactHandlerFunc) Handle(params StopScanArtifactParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // StopScanArtifactHandler interface for that can handle valid stop scan artifact params
 type StopScanArtifactHandler interface {
-	Handle(StopScanArtifactParams, interface{}) middleware.Responder
+	Handle(StopScanArtifactParams, any) middleware.Responder
 }
 
 // NewStopScanArtifact creates a new http.Handler for the stop scan artifact operation
@@ -55,9 +55,9 @@ func (o *StopScanArtifact) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *StopScanArtifact) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

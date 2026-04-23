@@ -21,7 +21,7 @@ type InternalConfigurationValue struct {
 	Editable bool `json:"editable"`
 
 	// The value of current config item
-	Value interface{} `json:"value,omitempty"`
+	Value any `json:"value,omitempty"`
 }
 
 // Validate validates this internal configuration value

@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -132,11 +133,15 @@ func (m *ReplicationPolicy) validateDestRegistry(formats strfmt.Registry) error 
 
 	if m.DestRegistry != nil {
 		if err := m.DestRegistry.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("dest_registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("dest_registry")
 			}
+
 			return err
 		}
 	}
@@ -156,11 +161,15 @@ func (m *ReplicationPolicy) validateFilters(formats strfmt.Registry) error {
 
 		if m.Filters[i] != nil {
 			if err := m.Filters[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("filters" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("filters" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -177,11 +186,15 @@ func (m *ReplicationPolicy) validateSrcRegistry(formats strfmt.Registry) error {
 
 	if m.SrcRegistry != nil {
 		if err := m.SrcRegistry.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("src_registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("src_registry")
 			}
+
 			return err
 		}
 	}
@@ -196,11 +209,15 @@ func (m *ReplicationPolicy) validateTrigger(formats strfmt.Registry) error {
 
 	if m.Trigger != nil {
 		if err := m.Trigger.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("trigger")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("trigger")
 			}
+
 			return err
 		}
 	}
@@ -255,11 +272,15 @@ func (m *ReplicationPolicy) contextValidateDestRegistry(ctx context.Context, for
 		}
 
 		if err := m.DestRegistry.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("dest_registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("dest_registry")
 			}
+
 			return err
 		}
 	}
@@ -278,11 +299,15 @@ func (m *ReplicationPolicy) contextValidateFilters(ctx context.Context, formats 
 			}
 
 			if err := m.Filters[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("filters" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("filters" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -301,11 +326,15 @@ func (m *ReplicationPolicy) contextValidateSrcRegistry(ctx context.Context, form
 		}
 
 		if err := m.SrcRegistry.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("src_registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("src_registry")
 			}
+
 			return err
 		}
 	}
@@ -322,11 +351,15 @@ func (m *ReplicationPolicy) contextValidateTrigger(ctx context.Context, formats 
 		}
 
 		if err := m.Trigger.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("trigger")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("trigger")
 			}
+
 			return err
 		}
 	}

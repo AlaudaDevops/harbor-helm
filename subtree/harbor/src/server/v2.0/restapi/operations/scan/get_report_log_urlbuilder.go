@@ -47,28 +47,28 @@ func (o *GetReportLogURL) Build() (*url.URL, error) {
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on GetReportLogURL")
 	}
 
 	reference := o.Reference
 	if reference != "" {
-		_path = strings.Replace(_path, "{reference}", reference, -1)
+		_path = strings.ReplaceAll(_path, "{reference}", reference)
 	} else {
 		return nil, errors.New("reference is required on GetReportLogURL")
 	}
 
 	reportID := o.ReportID
 	if reportID != "" {
-		_path = strings.Replace(_path, "{report_id}", reportID, -1)
+		_path = strings.ReplaceAll(_path, "{report_id}", reportID)
 	} else {
 		return nil, errors.New("reportId is required on GetReportLogURL")
 	}
 
 	repositoryName := o.RepositoryName
 	if repositoryName != "" {
-		_path = strings.Replace(_path, "{repository_name}", repositoryName, -1)
+		_path = strings.ReplaceAll(_path, "{repository_name}", repositoryName)
 	} else {
 		return nil, errors.New("repositoryName is required on GetReportLogURL")
 	}

@@ -12,16 +12,16 @@ import (
 )
 
 // GetReportLogHandlerFunc turns a function with the right signature into a get report log handler
-type GetReportLogHandlerFunc func(GetReportLogParams, interface{}) middleware.Responder
+type GetReportLogHandlerFunc func(GetReportLogParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetReportLogHandlerFunc) Handle(params GetReportLogParams, principal interface{}) middleware.Responder {
+func (fn GetReportLogHandlerFunc) Handle(params GetReportLogParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetReportLogHandler interface for that can handle valid get report log params
 type GetReportLogHandler interface {
-	Handle(GetReportLogParams, interface{}) middleware.Responder
+	Handle(GetReportLogParams, any) middleware.Responder
 }
 
 // NewGetReportLog creates a new http.Handler for the get report log operation
@@ -55,9 +55,9 @@ func (o *GetReportLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetReportLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteReplicationPolicyHandlerFunc turns a function with the right signature into a delete replication policy handler
-type DeleteReplicationPolicyHandlerFunc func(DeleteReplicationPolicyParams, interface{}) middleware.Responder
+type DeleteReplicationPolicyHandlerFunc func(DeleteReplicationPolicyParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteReplicationPolicyHandlerFunc) Handle(params DeleteReplicationPolicyParams, principal interface{}) middleware.Responder {
+func (fn DeleteReplicationPolicyHandlerFunc) Handle(params DeleteReplicationPolicyParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteReplicationPolicyHandler interface for that can handle valid delete replication policy params
 type DeleteReplicationPolicyHandler interface {
-	Handle(DeleteReplicationPolicyParams, interface{}) middleware.Responder
+	Handle(DeleteReplicationPolicyParams, any) middleware.Responder
 }
 
 // NewDeleteReplicationPolicy creates a new http.Handler for the delete replication policy operation
@@ -55,9 +55,9 @@ func (o *DeleteReplicationPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteReplicationPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

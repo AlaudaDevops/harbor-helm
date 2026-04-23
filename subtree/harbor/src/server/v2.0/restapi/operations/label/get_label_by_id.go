@@ -12,16 +12,16 @@ import (
 )
 
 // GetLabelByIDHandlerFunc turns a function with the right signature into a get label by ID handler
-type GetLabelByIDHandlerFunc func(GetLabelByIDParams, interface{}) middleware.Responder
+type GetLabelByIDHandlerFunc func(GetLabelByIDParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetLabelByIDHandlerFunc) Handle(params GetLabelByIDParams, principal interface{}) middleware.Responder {
+func (fn GetLabelByIDHandlerFunc) Handle(params GetLabelByIDParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetLabelByIDHandler interface for that can handle valid get label by ID params
 type GetLabelByIDHandler interface {
-	Handle(GetLabelByIDParams, interface{}) middleware.Responder
+	Handle(GetLabelByIDParams, any) middleware.Responder
 }
 
 // NewGetLabelByID creates a new http.Handler for the get label by ID operation
@@ -55,9 +55,9 @@ func (o *GetLabelByID) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetLabelByID) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

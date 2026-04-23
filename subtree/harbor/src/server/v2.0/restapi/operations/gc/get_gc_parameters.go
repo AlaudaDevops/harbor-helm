@@ -28,7 +28,6 @@ func NewGetGCParams() GetGCParams {
 //
 // swagger:parameters getGC
 type GetGCParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetGCParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the gc log
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetGCParams) bindXRequestID(rawData []string, hasKey bool, formats strf
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetGCParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

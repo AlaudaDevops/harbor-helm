@@ -12,16 +12,16 @@ import (
 )
 
 // GetExecutionHandlerFunc turns a function with the right signature into a get execution handler
-type GetExecutionHandlerFunc func(GetExecutionParams, interface{}) middleware.Responder
+type GetExecutionHandlerFunc func(GetExecutionParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetExecutionHandlerFunc) Handle(params GetExecutionParams, principal interface{}) middleware.Responder {
+func (fn GetExecutionHandlerFunc) Handle(params GetExecutionParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetExecutionHandler interface for that can handle valid get execution params
 type GetExecutionHandler interface {
-	Handle(GetExecutionParams, interface{}) middleware.Responder
+	Handle(GetExecutionParams, any) middleware.Responder
 }
 
 // NewGetExecution creates a new http.Handler for the get execution operation
@@ -55,9 +55,9 @@ func (o *GetExecution) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetExecution) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

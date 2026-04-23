@@ -27,7 +27,6 @@ func NewGetIconParams() GetIconParams {
 //
 // swagger:parameters getIcon
 type GetIconParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,6 +35,7 @@ type GetIconParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The digest of the resource
 	  Required: true
 	  In: path
@@ -87,7 +87,7 @@ func (o *GetIconParams) bindXRequestID(rawData []string, hasKey bool, formats st
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetIconParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

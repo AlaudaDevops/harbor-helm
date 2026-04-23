@@ -44,7 +44,7 @@ func (o *GetIconURL) Build() (*url.URL, error) {
 
 	digest := o.Digest
 	if digest != "" {
-		_path = strings.Replace(_path, "{digest}", digest, -1)
+		_path = strings.ReplaceAll(_path, "{digest}", digest)
 	} else {
 		return nil, errors.New("digest is required on GetIconURL")
 	}

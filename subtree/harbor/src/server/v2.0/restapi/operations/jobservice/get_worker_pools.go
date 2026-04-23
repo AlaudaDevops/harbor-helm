@@ -12,16 +12,16 @@ import (
 )
 
 // GetWorkerPoolsHandlerFunc turns a function with the right signature into a get worker pools handler
-type GetWorkerPoolsHandlerFunc func(GetWorkerPoolsParams, interface{}) middleware.Responder
+type GetWorkerPoolsHandlerFunc func(GetWorkerPoolsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetWorkerPoolsHandlerFunc) Handle(params GetWorkerPoolsParams, principal interface{}) middleware.Responder {
+func (fn GetWorkerPoolsHandlerFunc) Handle(params GetWorkerPoolsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetWorkerPoolsHandler interface for that can handle valid get worker pools params
 type GetWorkerPoolsHandler interface {
-	Handle(GetWorkerPoolsParams, interface{}) middleware.Responder
+	Handle(GetWorkerPoolsParams, any) middleware.Responder
 }
 
 // NewGetWorkerPools creates a new http.Handler for the get worker pools operation
@@ -55,9 +55,9 @@ func (o *GetWorkerPools) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetWorkerPools) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -12,16 +12,16 @@ import (
 )
 
 // GetPermissionsHandlerFunc turns a function with the right signature into a get permissions handler
-type GetPermissionsHandlerFunc func(GetPermissionsParams, interface{}) middleware.Responder
+type GetPermissionsHandlerFunc func(GetPermissionsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetPermissionsHandlerFunc) Handle(params GetPermissionsParams, principal interface{}) middleware.Responder {
+func (fn GetPermissionsHandlerFunc) Handle(params GetPermissionsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetPermissionsHandler interface for that can handle valid get permissions params
 type GetPermissionsHandler interface {
-	Handle(GetPermissionsParams, interface{}) middleware.Responder
+	Handle(GetPermissionsParams, any) middleware.Responder
 }
 
 // NewGetPermissions creates a new http.Handler for the get permissions operation
@@ -55,9 +55,9 @@ func (o *GetPermissions) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetPermissions) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

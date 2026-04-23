@@ -36,7 +36,7 @@ type ScannerRegistration struct {
 
 	// Indicates the capabilities of the scanner, e.g. support_vulnerability or support_sbom.
 	// Example: {"support_sbom":true,"support_vulnerability":true}
-	Capabilities interface{} `json:"capabilities,omitempty"`
+	Capabilities any `json:"capabilities,omitempty"`
 
 	// The creation time of this registration
 	// Format: date-time

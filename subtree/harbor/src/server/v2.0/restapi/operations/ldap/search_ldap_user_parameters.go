@@ -28,7 +28,6 @@ func NewSearchLdapUserParams() SearchLdapUserParams {
 //
 // swagger:parameters searchLdapUser
 type SearchLdapUserParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type SearchLdapUserParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Registered user ID
 	  In: query
 	*/
@@ -51,7 +51,6 @@ func (o *SearchLdapUserParams) BindRequest(r *http.Request, route *middleware.Ma
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -89,7 +88,7 @@ func (o *SearchLdapUserParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SearchLdapUserParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

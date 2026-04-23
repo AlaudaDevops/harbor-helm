@@ -39,7 +39,6 @@ func NewSearchUserGroupsParams() SearchUserGroupsParams {
 //
 // swagger:parameters searchUserGroups
 type SearchUserGroupsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,16 +47,19 @@ type SearchUserGroupsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Group name for filtering results.
 	  Required: true
 	  In: query
 	*/
 	Groupname string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
@@ -74,7 +76,6 @@ func (o *SearchUserGroupsParams) BindRequest(r *http.Request, route *middleware.
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -122,7 +123,7 @@ func (o *SearchUserGroupsParams) bindXRequestID(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SearchUserGroupsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -205,7 +206,7 @@ func (o *SearchUserGroupsParams) bindPageSize(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *SearchUserGroupsParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

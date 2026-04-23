@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteRepositoryHandlerFunc turns a function with the right signature into a delete repository handler
-type DeleteRepositoryHandlerFunc func(DeleteRepositoryParams, interface{}) middleware.Responder
+type DeleteRepositoryHandlerFunc func(DeleteRepositoryParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteRepositoryHandlerFunc) Handle(params DeleteRepositoryParams, principal interface{}) middleware.Responder {
+func (fn DeleteRepositoryHandlerFunc) Handle(params DeleteRepositoryParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteRepositoryHandler interface for that can handle valid delete repository params
 type DeleteRepositoryHandler interface {
-	Handle(DeleteRepositoryParams, interface{}) middleware.Responder
+	Handle(DeleteRepositoryParams, any) middleware.Responder
 }
 
 // NewDeleteRepository creates a new http.Handler for the delete repository operation
@@ -55,9 +55,9 @@ func (o *DeleteRepository) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteRepository) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

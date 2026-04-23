@@ -28,7 +28,6 @@ func NewGetReplicationLogParams() GetReplicationLogParams {
 //
 // swagger:parameters getReplicationLog
 type GetReplicationLogParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,11 +36,13 @@ type GetReplicationLogParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the execution that the tasks belongs to.
 	  Required: true
 	  In: path
 	*/
 	ID int64
+
 	/*The ID of the task.
 	  Required: true
 	  In: path
@@ -98,7 +99,7 @@ func (o *GetReplicationLogParams) bindXRequestID(rawData []string, hasKey bool, 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetReplicationLogParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

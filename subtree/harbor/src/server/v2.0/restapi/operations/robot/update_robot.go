@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateRobotHandlerFunc turns a function with the right signature into a update robot handler
-type UpdateRobotHandlerFunc func(UpdateRobotParams, interface{}) middleware.Responder
+type UpdateRobotHandlerFunc func(UpdateRobotParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateRobotHandlerFunc) Handle(params UpdateRobotParams, principal interface{}) middleware.Responder {
+func (fn UpdateRobotHandlerFunc) Handle(params UpdateRobotParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateRobotHandler interface for that can handle valid update robot params
 type UpdateRobotHandler interface {
-	Handle(UpdateRobotParams, interface{}) middleware.Responder
+	Handle(UpdateRobotParams, any) middleware.Responder
 }
 
 // NewUpdateRobot creates a new http.Handler for the update robot operation
@@ -55,9 +55,9 @@ func (o *UpdateRobot) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateRobot) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

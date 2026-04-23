@@ -12,16 +12,16 @@ import (
 )
 
 // CreateScannerHandlerFunc turns a function with the right signature into a create scanner handler
-type CreateScannerHandlerFunc func(CreateScannerParams, interface{}) middleware.Responder
+type CreateScannerHandlerFunc func(CreateScannerParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateScannerHandlerFunc) Handle(params CreateScannerParams, principal interface{}) middleware.Responder {
+func (fn CreateScannerHandlerFunc) Handle(params CreateScannerParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateScannerHandler interface for that can handle valid create scanner params
 type CreateScannerHandler interface {
-	Handle(CreateScannerParams, interface{}) middleware.Responder
+	Handle(CreateScannerParams, any) middleware.Responder
 }
 
 // NewCreateScanner creates a new http.Handler for the create scanner operation
@@ -55,9 +55,9 @@ func (o *CreateScanner) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateScanner) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

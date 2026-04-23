@@ -28,7 +28,6 @@ func NewDeleteReplicationPolicyParams() DeleteReplicationPolicyParams {
 //
 // swagger:parameters deleteReplicationPolicy
 type DeleteReplicationPolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type DeleteReplicationPolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Replication policy ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *DeleteReplicationPolicyParams) bindXRequestID(rawData []string, hasKey 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteReplicationPolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

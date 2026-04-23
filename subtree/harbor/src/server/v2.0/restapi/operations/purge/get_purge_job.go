@@ -12,16 +12,16 @@ import (
 )
 
 // GetPurgeJobHandlerFunc turns a function with the right signature into a get purge job handler
-type GetPurgeJobHandlerFunc func(GetPurgeJobParams, interface{}) middleware.Responder
+type GetPurgeJobHandlerFunc func(GetPurgeJobParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetPurgeJobHandlerFunc) Handle(params GetPurgeJobParams, principal interface{}) middleware.Responder {
+func (fn GetPurgeJobHandlerFunc) Handle(params GetPurgeJobParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetPurgeJobHandler interface for that can handle valid get purge job params
 type GetPurgeJobHandler interface {
-	Handle(GetPurgeJobParams, interface{}) middleware.Responder
+	Handle(GetPurgeJobParams, any) middleware.Responder
 }
 
 // NewGetPurgeJob creates a new http.Handler for the get purge job operation
@@ -55,9 +55,9 @@ func (o *GetPurgeJob) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetPurgeJob) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

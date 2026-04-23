@@ -12,16 +12,16 @@ import (
 )
 
 // ListProjectMembersHandlerFunc turns a function with the right signature into a list project members handler
-type ListProjectMembersHandlerFunc func(ListProjectMembersParams, interface{}) middleware.Responder
+type ListProjectMembersHandlerFunc func(ListProjectMembersParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListProjectMembersHandlerFunc) Handle(params ListProjectMembersParams, principal interface{}) middleware.Responder {
+func (fn ListProjectMembersHandlerFunc) Handle(params ListProjectMembersParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListProjectMembersHandler interface for that can handle valid list project members params
 type ListProjectMembersHandler interface {
-	Handle(ListProjectMembersParams, interface{}) middleware.Responder
+	Handle(ListProjectMembersParams, any) middleware.Responder
 }
 
 // NewListProjectMembers creates a new http.Handler for the list project members operation
@@ -55,9 +55,9 @@ func (o *ListProjectMembers) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListProjectMembers) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

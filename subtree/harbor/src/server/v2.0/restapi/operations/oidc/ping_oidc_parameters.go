@@ -6,6 +6,7 @@ package oidc
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -29,7 +30,6 @@ func NewPingOIDCParams() PingOIDCParams {
 //
 // swagger:parameters pingOIDC
 type PingOIDCParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -38,6 +38,7 @@ type PingOIDCParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Request body for OIDC endpoint to be tested.
 	  Required: true
 	  In: body
@@ -59,10 +60,12 @@ func (o *PingOIDCParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body PingOIDCBody
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("endpoint", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("endpoint", "body", "", err))
@@ -112,7 +115,7 @@ func (o *PingOIDCParams) bindXRequestID(rawData []string, hasKey bool, formats s
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PingOIDCParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

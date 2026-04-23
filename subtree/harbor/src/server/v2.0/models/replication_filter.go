@@ -24,7 +24,7 @@ type ReplicationFilter struct {
 	Type string `json:"type,omitempty"`
 
 	// The value of replication policy filter.
-	Value interface{} `json:"value,omitempty"`
+	Value any `json:"value,omitempty"`
 }
 
 // Validate validates this replication filter

@@ -44,7 +44,7 @@ func (o *SetScannerAsDefaultURL) Build() (*url.URL, error) {
 
 	registrationID := o.RegistrationID
 	if registrationID != "" {
-		_path = strings.Replace(_path, "{registration_id}", registrationID, -1)
+		_path = strings.ReplaceAll(_path, "{registration_id}", registrationID)
 	} else {
 		return nil, errors.New("registrationId is required on SetScannerAsDefaultURL")
 	}

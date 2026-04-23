@@ -12,16 +12,16 @@ import (
 )
 
 // GetVolumesHandlerFunc turns a function with the right signature into a get volumes handler
-type GetVolumesHandlerFunc func(GetVolumesParams, interface{}) middleware.Responder
+type GetVolumesHandlerFunc func(GetVolumesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetVolumesHandlerFunc) Handle(params GetVolumesParams, principal interface{}) middleware.Responder {
+func (fn GetVolumesHandlerFunc) Handle(params GetVolumesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetVolumesHandler interface for that can handle valid get volumes params
 type GetVolumesHandler interface {
-	Handle(GetVolumesParams, interface{}) middleware.Responder
+	Handle(GetVolumesParams, any) middleware.Responder
 }
 
 // NewGetVolumes creates a new http.Handler for the get volumes operation
@@ -55,9 +55,9 @@ func (o *GetVolumes) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetVolumes) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

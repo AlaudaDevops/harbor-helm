@@ -46,7 +46,7 @@ func (o *SetCliSecretURL) Build() (*url.URL, error) {
 
 	userID := swag.FormatInt64(o.UserID)
 	if userID != "" {
-		_path = strings.Replace(_path, "{user_id}", userID, -1)
+		_path = strings.ReplaceAll(_path, "{user_id}", userID)
 	} else {
 		return nil, errors.New("userId is required on SetCliSecretURL")
 	}

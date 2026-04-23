@@ -12,16 +12,16 @@ import (
 )
 
 // GetConfigurationsHandlerFunc turns a function with the right signature into a get configurations handler
-type GetConfigurationsHandlerFunc func(GetConfigurationsParams, interface{}) middleware.Responder
+type GetConfigurationsHandlerFunc func(GetConfigurationsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetConfigurationsHandlerFunc) Handle(params GetConfigurationsParams, principal interface{}) middleware.Responder {
+func (fn GetConfigurationsHandlerFunc) Handle(params GetConfigurationsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetConfigurationsHandler interface for that can handle valid get configurations params
 type GetConfigurationsHandler interface {
-	Handle(GetConfigurationsParams, interface{}) middleware.Responder
+	Handle(GetConfigurationsParams, any) middleware.Responder
 }
 
 // NewGetConfigurations creates a new http.Handler for the get configurations operation
@@ -55,9 +55,9 @@ func (o *GetConfigurations) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetConfigurations) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

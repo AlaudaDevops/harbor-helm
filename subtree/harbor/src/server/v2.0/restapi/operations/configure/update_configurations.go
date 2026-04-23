@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateConfigurationsHandlerFunc turns a function with the right signature into a update configurations handler
-type UpdateConfigurationsHandlerFunc func(UpdateConfigurationsParams, interface{}) middleware.Responder
+type UpdateConfigurationsHandlerFunc func(UpdateConfigurationsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateConfigurationsHandlerFunc) Handle(params UpdateConfigurationsParams, principal interface{}) middleware.Responder {
+func (fn UpdateConfigurationsHandlerFunc) Handle(params UpdateConfigurationsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateConfigurationsHandler interface for that can handle valid update configurations params
 type UpdateConfigurationsHandler interface {
-	Handle(UpdateConfigurationsParams, interface{}) middleware.Responder
+	Handle(UpdateConfigurationsParams, any) middleware.Responder
 }
 
 // NewUpdateConfigurations creates a new http.Handler for the update configurations operation
@@ -55,9 +55,9 @@ func (o *UpdateConfigurations) ServeHTTP(rw http.ResponseWriter, r *http.Request
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateConfigurations) ServeHTTP(rw http.ResponseWriter, r *http.Request
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -28,7 +28,6 @@ func NewDeleteUserParams() DeleteUserParams {
 //
 // swagger:parameters deleteUser
 type DeleteUserParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type DeleteUserParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*User ID for marking as to be removed.
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *DeleteUserParams) bindXRequestID(rawData []string, hasKey bool, formats
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteUserParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

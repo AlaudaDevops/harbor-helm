@@ -12,16 +12,16 @@ import (
 )
 
 // RefreshSecHandlerFunc turns a function with the right signature into a refresh sec handler
-type RefreshSecHandlerFunc func(RefreshSecParams, interface{}) middleware.Responder
+type RefreshSecHandlerFunc func(RefreshSecParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn RefreshSecHandlerFunc) Handle(params RefreshSecParams, principal interface{}) middleware.Responder {
+func (fn RefreshSecHandlerFunc) Handle(params RefreshSecParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // RefreshSecHandler interface for that can handle valid refresh sec params
 type RefreshSecHandler interface {
-	Handle(RefreshSecParams, interface{}) middleware.Responder
+	Handle(RefreshSecParams, any) middleware.Responder
 }
 
 // NewRefreshSec creates a new http.Handler for the refresh sec operation
@@ -55,9 +55,9 @@ func (o *RefreshSec) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *RefreshSec) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

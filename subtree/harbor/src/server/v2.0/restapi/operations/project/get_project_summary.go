@@ -12,16 +12,16 @@ import (
 )
 
 // GetProjectSummaryHandlerFunc turns a function with the right signature into a get project summary handler
-type GetProjectSummaryHandlerFunc func(GetProjectSummaryParams, interface{}) middleware.Responder
+type GetProjectSummaryHandlerFunc func(GetProjectSummaryParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetProjectSummaryHandlerFunc) Handle(params GetProjectSummaryParams, principal interface{}) middleware.Responder {
+func (fn GetProjectSummaryHandlerFunc) Handle(params GetProjectSummaryParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetProjectSummaryHandler interface for that can handle valid get project summary params
 type GetProjectSummaryHandler interface {
-	Handle(GetProjectSummaryParams, interface{}) middleware.Responder
+	Handle(GetProjectSummaryParams, any) middleware.Responder
 }
 
 // NewGetProjectSummary creates a new http.Handler for the get project summary operation
@@ -55,9 +55,9 @@ func (o *GetProjectSummary) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetProjectSummary) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

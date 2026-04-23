@@ -12,16 +12,16 @@ import (
 )
 
 // ListRegistriesHandlerFunc turns a function with the right signature into a list registries handler
-type ListRegistriesHandlerFunc func(ListRegistriesParams, interface{}) middleware.Responder
+type ListRegistriesHandlerFunc func(ListRegistriesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListRegistriesHandlerFunc) Handle(params ListRegistriesParams, principal interface{}) middleware.Responder {
+func (fn ListRegistriesHandlerFunc) Handle(params ListRegistriesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListRegistriesHandler interface for that can handle valid list registries params
 type ListRegistriesHandler interface {
-	Handle(ListRegistriesParams, interface{}) middleware.Responder
+	Handle(ListRegistriesParams, any) middleware.Responder
 }
 
 // NewListRegistries creates a new http.Handler for the list registries operation
@@ -55,9 +55,9 @@ func (o *ListRegistries) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListRegistries) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

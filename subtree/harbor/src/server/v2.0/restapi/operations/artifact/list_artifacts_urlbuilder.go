@@ -58,14 +58,14 @@ func (o *ListArtifactsURL) Build() (*url.URL, error) {
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on ListArtifactsURL")
 	}
 
 	repositoryName := o.RepositoryName
 	if repositoryName != "" {
-		_path = strings.Replace(_path, "{repository_name}", repositoryName, -1)
+		_path = strings.ReplaceAll(_path, "{repository_name}", repositoryName)
 	} else {
 		return nil, errors.New("repositoryName is required on ListArtifactsURL")
 	}

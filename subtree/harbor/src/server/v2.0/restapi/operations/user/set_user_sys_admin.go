@@ -12,16 +12,16 @@ import (
 )
 
 // SetUserSysAdminHandlerFunc turns a function with the right signature into a set user sys admin handler
-type SetUserSysAdminHandlerFunc func(SetUserSysAdminParams, interface{}) middleware.Responder
+type SetUserSysAdminHandlerFunc func(SetUserSysAdminParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn SetUserSysAdminHandlerFunc) Handle(params SetUserSysAdminParams, principal interface{}) middleware.Responder {
+func (fn SetUserSysAdminHandlerFunc) Handle(params SetUserSysAdminParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // SetUserSysAdminHandler interface for that can handle valid set user sys admin params
 type SetUserSysAdminHandler interface {
-	Handle(SetUserSysAdminParams, interface{}) middleware.Responder
+	Handle(SetUserSysAdminParams, any) middleware.Responder
 }
 
 // NewSetUserSysAdmin creates a new http.Handler for the set user sys admin operation
@@ -53,9 +53,9 @@ func (o *SetUserSysAdmin) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -64,6 +64,7 @@ func (o *SetUserSysAdmin) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

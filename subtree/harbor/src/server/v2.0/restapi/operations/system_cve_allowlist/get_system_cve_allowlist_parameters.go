@@ -27,7 +27,6 @@ func NewGetSystemCVEAllowlistParams() GetSystemCVEAllowlistParams {
 //
 // swagger:parameters getSystemCVEAllowlist
 type GetSystemCVEAllowlistParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *GetSystemCVEAllowlistParams) bindXRequestID(rawData []string, hasKey bo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetSystemCVEAllowlistParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

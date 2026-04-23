@@ -6,6 +6,7 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewSetUserSysAdminParams() SetUserSysAdminParams {
 //
 // swagger:parameters setUserSysAdmin
 type SetUserSysAdminParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type SetUserSysAdminParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Toggle a user to admin or not.
 	  Required: true
 	  In: body
 	*/
 	SysadminFlag *models.UserSysAdminFlag
+
 	/*
 	  Required: true
 	  In: path
@@ -67,10 +69,12 @@ func (o *SetUserSysAdminParams) BindRequest(r *http.Request, route *middleware.M
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.UserSysAdminFlag
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("sysadminFlag", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("sysadminFlag", "body", "", err))
@@ -125,7 +129,7 @@ func (o *SetUserSysAdminParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SetUserSysAdminParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

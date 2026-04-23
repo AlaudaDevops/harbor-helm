@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -68,11 +69,15 @@ func (m *ProjectSummary) validateQuota(formats strfmt.Registry) error {
 
 	if m.Quota != nil {
 		if err := m.Quota.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("quota")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("quota")
 			}
+
 			return err
 		}
 	}
@@ -87,11 +92,15 @@ func (m *ProjectSummary) validateRegistry(formats strfmt.Registry) error {
 
 	if m.Registry != nil {
 		if err := m.Registry.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("registry")
 			}
+
 			return err
 		}
 	}
@@ -126,11 +135,15 @@ func (m *ProjectSummary) contextValidateQuota(ctx context.Context, formats strfm
 		}
 
 		if err := m.Quota.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("quota")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("quota")
 			}
+
 			return err
 		}
 	}
@@ -147,11 +160,15 @@ func (m *ProjectSummary) contextValidateRegistry(ctx context.Context, formats st
 		}
 
 		if err := m.Registry.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("registry")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("registry")
 			}
+
 			return err
 		}
 	}

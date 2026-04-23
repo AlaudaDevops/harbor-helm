@@ -6,7 +6,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -65,7 +64,7 @@ const AuthKey contextKey = "Auth"
 /* ArtifactAPI  */
 type ArtifactAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CopyArtifact Copy artifact */
 	CopyArtifact(ctx context.Context, params artifact.CopyArtifactParams) middleware.Responder
@@ -109,7 +108,7 @@ type ArtifactAPI interface {
 /* AuditlogAPI  */
 type AuditlogAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* ListAuditLogEventTypes Get all event types of audit log */
 	ListAuditLogEventTypes(ctx context.Context, params auditlog.ListAuditLogEventTypesParams) middleware.Responder
@@ -126,7 +125,7 @@ type AuditlogAPI interface {
 /* ConfigureAPI  */
 type ConfigureAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetConfigurations Get system configurations. */
 	GetConfigurations(ctx context.Context, params configure.GetConfigurationsParams) middleware.Responder
@@ -143,7 +142,7 @@ type ConfigureAPI interface {
 /* GCAPI  */
 type GCAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateGCSchedule Create a gc schedule. */
 	CreateGCSchedule(ctx context.Context, params gc.CreateGCScheduleParams) middleware.Responder
@@ -172,7 +171,7 @@ type GCAPI interface {
 /* HealthAPI  */
 type HealthAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetHealth Check the status of Harbor components */
 	GetHealth(ctx context.Context, params health.GetHealthParams) middleware.Responder
@@ -183,7 +182,7 @@ type HealthAPI interface {
 /* IconAPI  */
 type IconAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetIcon Get artifact icon */
 	GetIcon(ctx context.Context, params icon.GetIconParams) middleware.Responder
@@ -194,7 +193,7 @@ type IconAPI interface {
 /* ImmutableAPI  */
 type ImmutableAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateImmuRule Add an immutable tag rule to current project */
 	CreateImmuRule(ctx context.Context, params immutable.CreateImmuRuleParams) middleware.Responder
@@ -214,7 +213,7 @@ type ImmutableAPI interface {
 /* JobserviceAPI  */
 type JobserviceAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* ActionGetJobLog Get job log by job id */
 	ActionGetJobLog(ctx context.Context, params jobservice.ActionGetJobLogParams) middleware.Responder
@@ -240,7 +239,7 @@ type JobserviceAPI interface {
 /* LabelAPI  */
 type LabelAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateLabel Post creates a label */
 	CreateLabel(ctx context.Context, params label.CreateLabelParams) middleware.Responder
@@ -263,7 +262,7 @@ type LabelAPI interface {
 /* LdapAPI  */
 type LdapAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* ImportLdapUser Import selected available ldap users. */
 	ImportLdapUser(ctx context.Context, params ldap.ImportLdapUserParams) middleware.Responder
@@ -283,7 +282,7 @@ type LdapAPI interface {
 /* MemberAPI  */
 type MemberAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateProjectMember Create project member */
 	CreateProjectMember(ctx context.Context, params member.CreateProjectMemberParams) middleware.Responder
@@ -306,7 +305,7 @@ type MemberAPI interface {
 /* OIDCAPI  */
 type OIDCAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* PingOIDC Test the OIDC endpoint. */
 	PingOIDC(ctx context.Context, params oidc.PingOIDCParams) middleware.Responder
@@ -317,7 +316,7 @@ type OIDCAPI interface {
 /* PermissionsAPI  */
 type PermissionsAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetPermissions Get system or project level permissions info. */
 	GetPermissions(ctx context.Context, params permissions.GetPermissionsParams) middleware.Responder
@@ -328,7 +327,7 @@ type PermissionsAPI interface {
 /* PingAPI  */
 type PingAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetPing Ping Harbor to check if the API server is alive. */
 	GetPing(ctx context.Context, params ping.GetPingParams) middleware.Responder
@@ -339,7 +338,7 @@ type PingAPI interface {
 /* PreheatAPI  */
 type PreheatAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateInstance Create p2p provider instances */
 	CreateInstance(ctx context.Context, params preheat.CreateInstanceParams) middleware.Responder
@@ -404,7 +403,7 @@ type PreheatAPI interface {
 /* ProjectAPI  */
 type ProjectAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateProject Create a new project. */
 	CreateProject(ctx context.Context, params project.CreateProjectParams) middleware.Responder
@@ -454,7 +453,7 @@ type ProjectAPI interface {
 /* ProjectMetadataAPI  */
 type ProjectMetadataAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* AddProjectMetadatas Add metadata for the specific project */
 	AddProjectMetadatas(ctx context.Context, params project_metadata.AddProjectMetadatasParams) middleware.Responder
@@ -477,7 +476,7 @@ type ProjectMetadataAPI interface {
 /* PurgeAPI  */
 type PurgeAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreatePurgeSchedule Create a purge job schedule. */
 	CreatePurgeSchedule(ctx context.Context, params purge.CreatePurgeScheduleParams) middleware.Responder
@@ -506,7 +505,7 @@ type PurgeAPI interface {
 /* QuotaAPI  */
 type QuotaAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetQuota Get the specified quota */
 	GetQuota(ctx context.Context, params quota.GetQuotaParams) middleware.Responder
@@ -523,7 +522,7 @@ type QuotaAPI interface {
 /* RegistryAPI  */
 type RegistryAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateRegistry Create a registry */
 	CreateRegistry(ctx context.Context, params registry.CreateRegistryParams) middleware.Responder
@@ -558,7 +557,7 @@ type RegistryAPI interface {
 /* ReplicationAPI  */
 type ReplicationAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateReplicationPolicy Create a replication policy */
 	CreateReplicationPolicy(ctx context.Context, params replication.CreateReplicationPolicyParams) middleware.Responder
@@ -599,7 +598,7 @@ type ReplicationAPI interface {
 /* RepositoryAPI  */
 type RepositoryAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* DeleteRepository Delete repository */
 	DeleteRepository(ctx context.Context, params repository.DeleteRepositoryParams) middleware.Responder
@@ -622,7 +621,7 @@ type RepositoryAPI interface {
 /* RetentionAPI  */
 type RetentionAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateRetention Create Retention Policy */
 	CreateRetention(ctx context.Context, params retention.CreateRetentionParams) middleware.Responder
@@ -660,7 +659,7 @@ type RetentionAPI interface {
 /* RobotAPI  */
 type RobotAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateRobot Create a robot account */
 	CreateRobot(ctx context.Context, params robot.CreateRobotParams) middleware.Responder
@@ -686,7 +685,7 @@ type RobotAPI interface {
 /* ScanAPI  */
 type ScanAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetReportLog Get the log of the scan report */
 	GetReportLog(ctx context.Context, params scan.GetReportLogParams) middleware.Responder
@@ -703,7 +702,7 @@ type ScanAPI interface {
 /* ScanAllAPI  */
 type ScanAllAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateScanAllSchedule Create a schedule or a manual trigger for the scan all job. */
 	CreateScanAllSchedule(ctx context.Context, params scan_all.CreateScanAllScheduleParams) middleware.Responder
@@ -729,7 +728,7 @@ type ScanAllAPI interface {
 /* ScanDataExportAPI  */
 type ScanDataExportAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* DownloadScanData Download the scan data export file */
 	DownloadScanData(ctx context.Context, params scan_data_export.DownloadScanDataParams) middleware.Responder
@@ -749,7 +748,7 @@ type ScanDataExportAPI interface {
 /* ScannerAPI  */
 type ScannerAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateScanner Create a scanner registration */
 	CreateScanner(ctx context.Context, params scanner.CreateScannerParams) middleware.Responder
@@ -781,7 +780,7 @@ type ScannerAPI interface {
 /* ScheduleAPI  */
 type ScheduleAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetSchedulePaused Get scheduler paused status */
 	GetSchedulePaused(ctx context.Context, params schedule.GetSchedulePausedParams) middleware.Responder
@@ -795,7 +794,7 @@ type ScheduleAPI interface {
 /* SearchAPI  */
 type SearchAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* Search Search for projects and repositories */
 	Search(ctx context.Context, params search.SearchParams) middleware.Responder
@@ -806,7 +805,7 @@ type SearchAPI interface {
 /* SecurityhubAPI  */
 type SecurityhubAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* ListVulnerabilities Get the vulnerability list. */
 	ListVulnerabilities(ctx context.Context, params securityhub.ListVulnerabilitiesParams) middleware.Responder
@@ -820,7 +819,7 @@ type SecurityhubAPI interface {
 /* StatisticAPI  */
 type StatisticAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetStatistic Get the statistic information about the projects and repositories */
 	GetStatistic(ctx context.Context, params statistic.GetStatisticParams) middleware.Responder
@@ -831,7 +830,7 @@ type StatisticAPI interface {
 /* SystemCVEAllowlistAPI  */
 type SystemCVEAllowlistAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetSystemCVEAllowlist Get the system level allowlist of CVE. */
 	GetSystemCVEAllowlist(ctx context.Context, params system_cve_allowlist.GetSystemCVEAllowlistParams) middleware.Responder
@@ -845,7 +844,7 @@ type SystemCVEAllowlistAPI interface {
 /* SysteminfoAPI  */
 type SysteminfoAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* GetCert Get default root certificate. */
 	GetCert(ctx context.Context, params systeminfo.GetCertParams) middleware.Responder
@@ -862,7 +861,7 @@ type SysteminfoAPI interface {
 /* UserAPI  */
 type UserAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateUser Create a local user. */
 	CreateUser(ctx context.Context, params user.CreateUserParams) middleware.Responder
@@ -903,7 +902,7 @@ type UserAPI interface {
 /* UsergroupAPI  */
 type UsergroupAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateUserGroup Create user group */
 	CreateUserGroup(ctx context.Context, params usergroup.CreateUserGroupParams) middleware.Responder
@@ -929,7 +928,7 @@ type UsergroupAPI interface {
 /* WebhookAPI  */
 type WebhookAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* CreateWebhookPolicyOfProject Create project webhook policy. */
 	CreateWebhookPolicyOfProject(ctx context.Context, params webhook.CreateWebhookPolicyOfProjectParams) middleware.Responder
@@ -967,7 +966,7 @@ type WebhookAPI interface {
 /* WebhookjobAPI  */
 type WebhookjobAPI interface {
 	/* Prepare action before the operation */
-	Prepare(ctx context.Context, operation string, params interface{}) middleware.Responder
+	Prepare(ctx context.Context, operation string, params any) middleware.Responder
 
 	/* ListWebhookJobs List project webhook jobs */
 	ListWebhookJobs(ctx context.Context, params webhookjob.ListWebhookJobsParams) middleware.Responder
@@ -1023,7 +1022,7 @@ type Config struct {
 	Authorizer func(*http.Request) error
 
 	// AuthBasic for basic authentication
-	AuthBasic func(user string, pass string) (interface{}, error)
+	AuthBasic func(user string, pass string) (any, error)
 
 	// Authenticator to use for all APIKey authentication
 	APIKeyAuthenticator func(string, string, security.TokenAuthentication) runtime.Authenticator
@@ -1064,12 +1063,10 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 
 	api.JSONConsumer = runtime.JSONConsumer()
 	api.BinProducer = runtime.ByteStreamProducer()
-	api.CsvProducer = runtime.ProducerFunc(func(w io.Writer, data interface{}) error {
-		return errors.NotImplemented("csv producer has not yet been implemented")
-	})
+	api.CsvProducer = runtime.CSVProducer()
 	api.JSONProducer = runtime.JSONProducer()
 	api.TxtProducer = runtime.TextProducer()
-	api.BasicAuth = func(user string, pass string) (interface{}, error) {
+	api.BasicAuth = func(user string, pass string) (any, error) {
 		if c.AuthBasic == nil {
 			return "", nil
 		}
@@ -1077,7 +1074,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 	}
 
 	api.APIAuthorizer = authorizer(c.Authorizer)
-	api.ArtifactCopyArtifactHandler = artifact.CopyArtifactHandlerFunc(func(params artifact.CopyArtifactParams, principal interface{}) middleware.Responder {
+	api.ArtifactCopyArtifactHandler = artifact.CopyArtifactHandlerFunc(func(params artifact.CopyArtifactParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1090,7 +1087,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.CopyArtifact(ctx, params)
 	})
-	api.ImmutableCreateImmuRuleHandler = immutable.CreateImmuRuleHandlerFunc(func(params immutable.CreateImmuRuleParams, principal interface{}) middleware.Responder {
+	api.ImmutableCreateImmuRuleHandler = immutable.CreateImmuRuleHandlerFunc(func(params immutable.CreateImmuRuleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1103,7 +1100,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ImmutableAPI.CreateImmuRule(ctx, params)
 	})
-	api.PreheatCreateInstanceHandler = preheat.CreateInstanceHandlerFunc(func(params preheat.CreateInstanceParams, principal interface{}) middleware.Responder {
+	api.PreheatCreateInstanceHandler = preheat.CreateInstanceHandlerFunc(func(params preheat.CreateInstanceParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1116,7 +1113,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.CreateInstance(ctx, params)
 	})
-	api.LabelCreateLabelHandler = label.CreateLabelHandlerFunc(func(params label.CreateLabelParams, principal interface{}) middleware.Responder {
+	api.LabelCreateLabelHandler = label.CreateLabelHandlerFunc(func(params label.CreateLabelParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1129,7 +1126,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LabelAPI.CreateLabel(ctx, params)
 	})
-	api.PreheatCreatePolicyHandler = preheat.CreatePolicyHandlerFunc(func(params preheat.CreatePolicyParams, principal interface{}) middleware.Responder {
+	api.PreheatCreatePolicyHandler = preheat.CreatePolicyHandlerFunc(func(params preheat.CreatePolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1142,7 +1139,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.CreatePolicy(ctx, params)
 	})
-	api.RobotCreateRobotHandler = robot.CreateRobotHandlerFunc(func(params robot.CreateRobotParams, principal interface{}) middleware.Responder {
+	api.RobotCreateRobotHandler = robot.CreateRobotHandlerFunc(func(params robot.CreateRobotParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1155,7 +1152,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.CreateRobot(ctx, params)
 	})
-	api.WebhookCreateWebhookPolicyOfProjectHandler = webhook.CreateWebhookPolicyOfProjectHandlerFunc(func(params webhook.CreateWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+	api.WebhookCreateWebhookPolicyOfProjectHandler = webhook.CreateWebhookPolicyOfProjectHandlerFunc(func(params webhook.CreateWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1168,7 +1165,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.CreateWebhookPolicyOfProject(ctx, params)
 	})
-	api.ImmutableDeleteImmuRuleHandler = immutable.DeleteImmuRuleHandlerFunc(func(params immutable.DeleteImmuRuleParams, principal interface{}) middleware.Responder {
+	api.ImmutableDeleteImmuRuleHandler = immutable.DeleteImmuRuleHandlerFunc(func(params immutable.DeleteImmuRuleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1181,7 +1178,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ImmutableAPI.DeleteImmuRule(ctx, params)
 	})
-	api.PreheatDeleteInstanceHandler = preheat.DeleteInstanceHandlerFunc(func(params preheat.DeleteInstanceParams, principal interface{}) middleware.Responder {
+	api.PreheatDeleteInstanceHandler = preheat.DeleteInstanceHandlerFunc(func(params preheat.DeleteInstanceParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1194,7 +1191,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.DeleteInstance(ctx, params)
 	})
-	api.LabelDeleteLabelHandler = label.DeleteLabelHandlerFunc(func(params label.DeleteLabelParams, principal interface{}) middleware.Responder {
+	api.LabelDeleteLabelHandler = label.DeleteLabelHandlerFunc(func(params label.DeleteLabelParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1207,7 +1204,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LabelAPI.DeleteLabel(ctx, params)
 	})
-	api.PreheatDeletePolicyHandler = preheat.DeletePolicyHandlerFunc(func(params preheat.DeletePolicyParams, principal interface{}) middleware.Responder {
+	api.PreheatDeletePolicyHandler = preheat.DeletePolicyHandlerFunc(func(params preheat.DeletePolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1220,7 +1217,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.DeletePolicy(ctx, params)
 	})
-	api.RobotDeleteRobotHandler = robot.DeleteRobotHandlerFunc(func(params robot.DeleteRobotParams, principal interface{}) middleware.Responder {
+	api.RobotDeleteRobotHandler = robot.DeleteRobotHandlerFunc(func(params robot.DeleteRobotParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1233,7 +1230,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.DeleteRobot(ctx, params)
 	})
-	api.WebhookDeleteWebhookPolicyOfProjectHandler = webhook.DeleteWebhookPolicyOfProjectHandlerFunc(func(params webhook.DeleteWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+	api.WebhookDeleteWebhookPolicyOfProjectHandler = webhook.DeleteWebhookPolicyOfProjectHandlerFunc(func(params webhook.DeleteWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1246,7 +1243,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.DeleteWebhookPolicyOfProject(ctx, params)
 	})
-	api.PreheatGetExecutionHandler = preheat.GetExecutionHandlerFunc(func(params preheat.GetExecutionParams, principal interface{}) middleware.Responder {
+	api.PreheatGetExecutionHandler = preheat.GetExecutionHandlerFunc(func(params preheat.GetExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1259,7 +1256,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.GetExecution(ctx, params)
 	})
-	api.PreheatGetInstanceHandler = preheat.GetInstanceHandlerFunc(func(params preheat.GetInstanceParams, principal interface{}) middleware.Responder {
+	api.PreheatGetInstanceHandler = preheat.GetInstanceHandlerFunc(func(params preheat.GetInstanceParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1272,7 +1269,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.GetInstance(ctx, params)
 	})
-	api.LabelGetLabelByIDHandler = label.GetLabelByIDHandlerFunc(func(params label.GetLabelByIDParams, principal interface{}) middleware.Responder {
+	api.LabelGetLabelByIDHandler = label.GetLabelByIDHandlerFunc(func(params label.GetLabelByIDParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1285,7 +1282,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LabelAPI.GetLabelByID(ctx, params)
 	})
-	api.WebhookGetLogsOfWebhookTaskHandler = webhook.GetLogsOfWebhookTaskHandlerFunc(func(params webhook.GetLogsOfWebhookTaskParams, principal interface{}) middleware.Responder {
+	api.WebhookGetLogsOfWebhookTaskHandler = webhook.GetLogsOfWebhookTaskHandlerFunc(func(params webhook.GetLogsOfWebhookTaskParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1298,7 +1295,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.GetLogsOfWebhookTask(ctx, params)
 	})
-	api.PreheatGetPolicyHandler = preheat.GetPolicyHandlerFunc(func(params preheat.GetPolicyParams, principal interface{}) middleware.Responder {
+	api.PreheatGetPolicyHandler = preheat.GetPolicyHandlerFunc(func(params preheat.GetPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1311,7 +1308,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.GetPolicy(ctx, params)
 	})
-	api.PreheatGetPreheatLogHandler = preheat.GetPreheatLogHandlerFunc(func(params preheat.GetPreheatLogParams, principal interface{}) middleware.Responder {
+	api.PreheatGetPreheatLogHandler = preheat.GetPreheatLogHandlerFunc(func(params preheat.GetPreheatLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1324,7 +1321,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.GetPreheatLog(ctx, params)
 	})
-	api.RobotGetRobotByIDHandler = robot.GetRobotByIDHandlerFunc(func(params robot.GetRobotByIDParams, principal interface{}) middleware.Responder {
+	api.RobotGetRobotByIDHandler = robot.GetRobotByIDHandlerFunc(func(params robot.GetRobotByIDParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1337,7 +1334,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.GetRobotByID(ctx, params)
 	})
-	api.WebhookGetSupportedEventTypesHandler = webhook.GetSupportedEventTypesHandlerFunc(func(params webhook.GetSupportedEventTypesParams, principal interface{}) middleware.Responder {
+	api.WebhookGetSupportedEventTypesHandler = webhook.GetSupportedEventTypesHandlerFunc(func(params webhook.GetSupportedEventTypesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1350,7 +1347,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.GetSupportedEventTypes(ctx, params)
 	})
-	api.WebhookGetWebhookPolicyOfProjectHandler = webhook.GetWebhookPolicyOfProjectHandlerFunc(func(params webhook.GetWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+	api.WebhookGetWebhookPolicyOfProjectHandler = webhook.GetWebhookPolicyOfProjectHandlerFunc(func(params webhook.GetWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1363,7 +1360,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.GetWebhookPolicyOfProject(ctx, params)
 	})
-	api.WebhookLastTriggerHandler = webhook.LastTriggerHandlerFunc(func(params webhook.LastTriggerParams, principal interface{}) middleware.Responder {
+	api.WebhookLastTriggerHandler = webhook.LastTriggerHandlerFunc(func(params webhook.LastTriggerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1376,7 +1373,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.LastTrigger(ctx, params)
 	})
-	api.PreheatListExecutionsHandler = preheat.ListExecutionsHandlerFunc(func(params preheat.ListExecutionsParams, principal interface{}) middleware.Responder {
+	api.PreheatListExecutionsHandler = preheat.ListExecutionsHandlerFunc(func(params preheat.ListExecutionsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1389,7 +1386,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListExecutions(ctx, params)
 	})
-	api.WebhookListExecutionsOfWebhookPolicyHandler = webhook.ListExecutionsOfWebhookPolicyHandlerFunc(func(params webhook.ListExecutionsOfWebhookPolicyParams, principal interface{}) middleware.Responder {
+	api.WebhookListExecutionsOfWebhookPolicyHandler = webhook.ListExecutionsOfWebhookPolicyHandlerFunc(func(params webhook.ListExecutionsOfWebhookPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1402,7 +1399,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.ListExecutionsOfWebhookPolicy(ctx, params)
 	})
-	api.ImmutableListImmuRulesHandler = immutable.ListImmuRulesHandlerFunc(func(params immutable.ListImmuRulesParams, principal interface{}) middleware.Responder {
+	api.ImmutableListImmuRulesHandler = immutable.ListImmuRulesHandlerFunc(func(params immutable.ListImmuRulesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1415,7 +1412,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ImmutableAPI.ListImmuRules(ctx, params)
 	})
-	api.PreheatListInstancesHandler = preheat.ListInstancesHandlerFunc(func(params preheat.ListInstancesParams, principal interface{}) middleware.Responder {
+	api.PreheatListInstancesHandler = preheat.ListInstancesHandlerFunc(func(params preheat.ListInstancesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1428,7 +1425,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListInstances(ctx, params)
 	})
-	api.LabelListLabelsHandler = label.ListLabelsHandlerFunc(func(params label.ListLabelsParams, principal interface{}) middleware.Responder {
+	api.LabelListLabelsHandler = label.ListLabelsHandlerFunc(func(params label.ListLabelsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1441,7 +1438,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LabelAPI.ListLabels(ctx, params)
 	})
-	api.PreheatListPoliciesHandler = preheat.ListPoliciesHandlerFunc(func(params preheat.ListPoliciesParams, principal interface{}) middleware.Responder {
+	api.PreheatListPoliciesHandler = preheat.ListPoliciesHandlerFunc(func(params preheat.ListPoliciesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1454,7 +1451,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListPolicies(ctx, params)
 	})
-	api.PreheatListProvidersHandler = preheat.ListProvidersHandlerFunc(func(params preheat.ListProvidersParams, principal interface{}) middleware.Responder {
+	api.PreheatListProvidersHandler = preheat.ListProvidersHandlerFunc(func(params preheat.ListProvidersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1467,7 +1464,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListProviders(ctx, params)
 	})
-	api.PreheatListProvidersUnderProjectHandler = preheat.ListProvidersUnderProjectHandlerFunc(func(params preheat.ListProvidersUnderProjectParams, principal interface{}) middleware.Responder {
+	api.PreheatListProvidersUnderProjectHandler = preheat.ListProvidersUnderProjectHandlerFunc(func(params preheat.ListProvidersUnderProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1480,7 +1477,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListProvidersUnderProject(ctx, params)
 	})
-	api.RobotListRobotHandler = robot.ListRobotHandlerFunc(func(params robot.ListRobotParams, principal interface{}) middleware.Responder {
+	api.RobotListRobotHandler = robot.ListRobotHandlerFunc(func(params robot.ListRobotParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1493,7 +1490,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.ListRobot(ctx, params)
 	})
-	api.PreheatListTasksHandler = preheat.ListTasksHandlerFunc(func(params preheat.ListTasksParams, principal interface{}) middleware.Responder {
+	api.PreheatListTasksHandler = preheat.ListTasksHandlerFunc(func(params preheat.ListTasksParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1506,7 +1503,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ListTasks(ctx, params)
 	})
-	api.WebhookListTasksOfWebhookExecutionHandler = webhook.ListTasksOfWebhookExecutionHandlerFunc(func(params webhook.ListTasksOfWebhookExecutionParams, principal interface{}) middleware.Responder {
+	api.WebhookListTasksOfWebhookExecutionHandler = webhook.ListTasksOfWebhookExecutionHandlerFunc(func(params webhook.ListTasksOfWebhookExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1519,7 +1516,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.ListTasksOfWebhookExecution(ctx, params)
 	})
-	api.SecurityhubListVulnerabilitiesHandler = securityhub.ListVulnerabilitiesHandlerFunc(func(params securityhub.ListVulnerabilitiesParams, principal interface{}) middleware.Responder {
+	api.SecurityhubListVulnerabilitiesHandler = securityhub.ListVulnerabilitiesHandlerFunc(func(params securityhub.ListVulnerabilitiesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1532,7 +1529,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SecurityhubAPI.ListVulnerabilities(ctx, params)
 	})
-	api.WebhookjobListWebhookJobsHandler = webhookjob.ListWebhookJobsHandlerFunc(func(params webhookjob.ListWebhookJobsParams, principal interface{}) middleware.Responder {
+	api.WebhookjobListWebhookJobsHandler = webhookjob.ListWebhookJobsHandlerFunc(func(params webhookjob.ListWebhookJobsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1545,7 +1542,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookjobAPI.ListWebhookJobs(ctx, params)
 	})
-	api.WebhookListWebhookPoliciesOfProjectHandler = webhook.ListWebhookPoliciesOfProjectHandlerFunc(func(params webhook.ListWebhookPoliciesOfProjectParams, principal interface{}) middleware.Responder {
+	api.WebhookListWebhookPoliciesOfProjectHandler = webhook.ListWebhookPoliciesOfProjectHandlerFunc(func(params webhook.ListWebhookPoliciesOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1558,7 +1555,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.ListWebhookPoliciesOfProject(ctx, params)
 	})
-	api.PreheatManualPreheatHandler = preheat.ManualPreheatHandlerFunc(func(params preheat.ManualPreheatParams, principal interface{}) middleware.Responder {
+	api.PreheatManualPreheatHandler = preheat.ManualPreheatHandlerFunc(func(params preheat.ManualPreheatParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1571,7 +1568,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.ManualPreheat(ctx, params)
 	})
-	api.PreheatPingInstancesHandler = preheat.PingInstancesHandlerFunc(func(params preheat.PingInstancesParams, principal interface{}) middleware.Responder {
+	api.PreheatPingInstancesHandler = preheat.PingInstancesHandlerFunc(func(params preheat.PingInstancesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1584,7 +1581,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.PingInstances(ctx, params)
 	})
-	api.RobotRefreshSecHandler = robot.RefreshSecHandlerFunc(func(params robot.RefreshSecParams, principal interface{}) middleware.Responder {
+	api.RobotRefreshSecHandler = robot.RefreshSecHandlerFunc(func(params robot.RefreshSecParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1597,7 +1594,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.RefreshSec(ctx, params)
 	})
-	api.PreheatStopExecutionHandler = preheat.StopExecutionHandlerFunc(func(params preheat.StopExecutionParams, principal interface{}) middleware.Responder {
+	api.PreheatStopExecutionHandler = preheat.StopExecutionHandlerFunc(func(params preheat.StopExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1610,7 +1607,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.StopExecution(ctx, params)
 	})
-	api.ImmutableUpdateImmuRuleHandler = immutable.UpdateImmuRuleHandlerFunc(func(params immutable.UpdateImmuRuleParams, principal interface{}) middleware.Responder {
+	api.ImmutableUpdateImmuRuleHandler = immutable.UpdateImmuRuleHandlerFunc(func(params immutable.UpdateImmuRuleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1623,7 +1620,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ImmutableAPI.UpdateImmuRule(ctx, params)
 	})
-	api.PreheatUpdateInstanceHandler = preheat.UpdateInstanceHandlerFunc(func(params preheat.UpdateInstanceParams, principal interface{}) middleware.Responder {
+	api.PreheatUpdateInstanceHandler = preheat.UpdateInstanceHandlerFunc(func(params preheat.UpdateInstanceParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1636,7 +1633,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.UpdateInstance(ctx, params)
 	})
-	api.LabelUpdateLabelHandler = label.UpdateLabelHandlerFunc(func(params label.UpdateLabelParams, principal interface{}) middleware.Responder {
+	api.LabelUpdateLabelHandler = label.UpdateLabelHandlerFunc(func(params label.UpdateLabelParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1649,7 +1646,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LabelAPI.UpdateLabel(ctx, params)
 	})
-	api.PreheatUpdatePolicyHandler = preheat.UpdatePolicyHandlerFunc(func(params preheat.UpdatePolicyParams, principal interface{}) middleware.Responder {
+	api.PreheatUpdatePolicyHandler = preheat.UpdatePolicyHandlerFunc(func(params preheat.UpdatePolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1662,7 +1659,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PreheatAPI.UpdatePolicy(ctx, params)
 	})
-	api.RobotUpdateRobotHandler = robot.UpdateRobotHandlerFunc(func(params robot.UpdateRobotParams, principal interface{}) middleware.Responder {
+	api.RobotUpdateRobotHandler = robot.UpdateRobotHandlerFunc(func(params robot.UpdateRobotParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1675,7 +1672,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RobotAPI.UpdateRobot(ctx, params)
 	})
-	api.WebhookUpdateWebhookPolicyOfProjectHandler = webhook.UpdateWebhookPolicyOfProjectHandlerFunc(func(params webhook.UpdateWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+	api.WebhookUpdateWebhookPolicyOfProjectHandler = webhook.UpdateWebhookPolicyOfProjectHandlerFunc(func(params webhook.UpdateWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1688,7 +1685,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.WebhookAPI.UpdateWebhookPolicyOfProject(ctx, params)
 	})
-	api.JobserviceActionGetJobLogHandler = jobservice.ActionGetJobLogHandlerFunc(func(params jobservice.ActionGetJobLogParams, principal interface{}) middleware.Responder {
+	api.JobserviceActionGetJobLogHandler = jobservice.ActionGetJobLogHandlerFunc(func(params jobservice.ActionGetJobLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1701,7 +1698,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.ActionGetJobLog(ctx, params)
 	})
-	api.JobserviceActionPendingJobsHandler = jobservice.ActionPendingJobsHandlerFunc(func(params jobservice.ActionPendingJobsParams, principal interface{}) middleware.Responder {
+	api.JobserviceActionPendingJobsHandler = jobservice.ActionPendingJobsHandlerFunc(func(params jobservice.ActionPendingJobsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1714,7 +1711,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.ActionPendingJobs(ctx, params)
 	})
-	api.ArtifactAddLabelHandler = artifact.AddLabelHandlerFunc(func(params artifact.AddLabelParams, principal interface{}) middleware.Responder {
+	api.ArtifactAddLabelHandler = artifact.AddLabelHandlerFunc(func(params artifact.AddLabelParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1727,7 +1724,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.AddLabel(ctx, params)
 	})
-	api.ProjectMetadataAddProjectMetadatasHandler = project_metadata.AddProjectMetadatasHandlerFunc(func(params project_metadata.AddProjectMetadatasParams, principal interface{}) middleware.Responder {
+	api.ProjectMetadataAddProjectMetadatasHandler = project_metadata.AddProjectMetadatasHandlerFunc(func(params project_metadata.AddProjectMetadatasParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1740,7 +1737,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectMetadataAPI.AddProjectMetadatas(ctx, params)
 	})
-	api.GCCreateGCScheduleHandler = gc.CreateGCScheduleHandlerFunc(func(params gc.CreateGCScheduleParams, principal interface{}) middleware.Responder {
+	api.GCCreateGCScheduleHandler = gc.CreateGCScheduleHandlerFunc(func(params gc.CreateGCScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1753,7 +1750,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.CreateGCSchedule(ctx, params)
 	})
-	api.ProjectCreateProjectHandler = project.CreateProjectHandlerFunc(func(params project.CreateProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectCreateProjectHandler = project.CreateProjectHandlerFunc(func(params project.CreateProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1766,7 +1763,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.CreateProject(ctx, params)
 	})
-	api.MemberCreateProjectMemberHandler = member.CreateProjectMemberHandlerFunc(func(params member.CreateProjectMemberParams, principal interface{}) middleware.Responder {
+	api.MemberCreateProjectMemberHandler = member.CreateProjectMemberHandlerFunc(func(params member.CreateProjectMemberParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1779,7 +1776,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.MemberAPI.CreateProjectMember(ctx, params)
 	})
-	api.PurgeCreatePurgeScheduleHandler = purge.CreatePurgeScheduleHandlerFunc(func(params purge.CreatePurgeScheduleParams, principal interface{}) middleware.Responder {
+	api.PurgeCreatePurgeScheduleHandler = purge.CreatePurgeScheduleHandlerFunc(func(params purge.CreatePurgeScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1792,7 +1789,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.CreatePurgeSchedule(ctx, params)
 	})
-	api.RegistryCreateRegistryHandler = registry.CreateRegistryHandlerFunc(func(params registry.CreateRegistryParams, principal interface{}) middleware.Responder {
+	api.RegistryCreateRegistryHandler = registry.CreateRegistryHandlerFunc(func(params registry.CreateRegistryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1805,7 +1802,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.CreateRegistry(ctx, params)
 	})
-	api.ReplicationCreateReplicationPolicyHandler = replication.CreateReplicationPolicyHandlerFunc(func(params replication.CreateReplicationPolicyParams, principal interface{}) middleware.Responder {
+	api.ReplicationCreateReplicationPolicyHandler = replication.CreateReplicationPolicyHandlerFunc(func(params replication.CreateReplicationPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1818,7 +1815,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.CreateReplicationPolicy(ctx, params)
 	})
-	api.RetentionCreateRetentionHandler = retention.CreateRetentionHandlerFunc(func(params retention.CreateRetentionParams, principal interface{}) middleware.Responder {
+	api.RetentionCreateRetentionHandler = retention.CreateRetentionHandlerFunc(func(params retention.CreateRetentionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1831,7 +1828,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.CreateRetention(ctx, params)
 	})
-	api.ScanAllCreateScanAllScheduleHandler = scan_all.CreateScanAllScheduleHandlerFunc(func(params scan_all.CreateScanAllScheduleParams, principal interface{}) middleware.Responder {
+	api.ScanAllCreateScanAllScheduleHandler = scan_all.CreateScanAllScheduleHandlerFunc(func(params scan_all.CreateScanAllScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1844,7 +1841,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.CreateScanAllSchedule(ctx, params)
 	})
-	api.ScannerCreateScannerHandler = scanner.CreateScannerHandlerFunc(func(params scanner.CreateScannerParams, principal interface{}) middleware.Responder {
+	api.ScannerCreateScannerHandler = scanner.CreateScannerHandlerFunc(func(params scanner.CreateScannerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1857,7 +1854,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.CreateScanner(ctx, params)
 	})
-	api.ArtifactCreateTagHandler = artifact.CreateTagHandlerFunc(func(params artifact.CreateTagParams, principal interface{}) middleware.Responder {
+	api.ArtifactCreateTagHandler = artifact.CreateTagHandlerFunc(func(params artifact.CreateTagParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1870,7 +1867,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.CreateTag(ctx, params)
 	})
-	api.UserCreateUserHandler = user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal interface{}) middleware.Responder {
+	api.UserCreateUserHandler = user.CreateUserHandlerFunc(func(params user.CreateUserParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1883,7 +1880,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.CreateUser(ctx, params)
 	})
-	api.UsergroupCreateUserGroupHandler = usergroup.CreateUserGroupHandlerFunc(func(params usergroup.CreateUserGroupParams, principal interface{}) middleware.Responder {
+	api.UsergroupCreateUserGroupHandler = usergroup.CreateUserGroupHandlerFunc(func(params usergroup.CreateUserGroupParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1896,7 +1893,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.CreateUserGroup(ctx, params)
 	})
-	api.ArtifactDeleteArtifactHandler = artifact.DeleteArtifactHandlerFunc(func(params artifact.DeleteArtifactParams, principal interface{}) middleware.Responder {
+	api.ArtifactDeleteArtifactHandler = artifact.DeleteArtifactHandlerFunc(func(params artifact.DeleteArtifactParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1909,7 +1906,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.DeleteArtifact(ctx, params)
 	})
-	api.ProjectDeleteProjectHandler = project.DeleteProjectHandlerFunc(func(params project.DeleteProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectDeleteProjectHandler = project.DeleteProjectHandlerFunc(func(params project.DeleteProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1922,7 +1919,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.DeleteProject(ctx, params)
 	})
-	api.MemberDeleteProjectMemberHandler = member.DeleteProjectMemberHandlerFunc(func(params member.DeleteProjectMemberParams, principal interface{}) middleware.Responder {
+	api.MemberDeleteProjectMemberHandler = member.DeleteProjectMemberHandlerFunc(func(params member.DeleteProjectMemberParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1935,7 +1932,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.MemberAPI.DeleteProjectMember(ctx, params)
 	})
-	api.ProjectMetadataDeleteProjectMetadataHandler = project_metadata.DeleteProjectMetadataHandlerFunc(func(params project_metadata.DeleteProjectMetadataParams, principal interface{}) middleware.Responder {
+	api.ProjectMetadataDeleteProjectMetadataHandler = project_metadata.DeleteProjectMetadataHandlerFunc(func(params project_metadata.DeleteProjectMetadataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1948,7 +1945,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectMetadataAPI.DeleteProjectMetadata(ctx, params)
 	})
-	api.RegistryDeleteRegistryHandler = registry.DeleteRegistryHandlerFunc(func(params registry.DeleteRegistryParams, principal interface{}) middleware.Responder {
+	api.RegistryDeleteRegistryHandler = registry.DeleteRegistryHandlerFunc(func(params registry.DeleteRegistryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1961,7 +1958,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.DeleteRegistry(ctx, params)
 	})
-	api.ReplicationDeleteReplicationPolicyHandler = replication.DeleteReplicationPolicyHandlerFunc(func(params replication.DeleteReplicationPolicyParams, principal interface{}) middleware.Responder {
+	api.ReplicationDeleteReplicationPolicyHandler = replication.DeleteReplicationPolicyHandlerFunc(func(params replication.DeleteReplicationPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1974,7 +1971,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.DeleteReplicationPolicy(ctx, params)
 	})
-	api.RepositoryDeleteRepositoryHandler = repository.DeleteRepositoryHandlerFunc(func(params repository.DeleteRepositoryParams, principal interface{}) middleware.Responder {
+	api.RepositoryDeleteRepositoryHandler = repository.DeleteRepositoryHandlerFunc(func(params repository.DeleteRepositoryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -1987,7 +1984,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RepositoryAPI.DeleteRepository(ctx, params)
 	})
-	api.RetentionDeleteRetentionHandler = retention.DeleteRetentionHandlerFunc(func(params retention.DeleteRetentionParams, principal interface{}) middleware.Responder {
+	api.RetentionDeleteRetentionHandler = retention.DeleteRetentionHandlerFunc(func(params retention.DeleteRetentionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2000,7 +1997,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.DeleteRetention(ctx, params)
 	})
-	api.ScannerDeleteScannerHandler = scanner.DeleteScannerHandlerFunc(func(params scanner.DeleteScannerParams, principal interface{}) middleware.Responder {
+	api.ScannerDeleteScannerHandler = scanner.DeleteScannerHandlerFunc(func(params scanner.DeleteScannerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2013,7 +2010,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.DeleteScanner(ctx, params)
 	})
-	api.ArtifactDeleteTagHandler = artifact.DeleteTagHandlerFunc(func(params artifact.DeleteTagParams, principal interface{}) middleware.Responder {
+	api.ArtifactDeleteTagHandler = artifact.DeleteTagHandlerFunc(func(params artifact.DeleteTagParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2026,7 +2023,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.DeleteTag(ctx, params)
 	})
-	api.UserDeleteUserHandler = user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal interface{}) middleware.Responder {
+	api.UserDeleteUserHandler = user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2039,7 +2036,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.DeleteUser(ctx, params)
 	})
-	api.UsergroupDeleteUserGroupHandler = usergroup.DeleteUserGroupHandlerFunc(func(params usergroup.DeleteUserGroupParams, principal interface{}) middleware.Responder {
+	api.UsergroupDeleteUserGroupHandler = usergroup.DeleteUserGroupHandlerFunc(func(params usergroup.DeleteUserGroupParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2052,7 +2049,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.DeleteUserGroup(ctx, params)
 	})
-	api.ScanDataExportDownloadScanDataHandler = scan_data_export.DownloadScanDataHandlerFunc(func(params scan_data_export.DownloadScanDataParams, principal interface{}) middleware.Responder {
+	api.ScanDataExportDownloadScanDataHandler = scan_data_export.DownloadScanDataHandlerFunc(func(params scan_data_export.DownloadScanDataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2065,7 +2062,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanDataExportAPI.DownloadScanData(ctx, params)
 	})
-	api.ScanDataExportExportScanDataHandler = scan_data_export.ExportScanDataHandlerFunc(func(params scan_data_export.ExportScanDataParams, principal interface{}) middleware.Responder {
+	api.ScanDataExportExportScanDataHandler = scan_data_export.ExportScanDataHandlerFunc(func(params scan_data_export.ExportScanDataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2078,7 +2075,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanDataExportAPI.ExportScanData(ctx, params)
 	})
-	api.ArtifactGetAdditionHandler = artifact.GetAdditionHandlerFunc(func(params artifact.GetAdditionParams, principal interface{}) middleware.Responder {
+	api.ArtifactGetAdditionHandler = artifact.GetAdditionHandlerFunc(func(params artifact.GetAdditionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2091,7 +2088,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.GetAddition(ctx, params)
 	})
-	api.ArtifactGetArtifactHandler = artifact.GetArtifactHandlerFunc(func(params artifact.GetArtifactParams, principal interface{}) middleware.Responder {
+	api.ArtifactGetArtifactHandler = artifact.GetArtifactHandlerFunc(func(params artifact.GetArtifactParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2104,7 +2101,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.GetArtifact(ctx, params)
 	})
-	api.SysteminfoGetCertHandler = systeminfo.GetCertHandlerFunc(func(params systeminfo.GetCertParams, principal interface{}) middleware.Responder {
+	api.SysteminfoGetCertHandler = systeminfo.GetCertHandlerFunc(func(params systeminfo.GetCertParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2117,7 +2114,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SysteminfoAPI.GetCert(ctx, params)
 	})
-	api.ConfigureGetConfigurationsHandler = configure.GetConfigurationsHandlerFunc(func(params configure.GetConfigurationsParams, principal interface{}) middleware.Responder {
+	api.ConfigureGetConfigurationsHandler = configure.GetConfigurationsHandlerFunc(func(params configure.GetConfigurationsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2130,7 +2127,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ConfigureAPI.GetConfigurations(ctx, params)
 	})
-	api.UserGetCurrentUserInfoHandler = user.GetCurrentUserInfoHandlerFunc(func(params user.GetCurrentUserInfoParams, principal interface{}) middleware.Responder {
+	api.UserGetCurrentUserInfoHandler = user.GetCurrentUserInfoHandlerFunc(func(params user.GetCurrentUserInfoParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2143,7 +2140,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.GetCurrentUserInfo(ctx, params)
 	})
-	api.UserGetCurrentUserPermissionsHandler = user.GetCurrentUserPermissionsHandlerFunc(func(params user.GetCurrentUserPermissionsParams, principal interface{}) middleware.Responder {
+	api.UserGetCurrentUserPermissionsHandler = user.GetCurrentUserPermissionsHandlerFunc(func(params user.GetCurrentUserPermissionsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2156,7 +2153,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.GetCurrentUserPermissions(ctx, params)
 	})
-	api.GCGetGCHandler = gc.GetGCHandlerFunc(func(params gc.GetGCParams, principal interface{}) middleware.Responder {
+	api.GCGetGCHandler = gc.GetGCHandlerFunc(func(params gc.GetGCParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2169,7 +2166,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.GetGC(ctx, params)
 	})
-	api.GCGetGCHistoryHandler = gc.GetGCHistoryHandlerFunc(func(params gc.GetGCHistoryParams, principal interface{}) middleware.Responder {
+	api.GCGetGCHistoryHandler = gc.GetGCHistoryHandlerFunc(func(params gc.GetGCHistoryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2182,7 +2179,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.GetGCHistory(ctx, params)
 	})
-	api.GCGetGCLogHandler = gc.GetGCLogHandlerFunc(func(params gc.GetGCLogParams, principal interface{}) middleware.Responder {
+	api.GCGetGCLogHandler = gc.GetGCLogHandlerFunc(func(params gc.GetGCLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2195,7 +2192,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.GetGCLog(ctx, params)
 	})
-	api.GCGetGCScheduleHandler = gc.GetGCScheduleHandlerFunc(func(params gc.GetGCScheduleParams, principal interface{}) middleware.Responder {
+	api.GCGetGCScheduleHandler = gc.GetGCScheduleHandlerFunc(func(params gc.GetGCScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2208,7 +2205,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.GetGCSchedule(ctx, params)
 	})
-	api.HealthGetHealthHandler = health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal interface{}) middleware.Responder {
+	api.HealthGetHealthHandler = health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2221,7 +2218,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.HealthAPI.GetHealth(ctx, params)
 	})
-	api.IconGetIconHandler = icon.GetIconHandlerFunc(func(params icon.GetIconParams, principal interface{}) middleware.Responder {
+	api.IconGetIconHandler = icon.GetIconHandlerFunc(func(params icon.GetIconParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2234,7 +2231,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.IconAPI.GetIcon(ctx, params)
 	})
-	api.ConfigureGetInternalconfigHandler = configure.GetInternalconfigHandlerFunc(func(params configure.GetInternalconfigParams, principal interface{}) middleware.Responder {
+	api.ConfigureGetInternalconfigHandler = configure.GetInternalconfigHandlerFunc(func(params configure.GetInternalconfigParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2247,7 +2244,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ConfigureAPI.GetInternalconfig(ctx, params)
 	})
-	api.ScanAllGetLatestScanAllMetricsHandler = scan_all.GetLatestScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScanAllMetricsParams, principal interface{}) middleware.Responder {
+	api.ScanAllGetLatestScanAllMetricsHandler = scan_all.GetLatestScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScanAllMetricsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2260,7 +2257,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.GetLatestScanAllMetrics(ctx, params)
 	})
-	api.ScanAllGetLatestScheduledScanAllMetricsHandler = scan_all.GetLatestScheduledScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScheduledScanAllMetricsParams, principal interface{}) middleware.Responder {
+	api.ScanAllGetLatestScheduledScanAllMetricsHandler = scan_all.GetLatestScheduledScanAllMetricsHandlerFunc(func(params scan_all.GetLatestScheduledScanAllMetricsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2273,7 +2270,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.GetLatestScheduledScanAllMetrics(ctx, params)
 	})
-	api.ProjectGetLogExtsHandler = project.GetLogExtsHandlerFunc(func(params project.GetLogExtsParams, principal interface{}) middleware.Responder {
+	api.ProjectGetLogExtsHandler = project.GetLogExtsHandlerFunc(func(params project.GetLogExtsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2286,7 +2283,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetLogExts(ctx, params)
 	})
-	api.ProjectGetLogsHandler = project.GetLogsHandlerFunc(func(params project.GetLogsParams, principal interface{}) middleware.Responder {
+	api.ProjectGetLogsHandler = project.GetLogsHandlerFunc(func(params project.GetLogsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2299,7 +2296,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetLogs(ctx, params)
 	})
-	api.PermissionsGetPermissionsHandler = permissions.GetPermissionsHandlerFunc(func(params permissions.GetPermissionsParams, principal interface{}) middleware.Responder {
+	api.PermissionsGetPermissionsHandler = permissions.GetPermissionsHandlerFunc(func(params permissions.GetPermissionsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2312,7 +2309,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PermissionsAPI.GetPermissions(ctx, params)
 	})
-	api.PingGetPingHandler = ping.GetPingHandlerFunc(func(params ping.GetPingParams, principal interface{}) middleware.Responder {
+	api.PingGetPingHandler = ping.GetPingHandlerFunc(func(params ping.GetPingParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2325,7 +2322,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PingAPI.GetPing(ctx, params)
 	})
-	api.ProjectGetProjectHandler = project.GetProjectHandlerFunc(func(params project.GetProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectGetProjectHandler = project.GetProjectHandlerFunc(func(params project.GetProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2338,7 +2335,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetProject(ctx, params)
 	})
-	api.ProjectGetProjectDeletableHandler = project.GetProjectDeletableHandlerFunc(func(params project.GetProjectDeletableParams, principal interface{}) middleware.Responder {
+	api.ProjectGetProjectDeletableHandler = project.GetProjectDeletableHandlerFunc(func(params project.GetProjectDeletableParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2351,7 +2348,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetProjectDeletable(ctx, params)
 	})
-	api.MemberGetProjectMemberHandler = member.GetProjectMemberHandlerFunc(func(params member.GetProjectMemberParams, principal interface{}) middleware.Responder {
+	api.MemberGetProjectMemberHandler = member.GetProjectMemberHandlerFunc(func(params member.GetProjectMemberParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2364,7 +2361,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.MemberAPI.GetProjectMember(ctx, params)
 	})
-	api.ProjectMetadataGetProjectMetadataHandler = project_metadata.GetProjectMetadataHandlerFunc(func(params project_metadata.GetProjectMetadataParams, principal interface{}) middleware.Responder {
+	api.ProjectMetadataGetProjectMetadataHandler = project_metadata.GetProjectMetadataHandlerFunc(func(params project_metadata.GetProjectMetadataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2377,7 +2374,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectMetadataAPI.GetProjectMetadata(ctx, params)
 	})
-	api.ProjectGetProjectSummaryHandler = project.GetProjectSummaryHandlerFunc(func(params project.GetProjectSummaryParams, principal interface{}) middleware.Responder {
+	api.ProjectGetProjectSummaryHandler = project.GetProjectSummaryHandlerFunc(func(params project.GetProjectSummaryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2390,7 +2387,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetProjectSummary(ctx, params)
 	})
-	api.PurgeGetPurgeHistoryHandler = purge.GetPurgeHistoryHandlerFunc(func(params purge.GetPurgeHistoryParams, principal interface{}) middleware.Responder {
+	api.PurgeGetPurgeHistoryHandler = purge.GetPurgeHistoryHandlerFunc(func(params purge.GetPurgeHistoryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2403,7 +2400,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.GetPurgeHistory(ctx, params)
 	})
-	api.PurgeGetPurgeJobHandler = purge.GetPurgeJobHandlerFunc(func(params purge.GetPurgeJobParams, principal interface{}) middleware.Responder {
+	api.PurgeGetPurgeJobHandler = purge.GetPurgeJobHandlerFunc(func(params purge.GetPurgeJobParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2416,7 +2413,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.GetPurgeJob(ctx, params)
 	})
-	api.PurgeGetPurgeJobLogHandler = purge.GetPurgeJobLogHandlerFunc(func(params purge.GetPurgeJobLogParams, principal interface{}) middleware.Responder {
+	api.PurgeGetPurgeJobLogHandler = purge.GetPurgeJobLogHandlerFunc(func(params purge.GetPurgeJobLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2429,7 +2426,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.GetPurgeJobLog(ctx, params)
 	})
-	api.PurgeGetPurgeScheduleHandler = purge.GetPurgeScheduleHandlerFunc(func(params purge.GetPurgeScheduleParams, principal interface{}) middleware.Responder {
+	api.PurgeGetPurgeScheduleHandler = purge.GetPurgeScheduleHandlerFunc(func(params purge.GetPurgeScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2442,7 +2439,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.GetPurgeSchedule(ctx, params)
 	})
-	api.QuotaGetQuotaHandler = quota.GetQuotaHandlerFunc(func(params quota.GetQuotaParams, principal interface{}) middleware.Responder {
+	api.QuotaGetQuotaHandler = quota.GetQuotaHandlerFunc(func(params quota.GetQuotaParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2455,7 +2452,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.QuotaAPI.GetQuota(ctx, params)
 	})
-	api.RegistryGetRegistryHandler = registry.GetRegistryHandlerFunc(func(params registry.GetRegistryParams, principal interface{}) middleware.Responder {
+	api.RegistryGetRegistryHandler = registry.GetRegistryHandlerFunc(func(params registry.GetRegistryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2468,7 +2465,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.GetRegistry(ctx, params)
 	})
-	api.RegistryGetRegistryInfoHandler = registry.GetRegistryInfoHandlerFunc(func(params registry.GetRegistryInfoParams, principal interface{}) middleware.Responder {
+	api.RegistryGetRegistryInfoHandler = registry.GetRegistryInfoHandlerFunc(func(params registry.GetRegistryInfoParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2481,7 +2478,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.GetRegistryInfo(ctx, params)
 	})
-	api.RetentionGetRentenitionMetadataHandler = retention.GetRentenitionMetadataHandlerFunc(func(params retention.GetRentenitionMetadataParams, principal interface{}) middleware.Responder {
+	api.RetentionGetRentenitionMetadataHandler = retention.GetRentenitionMetadataHandlerFunc(func(params retention.GetRentenitionMetadataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2494,7 +2491,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.GetRentenitionMetadata(ctx, params)
 	})
-	api.ReplicationGetReplicationExecutionHandler = replication.GetReplicationExecutionHandlerFunc(func(params replication.GetReplicationExecutionParams, principal interface{}) middleware.Responder {
+	api.ReplicationGetReplicationExecutionHandler = replication.GetReplicationExecutionHandlerFunc(func(params replication.GetReplicationExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2507,7 +2504,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.GetReplicationExecution(ctx, params)
 	})
-	api.ReplicationGetReplicationLogHandler = replication.GetReplicationLogHandlerFunc(func(params replication.GetReplicationLogParams, principal interface{}) middleware.Responder {
+	api.ReplicationGetReplicationLogHandler = replication.GetReplicationLogHandlerFunc(func(params replication.GetReplicationLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2520,7 +2517,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.GetReplicationLog(ctx, params)
 	})
-	api.ReplicationGetReplicationPolicyHandler = replication.GetReplicationPolicyHandlerFunc(func(params replication.GetReplicationPolicyParams, principal interface{}) middleware.Responder {
+	api.ReplicationGetReplicationPolicyHandler = replication.GetReplicationPolicyHandlerFunc(func(params replication.GetReplicationPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2533,7 +2530,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.GetReplicationPolicy(ctx, params)
 	})
-	api.ScanGetReportLogHandler = scan.GetReportLogHandlerFunc(func(params scan.GetReportLogParams, principal interface{}) middleware.Responder {
+	api.ScanGetReportLogHandler = scan.GetReportLogHandlerFunc(func(params scan.GetReportLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2546,7 +2543,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAPI.GetReportLog(ctx, params)
 	})
-	api.RepositoryGetRepositoryHandler = repository.GetRepositoryHandlerFunc(func(params repository.GetRepositoryParams, principal interface{}) middleware.Responder {
+	api.RepositoryGetRepositoryHandler = repository.GetRepositoryHandlerFunc(func(params repository.GetRepositoryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2559,7 +2556,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RepositoryAPI.GetRepository(ctx, params)
 	})
-	api.RetentionGetRetentionHandler = retention.GetRetentionHandlerFunc(func(params retention.GetRetentionParams, principal interface{}) middleware.Responder {
+	api.RetentionGetRetentionHandler = retention.GetRetentionHandlerFunc(func(params retention.GetRetentionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2572,7 +2569,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.GetRetention(ctx, params)
 	})
-	api.RetentionGetRetentionTaskLogHandler = retention.GetRetentionTaskLogHandlerFunc(func(params retention.GetRetentionTaskLogParams, principal interface{}) middleware.Responder {
+	api.RetentionGetRetentionTaskLogHandler = retention.GetRetentionTaskLogHandlerFunc(func(params retention.GetRetentionTaskLogParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2585,7 +2582,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.GetRetentionTaskLog(ctx, params)
 	})
-	api.ScanAllGetScanAllScheduleHandler = scan_all.GetScanAllScheduleHandlerFunc(func(params scan_all.GetScanAllScheduleParams, principal interface{}) middleware.Responder {
+	api.ScanAllGetScanAllScheduleHandler = scan_all.GetScanAllScheduleHandlerFunc(func(params scan_all.GetScanAllScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2598,7 +2595,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.GetScanAllSchedule(ctx, params)
 	})
-	api.ScanDataExportGetScanDataExportExecutionHandler = scan_data_export.GetScanDataExportExecutionHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionParams, principal interface{}) middleware.Responder {
+	api.ScanDataExportGetScanDataExportExecutionHandler = scan_data_export.GetScanDataExportExecutionHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2611,7 +2608,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanDataExportAPI.GetScanDataExportExecution(ctx, params)
 	})
-	api.ScanDataExportGetScanDataExportExecutionListHandler = scan_data_export.GetScanDataExportExecutionListHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionListParams, principal interface{}) middleware.Responder {
+	api.ScanDataExportGetScanDataExportExecutionListHandler = scan_data_export.GetScanDataExportExecutionListHandlerFunc(func(params scan_data_export.GetScanDataExportExecutionListParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2624,7 +2621,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanDataExportAPI.GetScanDataExportExecutionList(ctx, params)
 	})
-	api.ScannerGetScannerHandler = scanner.GetScannerHandlerFunc(func(params scanner.GetScannerParams, principal interface{}) middleware.Responder {
+	api.ScannerGetScannerHandler = scanner.GetScannerHandlerFunc(func(params scanner.GetScannerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2637,7 +2634,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.GetScanner(ctx, params)
 	})
-	api.ScannerGetScannerMetadataHandler = scanner.GetScannerMetadataHandlerFunc(func(params scanner.GetScannerMetadataParams, principal interface{}) middleware.Responder {
+	api.ScannerGetScannerMetadataHandler = scanner.GetScannerMetadataHandlerFunc(func(params scanner.GetScannerMetadataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2650,7 +2647,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.GetScannerMetadata(ctx, params)
 	})
-	api.ProjectGetScannerOfProjectHandler = project.GetScannerOfProjectHandlerFunc(func(params project.GetScannerOfProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectGetScannerOfProjectHandler = project.GetScannerOfProjectHandlerFunc(func(params project.GetScannerOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2663,7 +2660,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.GetScannerOfProject(ctx, params)
 	})
-	api.ScheduleGetSchedulePausedHandler = schedule.GetSchedulePausedHandlerFunc(func(params schedule.GetSchedulePausedParams, principal interface{}) middleware.Responder {
+	api.ScheduleGetSchedulePausedHandler = schedule.GetSchedulePausedHandlerFunc(func(params schedule.GetSchedulePausedParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2676,7 +2673,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScheduleAPI.GetSchedulePaused(ctx, params)
 	})
-	api.SecurityhubGetSecuritySummaryHandler = securityhub.GetSecuritySummaryHandlerFunc(func(params securityhub.GetSecuritySummaryParams, principal interface{}) middleware.Responder {
+	api.SecurityhubGetSecuritySummaryHandler = securityhub.GetSecuritySummaryHandlerFunc(func(params securityhub.GetSecuritySummaryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2689,7 +2686,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SecurityhubAPI.GetSecuritySummary(ctx, params)
 	})
-	api.StatisticGetStatisticHandler = statistic.GetStatisticHandlerFunc(func(params statistic.GetStatisticParams, principal interface{}) middleware.Responder {
+	api.StatisticGetStatisticHandler = statistic.GetStatisticHandlerFunc(func(params statistic.GetStatisticParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2702,7 +2699,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.StatisticAPI.GetStatistic(ctx, params)
 	})
-	api.SystemCVEAllowlistGetSystemCVEAllowlistHandler = system_cve_allowlist.GetSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.GetSystemCVEAllowlistParams, principal interface{}) middleware.Responder {
+	api.SystemCVEAllowlistGetSystemCVEAllowlistHandler = system_cve_allowlist.GetSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.GetSystemCVEAllowlistParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2715,7 +2712,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SystemCVEAllowlistAPI.GetSystemCVEAllowlist(ctx, params)
 	})
-	api.SysteminfoGetSystemInfoHandler = systeminfo.GetSystemInfoHandlerFunc(func(params systeminfo.GetSystemInfoParams, principal interface{}) middleware.Responder {
+	api.SysteminfoGetSystemInfoHandler = systeminfo.GetSystemInfoHandlerFunc(func(params systeminfo.GetSystemInfoParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2728,7 +2725,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SysteminfoAPI.GetSystemInfo(ctx, params)
 	})
-	api.UserGetUserHandler = user.GetUserHandlerFunc(func(params user.GetUserParams, principal interface{}) middleware.Responder {
+	api.UserGetUserHandler = user.GetUserHandlerFunc(func(params user.GetUserParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2741,7 +2738,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.GetUser(ctx, params)
 	})
-	api.UsergroupGetUserGroupHandler = usergroup.GetUserGroupHandlerFunc(func(params usergroup.GetUserGroupParams, principal interface{}) middleware.Responder {
+	api.UsergroupGetUserGroupHandler = usergroup.GetUserGroupHandlerFunc(func(params usergroup.GetUserGroupParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2754,7 +2751,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.GetUserGroup(ctx, params)
 	})
-	api.SysteminfoGetVolumesHandler = systeminfo.GetVolumesHandlerFunc(func(params systeminfo.GetVolumesParams, principal interface{}) middleware.Responder {
+	api.SysteminfoGetVolumesHandler = systeminfo.GetVolumesHandlerFunc(func(params systeminfo.GetVolumesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2767,7 +2764,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SysteminfoAPI.GetVolumes(ctx, params)
 	})
-	api.ArtifactGetVulnerabilitiesAdditionHandler = artifact.GetVulnerabilitiesAdditionHandlerFunc(func(params artifact.GetVulnerabilitiesAdditionParams, principal interface{}) middleware.Responder {
+	api.ArtifactGetVulnerabilitiesAdditionHandler = artifact.GetVulnerabilitiesAdditionHandlerFunc(func(params artifact.GetVulnerabilitiesAdditionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2780,7 +2777,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.GetVulnerabilitiesAddition(ctx, params)
 	})
-	api.JobserviceGetWorkerPoolsHandler = jobservice.GetWorkerPoolsHandlerFunc(func(params jobservice.GetWorkerPoolsParams, principal interface{}) middleware.Responder {
+	api.JobserviceGetWorkerPoolsHandler = jobservice.GetWorkerPoolsHandlerFunc(func(params jobservice.GetWorkerPoolsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2793,7 +2790,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.GetWorkerPools(ctx, params)
 	})
-	api.JobserviceGetWorkersHandler = jobservice.GetWorkersHandlerFunc(func(params jobservice.GetWorkersParams, principal interface{}) middleware.Responder {
+	api.JobserviceGetWorkersHandler = jobservice.GetWorkersHandlerFunc(func(params jobservice.GetWorkersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2806,7 +2803,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.GetWorkers(ctx, params)
 	})
-	api.ProjectHeadProjectHandler = project.HeadProjectHandlerFunc(func(params project.HeadProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectHeadProjectHandler = project.HeadProjectHandlerFunc(func(params project.HeadProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2819,7 +2816,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.HeadProject(ctx, params)
 	})
-	api.LdapImportLdapUserHandler = ldap.ImportLdapUserHandlerFunc(func(params ldap.ImportLdapUserParams, principal interface{}) middleware.Responder {
+	api.LdapImportLdapUserHandler = ldap.ImportLdapUserHandlerFunc(func(params ldap.ImportLdapUserParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2832,7 +2829,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LdapAPI.ImportLdapUser(ctx, params)
 	})
-	api.ArtifactListAccessoriesHandler = artifact.ListAccessoriesHandlerFunc(func(params artifact.ListAccessoriesParams, principal interface{}) middleware.Responder {
+	api.ArtifactListAccessoriesHandler = artifact.ListAccessoriesHandlerFunc(func(params artifact.ListAccessoriesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2845,7 +2842,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.ListAccessories(ctx, params)
 	})
-	api.RepositoryListAllRepositoriesHandler = repository.ListAllRepositoriesHandlerFunc(func(params repository.ListAllRepositoriesParams, principal interface{}) middleware.Responder {
+	api.RepositoryListAllRepositoriesHandler = repository.ListAllRepositoriesHandlerFunc(func(params repository.ListAllRepositoriesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2858,7 +2855,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RepositoryAPI.ListAllRepositories(ctx, params)
 	})
-	api.ArtifactListArtifactsHandler = artifact.ListArtifactsHandlerFunc(func(params artifact.ListArtifactsParams, principal interface{}) middleware.Responder {
+	api.ArtifactListArtifactsHandler = artifact.ListArtifactsHandlerFunc(func(params artifact.ListArtifactsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2871,7 +2868,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.ListArtifacts(ctx, params)
 	})
-	api.ProjectListArtifactsOfProjectHandler = project.ListArtifactsOfProjectHandlerFunc(func(params project.ListArtifactsOfProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectListArtifactsOfProjectHandler = project.ListArtifactsOfProjectHandlerFunc(func(params project.ListArtifactsOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2884,7 +2881,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.ListArtifactsOfProject(ctx, params)
 	})
-	api.AuditlogListAuditLogEventTypesHandler = auditlog.ListAuditLogEventTypesHandlerFunc(func(params auditlog.ListAuditLogEventTypesParams, principal interface{}) middleware.Responder {
+	api.AuditlogListAuditLogEventTypesHandler = auditlog.ListAuditLogEventTypesHandlerFunc(func(params auditlog.ListAuditLogEventTypesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2897,7 +2894,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.AuditlogAPI.ListAuditLogEventTypes(ctx, params)
 	})
-	api.AuditlogListAuditLogExtsHandler = auditlog.ListAuditLogExtsHandlerFunc(func(params auditlog.ListAuditLogExtsParams, principal interface{}) middleware.Responder {
+	api.AuditlogListAuditLogExtsHandler = auditlog.ListAuditLogExtsHandlerFunc(func(params auditlog.ListAuditLogExtsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2910,7 +2907,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.AuditlogAPI.ListAuditLogExts(ctx, params)
 	})
-	api.AuditlogListAuditLogsHandler = auditlog.ListAuditLogsHandlerFunc(func(params auditlog.ListAuditLogsParams, principal interface{}) middleware.Responder {
+	api.AuditlogListAuditLogsHandler = auditlog.ListAuditLogsHandlerFunc(func(params auditlog.ListAuditLogsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2923,7 +2920,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.AuditlogAPI.ListAuditLogs(ctx, params)
 	})
-	api.JobserviceListJobQueuesHandler = jobservice.ListJobQueuesHandlerFunc(func(params jobservice.ListJobQueuesParams, principal interface{}) middleware.Responder {
+	api.JobserviceListJobQueuesHandler = jobservice.ListJobQueuesHandlerFunc(func(params jobservice.ListJobQueuesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2936,7 +2933,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.ListJobQueues(ctx, params)
 	})
-	api.MemberListProjectMembersHandler = member.ListProjectMembersHandlerFunc(func(params member.ListProjectMembersParams, principal interface{}) middleware.Responder {
+	api.MemberListProjectMembersHandler = member.ListProjectMembersHandlerFunc(func(params member.ListProjectMembersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2949,7 +2946,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.MemberAPI.ListProjectMembers(ctx, params)
 	})
-	api.ProjectMetadataListProjectMetadatasHandler = project_metadata.ListProjectMetadatasHandlerFunc(func(params project_metadata.ListProjectMetadatasParams, principal interface{}) middleware.Responder {
+	api.ProjectMetadataListProjectMetadatasHandler = project_metadata.ListProjectMetadatasHandlerFunc(func(params project_metadata.ListProjectMetadatasParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2962,7 +2959,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectMetadataAPI.ListProjectMetadatas(ctx, params)
 	})
-	api.ProjectListProjectsHandler = project.ListProjectsHandlerFunc(func(params project.ListProjectsParams, principal interface{}) middleware.Responder {
+	api.ProjectListProjectsHandler = project.ListProjectsHandlerFunc(func(params project.ListProjectsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2975,7 +2972,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.ListProjects(ctx, params)
 	})
-	api.QuotaListQuotasHandler = quota.ListQuotasHandlerFunc(func(params quota.ListQuotasParams, principal interface{}) middleware.Responder {
+	api.QuotaListQuotasHandler = quota.ListQuotasHandlerFunc(func(params quota.ListQuotasParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -2988,7 +2985,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.QuotaAPI.ListQuotas(ctx, params)
 	})
-	api.RegistryListRegistriesHandler = registry.ListRegistriesHandlerFunc(func(params registry.ListRegistriesParams, principal interface{}) middleware.Responder {
+	api.RegistryListRegistriesHandler = registry.ListRegistriesHandlerFunc(func(params registry.ListRegistriesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3001,7 +2998,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.ListRegistries(ctx, params)
 	})
-	api.RegistryListRegistryProviderInfosHandler = registry.ListRegistryProviderInfosHandlerFunc(func(params registry.ListRegistryProviderInfosParams, principal interface{}) middleware.Responder {
+	api.RegistryListRegistryProviderInfosHandler = registry.ListRegistryProviderInfosHandlerFunc(func(params registry.ListRegistryProviderInfosParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3014,7 +3011,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.ListRegistryProviderInfos(ctx, params)
 	})
-	api.RegistryListRegistryProviderTypesHandler = registry.ListRegistryProviderTypesHandlerFunc(func(params registry.ListRegistryProviderTypesParams, principal interface{}) middleware.Responder {
+	api.RegistryListRegistryProviderTypesHandler = registry.ListRegistryProviderTypesHandlerFunc(func(params registry.ListRegistryProviderTypesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3027,7 +3024,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.ListRegistryProviderTypes(ctx, params)
 	})
-	api.ReplicationListReplicationExecutionsHandler = replication.ListReplicationExecutionsHandlerFunc(func(params replication.ListReplicationExecutionsParams, principal interface{}) middleware.Responder {
+	api.ReplicationListReplicationExecutionsHandler = replication.ListReplicationExecutionsHandlerFunc(func(params replication.ListReplicationExecutionsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3040,7 +3037,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.ListReplicationExecutions(ctx, params)
 	})
-	api.ReplicationListReplicationPoliciesHandler = replication.ListReplicationPoliciesHandlerFunc(func(params replication.ListReplicationPoliciesParams, principal interface{}) middleware.Responder {
+	api.ReplicationListReplicationPoliciesHandler = replication.ListReplicationPoliciesHandlerFunc(func(params replication.ListReplicationPoliciesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3053,7 +3050,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.ListReplicationPolicies(ctx, params)
 	})
-	api.ReplicationListReplicationTasksHandler = replication.ListReplicationTasksHandlerFunc(func(params replication.ListReplicationTasksParams, principal interface{}) middleware.Responder {
+	api.ReplicationListReplicationTasksHandler = replication.ListReplicationTasksHandlerFunc(func(params replication.ListReplicationTasksParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3066,7 +3063,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.ListReplicationTasks(ctx, params)
 	})
-	api.RepositoryListRepositoriesHandler = repository.ListRepositoriesHandlerFunc(func(params repository.ListRepositoriesParams, principal interface{}) middleware.Responder {
+	api.RepositoryListRepositoriesHandler = repository.ListRepositoriesHandlerFunc(func(params repository.ListRepositoriesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3079,7 +3076,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RepositoryAPI.ListRepositories(ctx, params)
 	})
-	api.RetentionListRetentionExecutionsHandler = retention.ListRetentionExecutionsHandlerFunc(func(params retention.ListRetentionExecutionsParams, principal interface{}) middleware.Responder {
+	api.RetentionListRetentionExecutionsHandler = retention.ListRetentionExecutionsHandlerFunc(func(params retention.ListRetentionExecutionsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3092,7 +3089,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.ListRetentionExecutions(ctx, params)
 	})
-	api.RetentionListRetentionTasksHandler = retention.ListRetentionTasksHandlerFunc(func(params retention.ListRetentionTasksParams, principal interface{}) middleware.Responder {
+	api.RetentionListRetentionTasksHandler = retention.ListRetentionTasksHandlerFunc(func(params retention.ListRetentionTasksParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3105,7 +3102,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.ListRetentionTasks(ctx, params)
 	})
-	api.ProjectListScannerCandidatesOfProjectHandler = project.ListScannerCandidatesOfProjectHandlerFunc(func(params project.ListScannerCandidatesOfProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectListScannerCandidatesOfProjectHandler = project.ListScannerCandidatesOfProjectHandlerFunc(func(params project.ListScannerCandidatesOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3118,7 +3115,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.ListScannerCandidatesOfProject(ctx, params)
 	})
-	api.ScannerListScannersHandler = scanner.ListScannersHandlerFunc(func(params scanner.ListScannersParams, principal interface{}) middleware.Responder {
+	api.ScannerListScannersHandler = scanner.ListScannersHandlerFunc(func(params scanner.ListScannersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3131,7 +3128,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.ListScanners(ctx, params)
 	})
-	api.ScheduleListSchedulesHandler = schedule.ListSchedulesHandlerFunc(func(params schedule.ListSchedulesParams, principal interface{}) middleware.Responder {
+	api.ScheduleListSchedulesHandler = schedule.ListSchedulesHandlerFunc(func(params schedule.ListSchedulesParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3144,7 +3141,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScheduleAPI.ListSchedules(ctx, params)
 	})
-	api.ArtifactListTagsHandler = artifact.ListTagsHandlerFunc(func(params artifact.ListTagsParams, principal interface{}) middleware.Responder {
+	api.ArtifactListTagsHandler = artifact.ListTagsHandlerFunc(func(params artifact.ListTagsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3157,7 +3154,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.ListTags(ctx, params)
 	})
-	api.UsergroupListUserGroupsHandler = usergroup.ListUserGroupsHandlerFunc(func(params usergroup.ListUserGroupsParams, principal interface{}) middleware.Responder {
+	api.UsergroupListUserGroupsHandler = usergroup.ListUserGroupsHandlerFunc(func(params usergroup.ListUserGroupsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3170,7 +3167,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.ListUserGroups(ctx, params)
 	})
-	api.UserListUsersHandler = user.ListUsersHandlerFunc(func(params user.ListUsersParams, principal interface{}) middleware.Responder {
+	api.UserListUsersHandler = user.ListUsersHandlerFunc(func(params user.ListUsersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3183,7 +3180,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.ListUsers(ctx, params)
 	})
-	api.RetentionOperateRetentionExecutionHandler = retention.OperateRetentionExecutionHandlerFunc(func(params retention.OperateRetentionExecutionParams, principal interface{}) middleware.Responder {
+	api.RetentionOperateRetentionExecutionHandler = retention.OperateRetentionExecutionHandlerFunc(func(params retention.OperateRetentionExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3196,7 +3193,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.OperateRetentionExecution(ctx, params)
 	})
-	api.LdapPingLdapHandler = ldap.PingLdapHandlerFunc(func(params ldap.PingLdapParams, principal interface{}) middleware.Responder {
+	api.LdapPingLdapHandler = ldap.PingLdapHandlerFunc(func(params ldap.PingLdapParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3209,7 +3206,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LdapAPI.PingLdap(ctx, params)
 	})
-	api.OIDCPingOIDCHandler = oidc.PingOIDCHandlerFunc(func(params oidc.PingOIDCParams, principal interface{}) middleware.Responder {
+	api.OIDCPingOIDCHandler = oidc.PingOIDCHandlerFunc(func(params oidc.PingOIDCParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3222,7 +3219,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.OIDCAPI.PingOIDC(ctx, params)
 	})
-	api.RegistryPingRegistryHandler = registry.PingRegistryHandlerFunc(func(params registry.PingRegistryParams, principal interface{}) middleware.Responder {
+	api.RegistryPingRegistryHandler = registry.PingRegistryHandlerFunc(func(params registry.PingRegistryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3235,7 +3232,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.PingRegistry(ctx, params)
 	})
-	api.ScannerPingScannerHandler = scanner.PingScannerHandlerFunc(func(params scanner.PingScannerParams, principal interface{}) middleware.Responder {
+	api.ScannerPingScannerHandler = scanner.PingScannerHandlerFunc(func(params scanner.PingScannerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3248,7 +3245,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.PingScanner(ctx, params)
 	})
-	api.SystemCVEAllowlistPutSystemCVEAllowlistHandler = system_cve_allowlist.PutSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.PutSystemCVEAllowlistParams, principal interface{}) middleware.Responder {
+	api.SystemCVEAllowlistPutSystemCVEAllowlistHandler = system_cve_allowlist.PutSystemCVEAllowlistHandlerFunc(func(params system_cve_allowlist.PutSystemCVEAllowlistParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3261,7 +3258,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SystemCVEAllowlistAPI.PutSystemCVEAllowlist(ctx, params)
 	})
-	api.ArtifactRemoveLabelHandler = artifact.RemoveLabelHandlerFunc(func(params artifact.RemoveLabelParams, principal interface{}) middleware.Responder {
+	api.ArtifactRemoveLabelHandler = artifact.RemoveLabelHandlerFunc(func(params artifact.RemoveLabelParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3274,7 +3271,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ArtifactAPI.RemoveLabel(ctx, params)
 	})
-	api.ScanScanArtifactHandler = scan.ScanArtifactHandlerFunc(func(params scan.ScanArtifactParams, principal interface{}) middleware.Responder {
+	api.ScanScanArtifactHandler = scan.ScanArtifactHandlerFunc(func(params scan.ScanArtifactParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3287,7 +3284,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAPI.ScanArtifact(ctx, params)
 	})
-	api.SearchSearchHandler = search.SearchHandlerFunc(func(params search.SearchParams, principal interface{}) middleware.Responder {
+	api.SearchSearchHandler = search.SearchHandlerFunc(func(params search.SearchParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3300,7 +3297,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.SearchAPI.Search(ctx, params)
 	})
-	api.LdapSearchLdapGroupHandler = ldap.SearchLdapGroupHandlerFunc(func(params ldap.SearchLdapGroupParams, principal interface{}) middleware.Responder {
+	api.LdapSearchLdapGroupHandler = ldap.SearchLdapGroupHandlerFunc(func(params ldap.SearchLdapGroupParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3313,7 +3310,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LdapAPI.SearchLdapGroup(ctx, params)
 	})
-	api.LdapSearchLdapUserHandler = ldap.SearchLdapUserHandlerFunc(func(params ldap.SearchLdapUserParams, principal interface{}) middleware.Responder {
+	api.LdapSearchLdapUserHandler = ldap.SearchLdapUserHandlerFunc(func(params ldap.SearchLdapUserParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3326,7 +3323,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.LdapAPI.SearchLdapUser(ctx, params)
 	})
-	api.UsergroupSearchUserGroupsHandler = usergroup.SearchUserGroupsHandlerFunc(func(params usergroup.SearchUserGroupsParams, principal interface{}) middleware.Responder {
+	api.UsergroupSearchUserGroupsHandler = usergroup.SearchUserGroupsHandlerFunc(func(params usergroup.SearchUserGroupsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3339,7 +3336,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.SearchUserGroups(ctx, params)
 	})
-	api.UserSearchUsersHandler = user.SearchUsersHandlerFunc(func(params user.SearchUsersParams, principal interface{}) middleware.Responder {
+	api.UserSearchUsersHandler = user.SearchUsersHandlerFunc(func(params user.SearchUsersParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3352,7 +3349,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.SearchUsers(ctx, params)
 	})
-	api.UserSetCliSecretHandler = user.SetCliSecretHandlerFunc(func(params user.SetCliSecretParams, principal interface{}) middleware.Responder {
+	api.UserSetCliSecretHandler = user.SetCliSecretHandlerFunc(func(params user.SetCliSecretParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3365,7 +3362,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.SetCliSecret(ctx, params)
 	})
-	api.ScannerSetScannerAsDefaultHandler = scanner.SetScannerAsDefaultHandlerFunc(func(params scanner.SetScannerAsDefaultParams, principal interface{}) middleware.Responder {
+	api.ScannerSetScannerAsDefaultHandler = scanner.SetScannerAsDefaultHandlerFunc(func(params scanner.SetScannerAsDefaultParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3378,7 +3375,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.SetScannerAsDefault(ctx, params)
 	})
-	api.ProjectSetScannerOfProjectHandler = project.SetScannerOfProjectHandlerFunc(func(params project.SetScannerOfProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectSetScannerOfProjectHandler = project.SetScannerOfProjectHandlerFunc(func(params project.SetScannerOfProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3391,7 +3388,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.SetScannerOfProject(ctx, params)
 	})
-	api.UserSetUserSysAdminHandler = user.SetUserSysAdminHandlerFunc(func(params user.SetUserSysAdminParams, principal interface{}) middleware.Responder {
+	api.UserSetUserSysAdminHandler = user.SetUserSysAdminHandlerFunc(func(params user.SetUserSysAdminParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3404,7 +3401,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.SetUserSysAdmin(ctx, params)
 	})
-	api.ReplicationStartReplicationHandler = replication.StartReplicationHandlerFunc(func(params replication.StartReplicationParams, principal interface{}) middleware.Responder {
+	api.ReplicationStartReplicationHandler = replication.StartReplicationHandlerFunc(func(params replication.StartReplicationParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3417,7 +3414,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.StartReplication(ctx, params)
 	})
-	api.GCStopGCHandler = gc.StopGCHandlerFunc(func(params gc.StopGCParams, principal interface{}) middleware.Responder {
+	api.GCStopGCHandler = gc.StopGCHandlerFunc(func(params gc.StopGCParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3430,7 +3427,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.StopGC(ctx, params)
 	})
-	api.PurgeStopPurgeHandler = purge.StopPurgeHandlerFunc(func(params purge.StopPurgeParams, principal interface{}) middleware.Responder {
+	api.PurgeStopPurgeHandler = purge.StopPurgeHandlerFunc(func(params purge.StopPurgeParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3443,7 +3440,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.StopPurge(ctx, params)
 	})
-	api.ReplicationStopReplicationHandler = replication.StopReplicationHandlerFunc(func(params replication.StopReplicationParams, principal interface{}) middleware.Responder {
+	api.ReplicationStopReplicationHandler = replication.StopReplicationHandlerFunc(func(params replication.StopReplicationParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3456,7 +3453,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.StopReplication(ctx, params)
 	})
-	api.JobserviceStopRunningJobHandler = jobservice.StopRunningJobHandlerFunc(func(params jobservice.StopRunningJobParams, principal interface{}) middleware.Responder {
+	api.JobserviceStopRunningJobHandler = jobservice.StopRunningJobHandlerFunc(func(params jobservice.StopRunningJobParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3469,7 +3466,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.JobserviceAPI.StopRunningJob(ctx, params)
 	})
-	api.ScanAllStopScanAllHandler = scan_all.StopScanAllHandlerFunc(func(params scan_all.StopScanAllParams, principal interface{}) middleware.Responder {
+	api.ScanAllStopScanAllHandler = scan_all.StopScanAllHandlerFunc(func(params scan_all.StopScanAllParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3482,7 +3479,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.StopScanAll(ctx, params)
 	})
-	api.ScanStopScanArtifactHandler = scan.StopScanArtifactHandlerFunc(func(params scan.StopScanArtifactParams, principal interface{}) middleware.Responder {
+	api.ScanStopScanArtifactHandler = scan.StopScanArtifactHandlerFunc(func(params scan.StopScanArtifactParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3495,7 +3492,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAPI.StopScanArtifact(ctx, params)
 	})
-	api.RetentionTriggerRetentionExecutionHandler = retention.TriggerRetentionExecutionHandlerFunc(func(params retention.TriggerRetentionExecutionParams, principal interface{}) middleware.Responder {
+	api.RetentionTriggerRetentionExecutionHandler = retention.TriggerRetentionExecutionHandlerFunc(func(params retention.TriggerRetentionExecutionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3508,7 +3505,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.TriggerRetentionExecution(ctx, params)
 	})
-	api.ConfigureUpdateConfigurationsHandler = configure.UpdateConfigurationsHandlerFunc(func(params configure.UpdateConfigurationsParams, principal interface{}) middleware.Responder {
+	api.ConfigureUpdateConfigurationsHandler = configure.UpdateConfigurationsHandlerFunc(func(params configure.UpdateConfigurationsParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3521,7 +3518,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ConfigureAPI.UpdateConfigurations(ctx, params)
 	})
-	api.GCUpdateGCScheduleHandler = gc.UpdateGCScheduleHandlerFunc(func(params gc.UpdateGCScheduleParams, principal interface{}) middleware.Responder {
+	api.GCUpdateGCScheduleHandler = gc.UpdateGCScheduleHandlerFunc(func(params gc.UpdateGCScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3534,7 +3531,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.GCAPI.UpdateGCSchedule(ctx, params)
 	})
-	api.ProjectUpdateProjectHandler = project.UpdateProjectHandlerFunc(func(params project.UpdateProjectParams, principal interface{}) middleware.Responder {
+	api.ProjectUpdateProjectHandler = project.UpdateProjectHandlerFunc(func(params project.UpdateProjectParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3547,7 +3544,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectAPI.UpdateProject(ctx, params)
 	})
-	api.MemberUpdateProjectMemberHandler = member.UpdateProjectMemberHandlerFunc(func(params member.UpdateProjectMemberParams, principal interface{}) middleware.Responder {
+	api.MemberUpdateProjectMemberHandler = member.UpdateProjectMemberHandlerFunc(func(params member.UpdateProjectMemberParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3560,7 +3557,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.MemberAPI.UpdateProjectMember(ctx, params)
 	})
-	api.ProjectMetadataUpdateProjectMetadataHandler = project_metadata.UpdateProjectMetadataHandlerFunc(func(params project_metadata.UpdateProjectMetadataParams, principal interface{}) middleware.Responder {
+	api.ProjectMetadataUpdateProjectMetadataHandler = project_metadata.UpdateProjectMetadataHandlerFunc(func(params project_metadata.UpdateProjectMetadataParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3573,7 +3570,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ProjectMetadataAPI.UpdateProjectMetadata(ctx, params)
 	})
-	api.PurgeUpdatePurgeScheduleHandler = purge.UpdatePurgeScheduleHandlerFunc(func(params purge.UpdatePurgeScheduleParams, principal interface{}) middleware.Responder {
+	api.PurgeUpdatePurgeScheduleHandler = purge.UpdatePurgeScheduleHandlerFunc(func(params purge.UpdatePurgeScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3586,7 +3583,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.PurgeAPI.UpdatePurgeSchedule(ctx, params)
 	})
-	api.QuotaUpdateQuotaHandler = quota.UpdateQuotaHandlerFunc(func(params quota.UpdateQuotaParams, principal interface{}) middleware.Responder {
+	api.QuotaUpdateQuotaHandler = quota.UpdateQuotaHandlerFunc(func(params quota.UpdateQuotaParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3599,7 +3596,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.QuotaAPI.UpdateQuota(ctx, params)
 	})
-	api.RegistryUpdateRegistryHandler = registry.UpdateRegistryHandlerFunc(func(params registry.UpdateRegistryParams, principal interface{}) middleware.Responder {
+	api.RegistryUpdateRegistryHandler = registry.UpdateRegistryHandlerFunc(func(params registry.UpdateRegistryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3612,7 +3609,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RegistryAPI.UpdateRegistry(ctx, params)
 	})
-	api.ReplicationUpdateReplicationPolicyHandler = replication.UpdateReplicationPolicyHandlerFunc(func(params replication.UpdateReplicationPolicyParams, principal interface{}) middleware.Responder {
+	api.ReplicationUpdateReplicationPolicyHandler = replication.UpdateReplicationPolicyHandlerFunc(func(params replication.UpdateReplicationPolicyParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3625,7 +3622,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ReplicationAPI.UpdateReplicationPolicy(ctx, params)
 	})
-	api.RepositoryUpdateRepositoryHandler = repository.UpdateRepositoryHandlerFunc(func(params repository.UpdateRepositoryParams, principal interface{}) middleware.Responder {
+	api.RepositoryUpdateRepositoryHandler = repository.UpdateRepositoryHandlerFunc(func(params repository.UpdateRepositoryParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3638,7 +3635,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RepositoryAPI.UpdateRepository(ctx, params)
 	})
-	api.RetentionUpdateRetentionHandler = retention.UpdateRetentionHandlerFunc(func(params retention.UpdateRetentionParams, principal interface{}) middleware.Responder {
+	api.RetentionUpdateRetentionHandler = retention.UpdateRetentionHandlerFunc(func(params retention.UpdateRetentionParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3651,7 +3648,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.RetentionAPI.UpdateRetention(ctx, params)
 	})
-	api.ScanAllUpdateScanAllScheduleHandler = scan_all.UpdateScanAllScheduleHandlerFunc(func(params scan_all.UpdateScanAllScheduleParams, principal interface{}) middleware.Responder {
+	api.ScanAllUpdateScanAllScheduleHandler = scan_all.UpdateScanAllScheduleHandlerFunc(func(params scan_all.UpdateScanAllScheduleParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3664,7 +3661,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScanAllAPI.UpdateScanAllSchedule(ctx, params)
 	})
-	api.ScannerUpdateScannerHandler = scanner.UpdateScannerHandlerFunc(func(params scanner.UpdateScannerParams, principal interface{}) middleware.Responder {
+	api.ScannerUpdateScannerHandler = scanner.UpdateScannerHandlerFunc(func(params scanner.UpdateScannerParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3677,7 +3674,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.ScannerAPI.UpdateScanner(ctx, params)
 	})
-	api.UsergroupUpdateUserGroupHandler = usergroup.UpdateUserGroupHandlerFunc(func(params usergroup.UpdateUserGroupParams, principal interface{}) middleware.Responder {
+	api.UsergroupUpdateUserGroupHandler = usergroup.UpdateUserGroupHandlerFunc(func(params usergroup.UpdateUserGroupParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3690,7 +3687,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UsergroupAPI.UpdateUserGroup(ctx, params)
 	})
-	api.UserUpdateUserPasswordHandler = user.UpdateUserPasswordHandlerFunc(func(params user.UpdateUserPasswordParams, principal interface{}) middleware.Responder {
+	api.UserUpdateUserPasswordHandler = user.UpdateUserPasswordHandlerFunc(func(params user.UpdateUserPasswordParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3703,7 +3700,7 @@ func HandlerAPI(c Config) (http.Handler, *operations.HarborAPI, error) {
 		}
 		return c.UserAPI.UpdateUserPassword(ctx, params)
 	})
-	api.UserUpdateUserProfileHandler = user.UpdateUserProfileHandlerFunc(func(params user.UpdateUserProfileParams, principal interface{}) middleware.Responder {
+	api.UserUpdateUserProfileHandler = user.UpdateUserProfileHandlerFunc(func(params user.UpdateUserProfileParams, principal any) middleware.Responder {
 		ctx := params.HTTPRequest.Context()
 		ctx = storeAuth(ctx, principal)
 		if api.BeforePrepare != nil {
@@ -3730,7 +3727,7 @@ func swaggerCopy(orig json.RawMessage) json.RawMessage {
 // authorizer is a helper function to implement the runtime.Authorizer interface.
 type authorizer func(*http.Request) error
 
-func (a authorizer) Authorize(req *http.Request, principal interface{}) error {
+func (a authorizer) Authorize(req *http.Request, principal any) error {
 	if a == nil {
 		return nil
 	}
@@ -3738,6 +3735,6 @@ func (a authorizer) Authorize(req *http.Request, principal interface{}) error {
 	return a(req.WithContext(ctx))
 }
 
-func storeAuth(ctx context.Context, principal interface{}) context.Context {
+func storeAuth(ctx context.Context, principal any) context.Context {
 	return context.WithValue(ctx, AuthKey, principal)
 }

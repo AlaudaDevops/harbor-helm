@@ -44,7 +44,7 @@ func (o *SetScannerOfProjectURL) Build() (*url.URL, error) {
 
 	projectNameOrID := o.ProjectNameOrID
 	if projectNameOrID != "" {
-		_path = strings.Replace(_path, "{project_name_or_id}", projectNameOrID, -1)
+		_path = strings.ReplaceAll(_path, "{project_name_or_id}", projectNameOrID)
 	} else {
 		return nil, errors.New("projectNameOrId is required on SetScannerOfProjectURL")
 	}

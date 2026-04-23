@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -428,11 +429,15 @@ func (m *ConfigurationsResponse) validateAuditLogForwardEndpoint(formats strfmt.
 
 	if m.AuditLogForwardEndpoint != nil {
 		if err := m.AuditLogForwardEndpoint.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("audit_log_forward_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("audit_log_forward_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -447,11 +452,15 @@ func (m *ConfigurationsResponse) validateAuthMode(formats strfmt.Registry) error
 
 	if m.AuthMode != nil {
 		if err := m.AuthMode.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("auth_mode")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("auth_mode")
 			}
+
 			return err
 		}
 	}
@@ -466,11 +475,15 @@ func (m *ConfigurationsResponse) validateBannerMessage(formats strfmt.Registry) 
 
 	if m.BannerMessage != nil {
 		if err := m.BannerMessage.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("banner_message")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("banner_message")
 			}
+
 			return err
 		}
 	}
@@ -485,11 +498,15 @@ func (m *ConfigurationsResponse) validateDisabledAuditLogEventTypes(formats strf
 
 	if m.DisabledAuditLogEventTypes != nil {
 		if err := m.DisabledAuditLogEventTypes.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("disabled_audit_log_event_types")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("disabled_audit_log_event_types")
 			}
+
 			return err
 		}
 	}
@@ -504,11 +521,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyAdminGroups(formats strfmt
 
 	if m.HTTPAuthproxyAdminGroups != nil {
 		if err := m.HTTPAuthproxyAdminGroups.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_admin_groups")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_admin_groups")
 			}
+
 			return err
 		}
 	}
@@ -523,11 +544,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyAdminUsernames(formats str
 
 	if m.HTTPAuthproxyAdminUsernames != nil {
 		if err := m.HTTPAuthproxyAdminUsernames.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_admin_usernames")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_admin_usernames")
 			}
+
 			return err
 		}
 	}
@@ -542,11 +567,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyEndpoint(formats strfmt.Re
 
 	if m.HTTPAuthproxyEndpoint != nil {
 		if err := m.HTTPAuthproxyEndpoint.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -561,11 +590,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyServerCertificate(formats 
 
 	if m.HTTPAuthproxyServerCertificate != nil {
 		if err := m.HTTPAuthproxyServerCertificate.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_server_certificate")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_server_certificate")
 			}
+
 			return err
 		}
 	}
@@ -580,11 +613,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxySkipSearch(formats strfmt.
 
 	if m.HTTPAuthproxySkipSearch != nil {
 		if err := m.HTTPAuthproxySkipSearch.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_skip_search")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_skip_search")
 			}
+
 			return err
 		}
 	}
@@ -599,11 +636,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyTokenreviewEndpoint(format
 
 	if m.HTTPAuthproxyTokenreviewEndpoint != nil {
 		if err := m.HTTPAuthproxyTokenreviewEndpoint.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_tokenreview_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_tokenreview_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -618,11 +659,15 @@ func (m *ConfigurationsResponse) validateHTTPAuthproxyVerifyCert(formats strfmt.
 
 	if m.HTTPAuthproxyVerifyCert != nil {
 		if err := m.HTTPAuthproxyVerifyCert.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -637,11 +682,15 @@ func (m *ConfigurationsResponse) validateLdapBaseDn(formats strfmt.Registry) err
 
 	if m.LdapBaseDn != nil {
 		if err := m.LdapBaseDn.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_base_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_base_dn")
 			}
+
 			return err
 		}
 	}
@@ -656,11 +705,15 @@ func (m *ConfigurationsResponse) validateLdapFilter(formats strfmt.Registry) err
 
 	if m.LdapFilter != nil {
 		if err := m.LdapFilter.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_filter")
 			}
+
 			return err
 		}
 	}
@@ -675,11 +728,15 @@ func (m *ConfigurationsResponse) validateLdapGroupAdminDn(formats strfmt.Registr
 
 	if m.LdapGroupAdminDn != nil {
 		if err := m.LdapGroupAdminDn.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_admin_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_admin_dn")
 			}
+
 			return err
 		}
 	}
@@ -694,11 +751,15 @@ func (m *ConfigurationsResponse) validateLdapGroupAttachParallel(formats strfmt.
 
 	if m.LdapGroupAttachParallel != nil {
 		if err := m.LdapGroupAttachParallel.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_attach_parallel")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_attach_parallel")
 			}
+
 			return err
 		}
 	}
@@ -713,11 +774,15 @@ func (m *ConfigurationsResponse) validateLdapGroupAttributeName(formats strfmt.R
 
 	if m.LdapGroupAttributeName != nil {
 		if err := m.LdapGroupAttributeName.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_attribute_name")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_attribute_name")
 			}
+
 			return err
 		}
 	}
@@ -732,11 +797,15 @@ func (m *ConfigurationsResponse) validateLdapGroupBaseDn(formats strfmt.Registry
 
 	if m.LdapGroupBaseDn != nil {
 		if err := m.LdapGroupBaseDn.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_base_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_base_dn")
 			}
+
 			return err
 		}
 	}
@@ -751,11 +820,15 @@ func (m *ConfigurationsResponse) validateLdapGroupMembershipAttribute(formats st
 
 	if m.LdapGroupMembershipAttribute != nil {
 		if err := m.LdapGroupMembershipAttribute.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_membership_attribute")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_membership_attribute")
 			}
+
 			return err
 		}
 	}
@@ -770,11 +843,15 @@ func (m *ConfigurationsResponse) validateLdapGroupSearchFilter(formats strfmt.Re
 
 	if m.LdapGroupSearchFilter != nil {
 		if err := m.LdapGroupSearchFilter.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_search_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_search_filter")
 			}
+
 			return err
 		}
 	}
@@ -789,11 +866,15 @@ func (m *ConfigurationsResponse) validateLdapGroupSearchScope(formats strfmt.Reg
 
 	if m.LdapGroupSearchScope != nil {
 		if err := m.LdapGroupSearchScope.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_search_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_search_scope")
 			}
+
 			return err
 		}
 	}
@@ -808,11 +889,15 @@ func (m *ConfigurationsResponse) validateLdapScope(formats strfmt.Registry) erro
 
 	if m.LdapScope != nil {
 		if err := m.LdapScope.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_scope")
 			}
+
 			return err
 		}
 	}
@@ -827,11 +912,15 @@ func (m *ConfigurationsResponse) validateLdapSearchDn(formats strfmt.Registry) e
 
 	if m.LdapSearchDn != nil {
 		if err := m.LdapSearchDn.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_search_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_search_dn")
 			}
+
 			return err
 		}
 	}
@@ -846,11 +935,15 @@ func (m *ConfigurationsResponse) validateLdapTimeout(formats strfmt.Registry) er
 
 	if m.LdapTimeout != nil {
 		if err := m.LdapTimeout.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_timeout")
 			}
+
 			return err
 		}
 	}
@@ -865,11 +958,15 @@ func (m *ConfigurationsResponse) validateLdapUID(formats strfmt.Registry) error 
 
 	if m.LdapUID != nil {
 		if err := m.LdapUID.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_uid")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_uid")
 			}
+
 			return err
 		}
 	}
@@ -884,11 +981,15 @@ func (m *ConfigurationsResponse) validateLdapURL(formats strfmt.Registry) error 
 
 	if m.LdapURL != nil {
 		if err := m.LdapURL.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_url")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_url")
 			}
+
 			return err
 		}
 	}
@@ -903,11 +1004,15 @@ func (m *ConfigurationsResponse) validateLdapVerifyCert(formats strfmt.Registry)
 
 	if m.LdapVerifyCert != nil {
 		if err := m.LdapVerifyCert.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -922,11 +1027,15 @@ func (m *ConfigurationsResponse) validateNotificationEnable(formats strfmt.Regis
 
 	if m.NotificationEnable != nil {
 		if err := m.NotificationEnable.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("notification_enable")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("notification_enable")
 			}
+
 			return err
 		}
 	}
@@ -941,11 +1050,15 @@ func (m *ConfigurationsResponse) validateOIDCAdminGroup(formats strfmt.Registry)
 
 	if m.OIDCAdminGroup != nil {
 		if err := m.OIDCAdminGroup.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_admin_group")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_admin_group")
 			}
+
 			return err
 		}
 	}
@@ -960,11 +1073,15 @@ func (m *ConfigurationsResponse) validateOIDCAutoOnboard(formats strfmt.Registry
 
 	if m.OIDCAutoOnboard != nil {
 		if err := m.OIDCAutoOnboard.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_auto_onboard")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_auto_onboard")
 			}
+
 			return err
 		}
 	}
@@ -979,11 +1096,15 @@ func (m *ConfigurationsResponse) validateOIDCClientID(formats strfmt.Registry) e
 
 	if m.OIDCClientID != nil {
 		if err := m.OIDCClientID.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_client_id")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_client_id")
 			}
+
 			return err
 		}
 	}
@@ -998,11 +1119,15 @@ func (m *ConfigurationsResponse) validateOIDCEndpoint(formats strfmt.Registry) e
 
 	if m.OIDCEndpoint != nil {
 		if err := m.OIDCEndpoint.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -1017,11 +1142,15 @@ func (m *ConfigurationsResponse) validateOIDCExtraRedirectParms(formats strfmt.R
 
 	if m.OIDCExtraRedirectParms != nil {
 		if err := m.OIDCExtraRedirectParms.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_extra_redirect_parms")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_extra_redirect_parms")
 			}
+
 			return err
 		}
 	}
@@ -1036,11 +1165,15 @@ func (m *ConfigurationsResponse) validateOIDCGroupFilter(formats strfmt.Registry
 
 	if m.OIDCGroupFilter != nil {
 		if err := m.OIDCGroupFilter.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_group_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_group_filter")
 			}
+
 			return err
 		}
 	}
@@ -1055,11 +1188,15 @@ func (m *ConfigurationsResponse) validateOIDCGroupsClaim(formats strfmt.Registry
 
 	if m.OIDCGroupsClaim != nil {
 		if err := m.OIDCGroupsClaim.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_groups_claim")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_groups_claim")
 			}
+
 			return err
 		}
 	}
@@ -1074,11 +1211,15 @@ func (m *ConfigurationsResponse) validateOIDCLogout(formats strfmt.Registry) err
 
 	if m.OIDCLogout != nil {
 		if err := m.OIDCLogout.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_logout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_logout")
 			}
+
 			return err
 		}
 	}
@@ -1093,11 +1234,15 @@ func (m *ConfigurationsResponse) validateOIDCName(formats strfmt.Registry) error
 
 	if m.OIDCName != nil {
 		if err := m.OIDCName.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_name")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_name")
 			}
+
 			return err
 		}
 	}
@@ -1112,11 +1257,15 @@ func (m *ConfigurationsResponse) validateOIDCScope(formats strfmt.Registry) erro
 
 	if m.OIDCScope != nil {
 		if err := m.OIDCScope.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_scope")
 			}
+
 			return err
 		}
 	}
@@ -1131,11 +1280,15 @@ func (m *ConfigurationsResponse) validateOIDCUserClaim(formats strfmt.Registry) 
 
 	if m.OIDCUserClaim != nil {
 		if err := m.OIDCUserClaim.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_user_claim")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_user_claim")
 			}
+
 			return err
 		}
 	}
@@ -1150,11 +1303,15 @@ func (m *ConfigurationsResponse) validateOIDCVerifyCert(formats strfmt.Registry)
 
 	if m.OIDCVerifyCert != nil {
 		if err := m.OIDCVerifyCert.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -1169,11 +1326,15 @@ func (m *ConfigurationsResponse) validatePrimaryAuthMode(formats strfmt.Registry
 
 	if m.PrimaryAuthMode != nil {
 		if err := m.PrimaryAuthMode.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("primary_auth_mode")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("primary_auth_mode")
 			}
+
 			return err
 		}
 	}
@@ -1188,11 +1349,15 @@ func (m *ConfigurationsResponse) validateProjectCreationRestriction(formats strf
 
 	if m.ProjectCreationRestriction != nil {
 		if err := m.ProjectCreationRestriction.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("project_creation_restriction")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("project_creation_restriction")
 			}
+
 			return err
 		}
 	}
@@ -1207,11 +1372,15 @@ func (m *ConfigurationsResponse) validateQuotaPerProjectEnable(formats strfmt.Re
 
 	if m.QuotaPerProjectEnable != nil {
 		if err := m.QuotaPerProjectEnable.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("quota_per_project_enable")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("quota_per_project_enable")
 			}
+
 			return err
 		}
 	}
@@ -1226,11 +1395,15 @@ func (m *ConfigurationsResponse) validateReadOnly(formats strfmt.Registry) error
 
 	if m.ReadOnly != nil {
 		if err := m.ReadOnly.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("read_only")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("read_only")
 			}
+
 			return err
 		}
 	}
@@ -1245,11 +1418,15 @@ func (m *ConfigurationsResponse) validateRobotNamePrefix(formats strfmt.Registry
 
 	if m.RobotNamePrefix != nil {
 		if err := m.RobotNamePrefix.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("robot_name_prefix")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("robot_name_prefix")
 			}
+
 			return err
 		}
 	}
@@ -1264,11 +1441,15 @@ func (m *ConfigurationsResponse) validateRobotTokenDuration(formats strfmt.Regis
 
 	if m.RobotTokenDuration != nil {
 		if err := m.RobotTokenDuration.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("robot_token_duration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("robot_token_duration")
 			}
+
 			return err
 		}
 	}
@@ -1283,11 +1464,15 @@ func (m *ConfigurationsResponse) validateScanAllPolicy(formats strfmt.Registry) 
 
 	if m.ScanAllPolicy != nil {
 		if err := m.ScanAllPolicy.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scan_all_policy")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scan_all_policy")
 			}
+
 			return err
 		}
 	}
@@ -1302,11 +1487,15 @@ func (m *ConfigurationsResponse) validateScannerSkipUpdatePulltime(formats strfm
 
 	if m.ScannerSkipUpdatePulltime != nil {
 		if err := m.ScannerSkipUpdatePulltime.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner_skip_update_pulltime")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner_skip_update_pulltime")
 			}
+
 			return err
 		}
 	}
@@ -1321,11 +1510,15 @@ func (m *ConfigurationsResponse) validateSelfRegistration(formats strfmt.Registr
 
 	if m.SelfRegistration != nil {
 		if err := m.SelfRegistration.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("self_registration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("self_registration")
 			}
+
 			return err
 		}
 	}
@@ -1340,11 +1533,15 @@ func (m *ConfigurationsResponse) validateSessionTimeout(formats strfmt.Registry)
 
 	if m.SessionTimeout != nil {
 		if err := m.SessionTimeout.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("session_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("session_timeout")
 			}
+
 			return err
 		}
 	}
@@ -1359,11 +1556,15 @@ func (m *ConfigurationsResponse) validateSkipAuditLogDatabase(formats strfmt.Reg
 
 	if m.SkipAuditLogDatabase != nil {
 		if err := m.SkipAuditLogDatabase.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("skip_audit_log_database")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("skip_audit_log_database")
 			}
+
 			return err
 		}
 	}
@@ -1378,11 +1579,15 @@ func (m *ConfigurationsResponse) validateStoragePerProject(formats strfmt.Regist
 
 	if m.StoragePerProject != nil {
 		if err := m.StoragePerProject.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("storage_per_project")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("storage_per_project")
 			}
+
 			return err
 		}
 	}
@@ -1397,11 +1602,15 @@ func (m *ConfigurationsResponse) validateTokenExpiration(formats strfmt.Registry
 
 	if m.TokenExpiration != nil {
 		if err := m.TokenExpiration.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("token_expiration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("token_expiration")
 			}
+
 			return err
 		}
 	}
@@ -1416,11 +1625,15 @@ func (m *ConfigurationsResponse) validateUaaClientID(formats strfmt.Registry) er
 
 	if m.UaaClientID != nil {
 		if err := m.UaaClientID.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_client_id")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_client_id")
 			}
+
 			return err
 		}
 	}
@@ -1435,11 +1648,15 @@ func (m *ConfigurationsResponse) validateUaaClientSecret(formats strfmt.Registry
 
 	if m.UaaClientSecret != nil {
 		if err := m.UaaClientSecret.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_client_secret")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_client_secret")
 			}
+
 			return err
 		}
 	}
@@ -1454,11 +1671,15 @@ func (m *ConfigurationsResponse) validateUaaEndpoint(formats strfmt.Registry) er
 
 	if m.UaaEndpoint != nil {
 		if err := m.UaaEndpoint.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -1473,11 +1694,15 @@ func (m *ConfigurationsResponse) validateUaaVerifyCert(formats strfmt.Registry) 
 
 	if m.UaaVerifyCert != nil {
 		if err := m.UaaVerifyCert.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -1728,11 +1953,15 @@ func (m *ConfigurationsResponse) contextValidateAuditLogForwardEndpoint(ctx cont
 		}
 
 		if err := m.AuditLogForwardEndpoint.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("audit_log_forward_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("audit_log_forward_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -1749,11 +1978,15 @@ func (m *ConfigurationsResponse) contextValidateAuthMode(ctx context.Context, fo
 		}
 
 		if err := m.AuthMode.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("auth_mode")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("auth_mode")
 			}
+
 			return err
 		}
 	}
@@ -1770,11 +2003,15 @@ func (m *ConfigurationsResponse) contextValidateBannerMessage(ctx context.Contex
 		}
 
 		if err := m.BannerMessage.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("banner_message")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("banner_message")
 			}
+
 			return err
 		}
 	}
@@ -1791,11 +2028,15 @@ func (m *ConfigurationsResponse) contextValidateDisabledAuditLogEventTypes(ctx c
 		}
 
 		if err := m.DisabledAuditLogEventTypes.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("disabled_audit_log_event_types")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("disabled_audit_log_event_types")
 			}
+
 			return err
 		}
 	}
@@ -1812,11 +2053,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyAdminGroups(ctx con
 		}
 
 		if err := m.HTTPAuthproxyAdminGroups.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_admin_groups")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_admin_groups")
 			}
+
 			return err
 		}
 	}
@@ -1833,11 +2078,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyAdminUsernames(ctx 
 		}
 
 		if err := m.HTTPAuthproxyAdminUsernames.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_admin_usernames")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_admin_usernames")
 			}
+
 			return err
 		}
 	}
@@ -1854,11 +2103,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyEndpoint(ctx contex
 		}
 
 		if err := m.HTTPAuthproxyEndpoint.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -1875,11 +2128,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyServerCertificate(c
 		}
 
 		if err := m.HTTPAuthproxyServerCertificate.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_server_certificate")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_server_certificate")
 			}
+
 			return err
 		}
 	}
@@ -1896,11 +2153,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxySkipSearch(ctx cont
 		}
 
 		if err := m.HTTPAuthproxySkipSearch.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_skip_search")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_skip_search")
 			}
+
 			return err
 		}
 	}
@@ -1917,11 +2178,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyTokenreviewEndpoint
 		}
 
 		if err := m.HTTPAuthproxyTokenreviewEndpoint.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_tokenreview_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_tokenreview_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -1938,11 +2203,15 @@ func (m *ConfigurationsResponse) contextValidateHTTPAuthproxyVerifyCert(ctx cont
 		}
 
 		if err := m.HTTPAuthproxyVerifyCert.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("http_authproxy_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("http_authproxy_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -1959,11 +2228,15 @@ func (m *ConfigurationsResponse) contextValidateLdapBaseDn(ctx context.Context, 
 		}
 
 		if err := m.LdapBaseDn.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_base_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_base_dn")
 			}
+
 			return err
 		}
 	}
@@ -1980,11 +2253,15 @@ func (m *ConfigurationsResponse) contextValidateLdapFilter(ctx context.Context, 
 		}
 
 		if err := m.LdapFilter.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_filter")
 			}
+
 			return err
 		}
 	}
@@ -2001,11 +2278,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupAdminDn(ctx context.Con
 		}
 
 		if err := m.LdapGroupAdminDn.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_admin_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_admin_dn")
 			}
+
 			return err
 		}
 	}
@@ -2022,11 +2303,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupAttachParallel(ctx cont
 		}
 
 		if err := m.LdapGroupAttachParallel.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_attach_parallel")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_attach_parallel")
 			}
+
 			return err
 		}
 	}
@@ -2043,11 +2328,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupAttributeName(ctx conte
 		}
 
 		if err := m.LdapGroupAttributeName.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_attribute_name")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_attribute_name")
 			}
+
 			return err
 		}
 	}
@@ -2064,11 +2353,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupBaseDn(ctx context.Cont
 		}
 
 		if err := m.LdapGroupBaseDn.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_base_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_base_dn")
 			}
+
 			return err
 		}
 	}
@@ -2085,11 +2378,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupMembershipAttribute(ctx
 		}
 
 		if err := m.LdapGroupMembershipAttribute.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_membership_attribute")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_membership_attribute")
 			}
+
 			return err
 		}
 	}
@@ -2106,11 +2403,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupSearchFilter(ctx contex
 		}
 
 		if err := m.LdapGroupSearchFilter.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_search_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_search_filter")
 			}
+
 			return err
 		}
 	}
@@ -2127,11 +2428,15 @@ func (m *ConfigurationsResponse) contextValidateLdapGroupSearchScope(ctx context
 		}
 
 		if err := m.LdapGroupSearchScope.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_group_search_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_group_search_scope")
 			}
+
 			return err
 		}
 	}
@@ -2148,11 +2453,15 @@ func (m *ConfigurationsResponse) contextValidateLdapScope(ctx context.Context, f
 		}
 
 		if err := m.LdapScope.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_scope")
 			}
+
 			return err
 		}
 	}
@@ -2169,11 +2478,15 @@ func (m *ConfigurationsResponse) contextValidateLdapSearchDn(ctx context.Context
 		}
 
 		if err := m.LdapSearchDn.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_search_dn")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_search_dn")
 			}
+
 			return err
 		}
 	}
@@ -2190,11 +2503,15 @@ func (m *ConfigurationsResponse) contextValidateLdapTimeout(ctx context.Context,
 		}
 
 		if err := m.LdapTimeout.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_timeout")
 			}
+
 			return err
 		}
 	}
@@ -2211,11 +2528,15 @@ func (m *ConfigurationsResponse) contextValidateLdapUID(ctx context.Context, for
 		}
 
 		if err := m.LdapUID.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_uid")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_uid")
 			}
+
 			return err
 		}
 	}
@@ -2232,11 +2553,15 @@ func (m *ConfigurationsResponse) contextValidateLdapURL(ctx context.Context, for
 		}
 
 		if err := m.LdapURL.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_url")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_url")
 			}
+
 			return err
 		}
 	}
@@ -2253,11 +2578,15 @@ func (m *ConfigurationsResponse) contextValidateLdapVerifyCert(ctx context.Conte
 		}
 
 		if err := m.LdapVerifyCert.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("ldap_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("ldap_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -2274,11 +2603,15 @@ func (m *ConfigurationsResponse) contextValidateNotificationEnable(ctx context.C
 		}
 
 		if err := m.NotificationEnable.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("notification_enable")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("notification_enable")
 			}
+
 			return err
 		}
 	}
@@ -2295,11 +2628,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCAdminGroup(ctx context.Conte
 		}
 
 		if err := m.OIDCAdminGroup.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_admin_group")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_admin_group")
 			}
+
 			return err
 		}
 	}
@@ -2316,11 +2653,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCAutoOnboard(ctx context.Cont
 		}
 
 		if err := m.OIDCAutoOnboard.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_auto_onboard")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_auto_onboard")
 			}
+
 			return err
 		}
 	}
@@ -2337,11 +2678,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCClientID(ctx context.Context
 		}
 
 		if err := m.OIDCClientID.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_client_id")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_client_id")
 			}
+
 			return err
 		}
 	}
@@ -2358,11 +2703,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCEndpoint(ctx context.Context
 		}
 
 		if err := m.OIDCEndpoint.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -2379,11 +2728,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCExtraRedirectParms(ctx conte
 		}
 
 		if err := m.OIDCExtraRedirectParms.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_extra_redirect_parms")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_extra_redirect_parms")
 			}
+
 			return err
 		}
 	}
@@ -2400,11 +2753,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCGroupFilter(ctx context.Cont
 		}
 
 		if err := m.OIDCGroupFilter.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_group_filter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_group_filter")
 			}
+
 			return err
 		}
 	}
@@ -2421,11 +2778,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCGroupsClaim(ctx context.Cont
 		}
 
 		if err := m.OIDCGroupsClaim.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_groups_claim")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_groups_claim")
 			}
+
 			return err
 		}
 	}
@@ -2442,11 +2803,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCLogout(ctx context.Context, 
 		}
 
 		if err := m.OIDCLogout.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_logout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_logout")
 			}
+
 			return err
 		}
 	}
@@ -2463,11 +2828,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCName(ctx context.Context, fo
 		}
 
 		if err := m.OIDCName.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_name")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_name")
 			}
+
 			return err
 		}
 	}
@@ -2484,11 +2853,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCScope(ctx context.Context, f
 		}
 
 		if err := m.OIDCScope.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_scope")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_scope")
 			}
+
 			return err
 		}
 	}
@@ -2505,11 +2878,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCUserClaim(ctx context.Contex
 		}
 
 		if err := m.OIDCUserClaim.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_user_claim")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_user_claim")
 			}
+
 			return err
 		}
 	}
@@ -2526,11 +2903,15 @@ func (m *ConfigurationsResponse) contextValidateOIDCVerifyCert(ctx context.Conte
 		}
 
 		if err := m.OIDCVerifyCert.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("oidc_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oidc_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -2547,11 +2928,15 @@ func (m *ConfigurationsResponse) contextValidatePrimaryAuthMode(ctx context.Cont
 		}
 
 		if err := m.PrimaryAuthMode.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("primary_auth_mode")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("primary_auth_mode")
 			}
+
 			return err
 		}
 	}
@@ -2568,11 +2953,15 @@ func (m *ConfigurationsResponse) contextValidateProjectCreationRestriction(ctx c
 		}
 
 		if err := m.ProjectCreationRestriction.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("project_creation_restriction")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("project_creation_restriction")
 			}
+
 			return err
 		}
 	}
@@ -2589,11 +2978,15 @@ func (m *ConfigurationsResponse) contextValidateQuotaPerProjectEnable(ctx contex
 		}
 
 		if err := m.QuotaPerProjectEnable.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("quota_per_project_enable")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("quota_per_project_enable")
 			}
+
 			return err
 		}
 	}
@@ -2610,11 +3003,15 @@ func (m *ConfigurationsResponse) contextValidateReadOnly(ctx context.Context, fo
 		}
 
 		if err := m.ReadOnly.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("read_only")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("read_only")
 			}
+
 			return err
 		}
 	}
@@ -2631,11 +3028,15 @@ func (m *ConfigurationsResponse) contextValidateRobotNamePrefix(ctx context.Cont
 		}
 
 		if err := m.RobotNamePrefix.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("robot_name_prefix")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("robot_name_prefix")
 			}
+
 			return err
 		}
 	}
@@ -2652,11 +3053,15 @@ func (m *ConfigurationsResponse) contextValidateRobotTokenDuration(ctx context.C
 		}
 
 		if err := m.RobotTokenDuration.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("robot_token_duration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("robot_token_duration")
 			}
+
 			return err
 		}
 	}
@@ -2673,11 +3078,15 @@ func (m *ConfigurationsResponse) contextValidateScanAllPolicy(ctx context.Contex
 		}
 
 		if err := m.ScanAllPolicy.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scan_all_policy")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scan_all_policy")
 			}
+
 			return err
 		}
 	}
@@ -2694,11 +3103,15 @@ func (m *ConfigurationsResponse) contextValidateScannerSkipUpdatePulltime(ctx co
 		}
 
 		if err := m.ScannerSkipUpdatePulltime.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner_skip_update_pulltime")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner_skip_update_pulltime")
 			}
+
 			return err
 		}
 	}
@@ -2715,11 +3128,15 @@ func (m *ConfigurationsResponse) contextValidateSelfRegistration(ctx context.Con
 		}
 
 		if err := m.SelfRegistration.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("self_registration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("self_registration")
 			}
+
 			return err
 		}
 	}
@@ -2736,11 +3153,15 @@ func (m *ConfigurationsResponse) contextValidateSessionTimeout(ctx context.Conte
 		}
 
 		if err := m.SessionTimeout.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("session_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("session_timeout")
 			}
+
 			return err
 		}
 	}
@@ -2757,11 +3178,15 @@ func (m *ConfigurationsResponse) contextValidateSkipAuditLogDatabase(ctx context
 		}
 
 		if err := m.SkipAuditLogDatabase.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("skip_audit_log_database")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("skip_audit_log_database")
 			}
+
 			return err
 		}
 	}
@@ -2778,11 +3203,15 @@ func (m *ConfigurationsResponse) contextValidateStoragePerProject(ctx context.Co
 		}
 
 		if err := m.StoragePerProject.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("storage_per_project")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("storage_per_project")
 			}
+
 			return err
 		}
 	}
@@ -2799,11 +3228,15 @@ func (m *ConfigurationsResponse) contextValidateTokenExpiration(ctx context.Cont
 		}
 
 		if err := m.TokenExpiration.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("token_expiration")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("token_expiration")
 			}
+
 			return err
 		}
 	}
@@ -2820,11 +3253,15 @@ func (m *ConfigurationsResponse) contextValidateUaaClientID(ctx context.Context,
 		}
 
 		if err := m.UaaClientID.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_client_id")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_client_id")
 			}
+
 			return err
 		}
 	}
@@ -2841,11 +3278,15 @@ func (m *ConfigurationsResponse) contextValidateUaaClientSecret(ctx context.Cont
 		}
 
 		if err := m.UaaClientSecret.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_client_secret")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_client_secret")
 			}
+
 			return err
 		}
 	}
@@ -2862,11 +3303,15 @@ func (m *ConfigurationsResponse) contextValidateUaaEndpoint(ctx context.Context,
 		}
 
 		if err := m.UaaEndpoint.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_endpoint")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_endpoint")
 			}
+
 			return err
 		}
 	}
@@ -2883,11 +3328,15 @@ func (m *ConfigurationsResponse) contextValidateUaaVerifyCert(ctx context.Contex
 		}
 
 		if err := m.UaaVerifyCert.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("uaa_verify_cert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("uaa_verify_cert")
 			}
+
 			return err
 		}
 	}
@@ -2946,11 +3395,15 @@ func (m *ConfigurationsResponseScanAllPolicy) validateParameter(formats strfmt.R
 
 	if m.Parameter != nil {
 		if err := m.Parameter.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scan_all_policy" + "." + "parameter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scan_all_policy" + "." + "parameter")
 			}
+
 			return err
 		}
 	}
@@ -2981,11 +3434,15 @@ func (m *ConfigurationsResponseScanAllPolicy) contextValidateParameter(ctx conte
 		}
 
 		if err := m.Parameter.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scan_all_policy" + "." + "parameter")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scan_all_policy" + "." + "parameter")
 			}
+
 			return err
 		}
 	}

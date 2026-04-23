@@ -12,16 +12,16 @@ import (
 )
 
 // PutSystemCVEAllowlistHandlerFunc turns a function with the right signature into a put system CVE allowlist handler
-type PutSystemCVEAllowlistHandlerFunc func(PutSystemCVEAllowlistParams, interface{}) middleware.Responder
+type PutSystemCVEAllowlistHandlerFunc func(PutSystemCVEAllowlistParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PutSystemCVEAllowlistHandlerFunc) Handle(params PutSystemCVEAllowlistParams, principal interface{}) middleware.Responder {
+func (fn PutSystemCVEAllowlistHandlerFunc) Handle(params PutSystemCVEAllowlistParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // PutSystemCVEAllowlistHandler interface for that can handle valid put system CVE allowlist params
 type PutSystemCVEAllowlistHandler interface {
-	Handle(PutSystemCVEAllowlistParams, interface{}) middleware.Responder
+	Handle(PutSystemCVEAllowlistParams, any) middleware.Responder
 }
 
 // NewPutSystemCVEAllowlist creates a new http.Handler for the put system CVE allowlist operation
@@ -55,9 +55,9 @@ func (o *PutSystemCVEAllowlist) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *PutSystemCVEAllowlist) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

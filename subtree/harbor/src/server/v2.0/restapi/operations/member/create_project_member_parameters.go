@@ -38,7 +38,6 @@ func NewCreateProjectMemberParams() CreateProjectMemberParams {
 //
 // swagger:parameters createProjectMember
 type CreateProjectMemberParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -47,15 +46,18 @@ type CreateProjectMemberParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*
 	  In: body
 	*/
 	ProjectMember *models.ProjectMember
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -81,7 +83,9 @@ func (o *CreateProjectMemberParams) BindRequest(r *http.Request, route *middlewa
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ProjectMember
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("projectMember", "body", "", err))
@@ -156,7 +160,7 @@ func (o *CreateProjectMemberParams) bindXRequestID(rawData []string, hasKey bool
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreateProjectMemberParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

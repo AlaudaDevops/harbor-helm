@@ -12,16 +12,16 @@ import (
 )
 
 // ListAuditLogEventTypesHandlerFunc turns a function with the right signature into a list audit log event types handler
-type ListAuditLogEventTypesHandlerFunc func(ListAuditLogEventTypesParams, interface{}) middleware.Responder
+type ListAuditLogEventTypesHandlerFunc func(ListAuditLogEventTypesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListAuditLogEventTypesHandlerFunc) Handle(params ListAuditLogEventTypesParams, principal interface{}) middleware.Responder {
+func (fn ListAuditLogEventTypesHandlerFunc) Handle(params ListAuditLogEventTypesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListAuditLogEventTypesHandler interface for that can handle valid list audit log event types params
 type ListAuditLogEventTypesHandler interface {
-	Handle(ListAuditLogEventTypesParams, interface{}) middleware.Responder
+	Handle(ListAuditLogEventTypesParams, any) middleware.Responder
 }
 
 // NewListAuditLogEventTypes creates a new http.Handler for the list audit log event types operation
@@ -55,9 +55,9 @@ func (o *ListAuditLogEventTypes) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListAuditLogEventTypes) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

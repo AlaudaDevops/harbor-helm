@@ -30,7 +30,6 @@ func NewPingLdapParams() PingLdapParams {
 //
 // swagger:parameters pingLdap
 type PingLdapParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -39,6 +38,7 @@ type PingLdapParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*ldap configuration. support input ldap service configuration. If it is a empty request, will load current configuration from the system.
 	  In: body
 	*/
@@ -59,7 +59,9 @@ func (o *PingLdapParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.LdapConf
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("ldapconf", "body", "", err))
@@ -106,7 +108,7 @@ func (o *PingLdapParams) bindXRequestID(rawData []string, hasKey bool, formats s
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PingLdapParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

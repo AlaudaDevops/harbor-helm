@@ -12,16 +12,16 @@ import (
 )
 
 // CreateImmuRuleHandlerFunc turns a function with the right signature into a create immu rule handler
-type CreateImmuRuleHandlerFunc func(CreateImmuRuleParams, interface{}) middleware.Responder
+type CreateImmuRuleHandlerFunc func(CreateImmuRuleParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateImmuRuleHandlerFunc) Handle(params CreateImmuRuleParams, principal interface{}) middleware.Responder {
+func (fn CreateImmuRuleHandlerFunc) Handle(params CreateImmuRuleParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateImmuRuleHandler interface for that can handle valid create immu rule params
 type CreateImmuRuleHandler interface {
-	Handle(CreateImmuRuleParams, interface{}) middleware.Responder
+	Handle(CreateImmuRuleParams, any) middleware.Responder
 }
 
 // NewCreateImmuRule creates a new http.Handler for the create immu rule operation
@@ -55,9 +55,9 @@ func (o *CreateImmuRule) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateImmuRule) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

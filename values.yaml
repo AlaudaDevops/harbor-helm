@@ -8,54 +8,54 @@ global:
   images:
     portal:
       repository: devops/goharbor-harbor-portal
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     core:
       repository: devops/goharbor-harbor-core
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     jobservice:
       repository: devops/goharbor-harbor-jobservice
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     registry:
       repository: devops/goharbor-registry-photon
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     registryController:
       repository: devops/goharbor-harbor-registryctl
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     trivy:
       repository: devops/goharbor-trivy-adapter-photon
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     trivyOfflineDB:
       repository: devops/goharbor-trivy-offline-db
-      tag: alauda-v2.14.0-148182a7
+      tag: alauda-v2.14.0-27764c53
       support_arm: true
       thirdparty: true
     nginx:
       repository: devops/goharbor-nginx-photon
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
     exporter:
       repository: devops/goharbor-harbor-exporter
-      tag: 2.14.1-g97ad82a
+      tag: 2.14.3-ga791aba
       support_arm: true
       thirdparty: true
       digest: ""
@@ -955,7 +955,7 @@ database:
   internal:
     image:
       repository: goharbor/harbor-db
-      tag: v2.14.1
+      tag: v2.14.3
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token
@@ -1035,7 +1035,7 @@ redis:
   internal:
     image:
       repository: goharbor/redis-photon
-      tag: v2.14.1
+      tag: v2.14.3
     # set the service account to be used, default if left empty
     serviceAccountName: ""
     # mount the service account token

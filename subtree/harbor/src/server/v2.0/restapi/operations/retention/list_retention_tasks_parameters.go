@@ -29,7 +29,6 @@ func NewListRetentionTasksParams() ListRetentionTasksParams {
 //
 // swagger:parameters listRetentionTasks
 type ListRetentionTasksParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -38,20 +37,24 @@ type ListRetentionTasksParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Retention execution ID.
 	  Required: true
 	  In: path
 	*/
 	Eid int64
+
 	/*Retention ID.
 	  Required: true
 	  In: path
 	*/
 	ID int64
+
 	/*The page number.
 	  In: query
 	*/
 	Page *int64
+
 	/*The size of per page.
 	  In: query
 	*/
@@ -66,7 +69,6 @@ func (o *ListRetentionTasksParams) BindRequest(r *http.Request, route *middlewar
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -119,7 +121,7 @@ func (o *ListRetentionTasksParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListRetentionTasksParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

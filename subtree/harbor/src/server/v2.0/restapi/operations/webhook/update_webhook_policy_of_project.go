@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateWebhookPolicyOfProjectHandlerFunc turns a function with the right signature into a update webhook policy of project handler
-type UpdateWebhookPolicyOfProjectHandlerFunc func(UpdateWebhookPolicyOfProjectParams, interface{}) middleware.Responder
+type UpdateWebhookPolicyOfProjectHandlerFunc func(UpdateWebhookPolicyOfProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateWebhookPolicyOfProjectHandlerFunc) Handle(params UpdateWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+func (fn UpdateWebhookPolicyOfProjectHandlerFunc) Handle(params UpdateWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateWebhookPolicyOfProjectHandler interface for that can handle valid update webhook policy of project params
 type UpdateWebhookPolicyOfProjectHandler interface {
-	Handle(UpdateWebhookPolicyOfProjectParams, interface{}) middleware.Responder
+	Handle(UpdateWebhookPolicyOfProjectParams, any) middleware.Responder
 }
 
 // NewUpdateWebhookPolicyOfProject creates a new http.Handler for the update webhook policy of project operation
@@ -55,9 +55,9 @@ func (o *UpdateWebhookPolicyOfProject) ServeHTTP(rw http.ResponseWriter, r *http
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateWebhookPolicyOfProject) ServeHTTP(rw http.ResponseWriter, r *http
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

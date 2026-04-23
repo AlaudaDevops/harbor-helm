@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteUserGroupHandlerFunc turns a function with the right signature into a delete user group handler
-type DeleteUserGroupHandlerFunc func(DeleteUserGroupParams, interface{}) middleware.Responder
+type DeleteUserGroupHandlerFunc func(DeleteUserGroupParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteUserGroupHandlerFunc) Handle(params DeleteUserGroupParams, principal interface{}) middleware.Responder {
+func (fn DeleteUserGroupHandlerFunc) Handle(params DeleteUserGroupParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteUserGroupHandler interface for that can handle valid delete user group params
 type DeleteUserGroupHandler interface {
-	Handle(DeleteUserGroupParams, interface{}) middleware.Responder
+	Handle(DeleteUserGroupParams, any) middleware.Responder
 }
 
 // NewDeleteUserGroup creates a new http.Handler for the delete user group operation
@@ -55,9 +55,9 @@ func (o *DeleteUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

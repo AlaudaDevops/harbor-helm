@@ -30,7 +30,6 @@ func NewPutSystemCVEAllowlistParams() PutSystemCVEAllowlistParams {
 //
 // swagger:parameters putSystemCVEAllowlist
 type PutSystemCVEAllowlistParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -39,6 +38,7 @@ type PutSystemCVEAllowlistParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The allowlist with new content
 	  In: body
 	*/
@@ -59,7 +59,9 @@ func (o *PutSystemCVEAllowlistParams) BindRequest(r *http.Request, route *middle
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.CVEAllowlist
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("allowlist", "body", "", err))
@@ -106,7 +108,7 @@ func (o *PutSystemCVEAllowlistParams) bindXRequestID(rawData []string, hasKey bo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PutSystemCVEAllowlistParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

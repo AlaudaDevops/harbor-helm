@@ -12,16 +12,16 @@ import (
 )
 
 // CreatePurgeScheduleHandlerFunc turns a function with the right signature into a create purge schedule handler
-type CreatePurgeScheduleHandlerFunc func(CreatePurgeScheduleParams, interface{}) middleware.Responder
+type CreatePurgeScheduleHandlerFunc func(CreatePurgeScheduleParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreatePurgeScheduleHandlerFunc) Handle(params CreatePurgeScheduleParams, principal interface{}) middleware.Responder {
+func (fn CreatePurgeScheduleHandlerFunc) Handle(params CreatePurgeScheduleParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreatePurgeScheduleHandler interface for that can handle valid create purge schedule params
 type CreatePurgeScheduleHandler interface {
-	Handle(CreatePurgeScheduleParams, interface{}) middleware.Responder
+	Handle(CreatePurgeScheduleParams, any) middleware.Responder
 }
 
 // NewCreatePurgeSchedule creates a new http.Handler for the create purge schedule operation
@@ -55,9 +55,9 @@ func (o *CreatePurgeSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreatePurgeSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

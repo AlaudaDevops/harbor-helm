@@ -12,16 +12,16 @@ import (
 )
 
 // SetCliSecretHandlerFunc turns a function with the right signature into a set cli secret handler
-type SetCliSecretHandlerFunc func(SetCliSecretParams, interface{}) middleware.Responder
+type SetCliSecretHandlerFunc func(SetCliSecretParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn SetCliSecretHandlerFunc) Handle(params SetCliSecretParams, principal interface{}) middleware.Responder {
+func (fn SetCliSecretHandlerFunc) Handle(params SetCliSecretParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // SetCliSecretHandler interface for that can handle valid set cli secret params
 type SetCliSecretHandler interface {
-	Handle(SetCliSecretParams, interface{}) middleware.Responder
+	Handle(SetCliSecretParams, any) middleware.Responder
 }
 
 // NewSetCliSecret creates a new http.Handler for the set cli secret operation
@@ -55,9 +55,9 @@ func (o *SetCliSecret) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *SetCliSecret) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

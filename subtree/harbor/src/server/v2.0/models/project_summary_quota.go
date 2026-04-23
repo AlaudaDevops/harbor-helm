@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -50,11 +51,15 @@ func (m *ProjectSummaryQuota) validateHard(formats strfmt.Registry) error {
 
 	if m.Hard != nil {
 		if err := m.Hard.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("hard")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("hard")
 			}
+
 			return err
 		}
 	}
@@ -69,11 +74,15 @@ func (m *ProjectSummaryQuota) validateUsed(formats strfmt.Registry) error {
 
 	if m.Used != nil {
 		if err := m.Used.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("used")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("used")
 			}
+
 			return err
 		}
 	}
@@ -106,11 +115,15 @@ func (m *ProjectSummaryQuota) contextValidateHard(ctx context.Context, formats s
 	}
 
 	if err := m.Hard.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("hard")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("hard")
 		}
+
 		return err
 	}
 
@@ -124,11 +137,15 @@ func (m *ProjectSummaryQuota) contextValidateUsed(ctx context.Context, formats s
 	}
 
 	if err := m.Used.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("used")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("used")
 		}
+
 		return err
 	}
 

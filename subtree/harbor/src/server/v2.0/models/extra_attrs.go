@@ -14,7 +14,7 @@ import (
 // ExtraAttrs extra attrs
 //
 // swagger:model ExtraAttrs
-type ExtraAttrs map[string]interface{}
+type ExtraAttrs map[string]any
 
 // Validate validates this extra attrs
 func (m ExtraAttrs) Validate(formats strfmt.Registry) error {

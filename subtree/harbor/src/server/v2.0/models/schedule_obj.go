@@ -65,7 +65,7 @@ func (m *ScheduleObj) validateNextScheduledTime(formats strfmt.Registry) error {
 	return nil
 }
 
-var scheduleObjTypeTypePropEnum []interface{}
+var scheduleObjTypeTypePropEnum []any
 
 func init() {
 	var res []string

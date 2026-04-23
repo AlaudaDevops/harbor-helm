@@ -12,16 +12,16 @@ import (
 )
 
 // GetAdditionHandlerFunc turns a function with the right signature into a get addition handler
-type GetAdditionHandlerFunc func(GetAdditionParams, interface{}) middleware.Responder
+type GetAdditionHandlerFunc func(GetAdditionParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetAdditionHandlerFunc) Handle(params GetAdditionParams, principal interface{}) middleware.Responder {
+func (fn GetAdditionHandlerFunc) Handle(params GetAdditionParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetAdditionHandler interface for that can handle valid get addition params
 type GetAdditionHandler interface {
-	Handle(GetAdditionParams, interface{}) middleware.Responder
+	Handle(GetAdditionParams, any) middleware.Responder
 }
 
 // NewGetAddition creates a new http.Handler for the get addition operation
@@ -55,9 +55,9 @@ func (o *GetAddition) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetAddition) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

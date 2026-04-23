@@ -12,16 +12,16 @@ import (
 )
 
 // GetVulnerabilitiesAdditionHandlerFunc turns a function with the right signature into a get vulnerabilities addition handler
-type GetVulnerabilitiesAdditionHandlerFunc func(GetVulnerabilitiesAdditionParams, interface{}) middleware.Responder
+type GetVulnerabilitiesAdditionHandlerFunc func(GetVulnerabilitiesAdditionParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetVulnerabilitiesAdditionHandlerFunc) Handle(params GetVulnerabilitiesAdditionParams, principal interface{}) middleware.Responder {
+func (fn GetVulnerabilitiesAdditionHandlerFunc) Handle(params GetVulnerabilitiesAdditionParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetVulnerabilitiesAdditionHandler interface for that can handle valid get vulnerabilities addition params
 type GetVulnerabilitiesAdditionHandler interface {
-	Handle(GetVulnerabilitiesAdditionParams, interface{}) middleware.Responder
+	Handle(GetVulnerabilitiesAdditionParams, any) middleware.Responder
 }
 
 // NewGetVulnerabilitiesAddition creates a new http.Handler for the get vulnerabilities addition operation
@@ -55,9 +55,9 @@ func (o *GetVulnerabilitiesAddition) ServeHTTP(rw http.ResponseWriter, r *http.R
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetVulnerabilitiesAddition) ServeHTTP(rw http.ResponseWriter, r *http.R
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

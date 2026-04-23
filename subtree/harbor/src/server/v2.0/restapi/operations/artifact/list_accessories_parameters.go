@@ -39,7 +39,6 @@ func NewListAccessoriesParams() ListAccessoriesParams {
 //
 // swagger:parameters listAccessories
 type ListAccessoriesParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,36 +47,43 @@ type ListAccessoriesParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
 	  Default: 10
 	*/
 	PageSize *int64
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*Query string to query resources. Supported query patterns are "exact match(k=v)", "fuzzy match(k=~v)", "range(k=[min~max])", "list with union releationship(k={v1 v2 v3})" and "list with intersetion relationship(k=(v1 v2 v3))". The value of range and list can be string(enclosed by " or '), integer or time(in format "2020-04-09 02:36:00"). All of these query patterns should be put in the query string "q=xxx" and splitted by ",". e.g. q=k1=v1,k2=~v2,k3=[min~max]
 	  In: query
 	*/
 	Q *string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
 	*/
 	RepositoryName string
+
 	/*Sort the resource list in ascending or descending order. e.g. sort by field1 in ascending order and field2 in descending order with "sort=field1,-field2"
 	  In: query
 	*/
@@ -92,7 +98,6 @@ func (o *ListAccessoriesParams) BindRequest(r *http.Request, route *middleware.M
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -160,7 +165,7 @@ func (o *ListAccessoriesParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListAccessoriesParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -222,7 +227,7 @@ func (o *ListAccessoriesParams) bindPageSize(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *ListAccessoriesParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

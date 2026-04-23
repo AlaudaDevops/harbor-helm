@@ -46,7 +46,7 @@ func (o *GetRobotByIDURL) Build() (*url.URL, error) {
 
 	robotID := swag.FormatInt64(o.RobotID)
 	if robotID != "" {
-		_path = strings.Replace(_path, "{robot_id}", robotID, -1)
+		_path = strings.ReplaceAll(_path, "{robot_id}", robotID)
 	} else {
 		return nil, errors.New("robotId is required on GetRobotByIDURL")
 	}

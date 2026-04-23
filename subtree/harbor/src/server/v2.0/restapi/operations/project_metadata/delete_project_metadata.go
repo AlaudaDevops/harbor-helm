@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteProjectMetadataHandlerFunc turns a function with the right signature into a delete project metadata handler
-type DeleteProjectMetadataHandlerFunc func(DeleteProjectMetadataParams, interface{}) middleware.Responder
+type DeleteProjectMetadataHandlerFunc func(DeleteProjectMetadataParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteProjectMetadataHandlerFunc) Handle(params DeleteProjectMetadataParams, principal interface{}) middleware.Responder {
+func (fn DeleteProjectMetadataHandlerFunc) Handle(params DeleteProjectMetadataParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteProjectMetadataHandler interface for that can handle valid delete project metadata params
 type DeleteProjectMetadataHandler interface {
-	Handle(DeleteProjectMetadataParams, interface{}) middleware.Responder
+	Handle(DeleteProjectMetadataParams, any) middleware.Responder
 }
 
 // NewDeleteProjectMetadata creates a new http.Handler for the delete project metadata operation
@@ -55,9 +55,9 @@ func (o *DeleteProjectMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteProjectMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

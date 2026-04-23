@@ -54,7 +54,7 @@ func (m *Stats) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var statsTypeTriggerPropEnum []interface{}
+var statsTypeTriggerPropEnum []any
 
 func init() {
 	var res []string

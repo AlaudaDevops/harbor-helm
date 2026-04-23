@@ -12,16 +12,16 @@ import (
 )
 
 // GetGCHandlerFunc turns a function with the right signature into a get GC handler
-type GetGCHandlerFunc func(GetGCParams, interface{}) middleware.Responder
+type GetGCHandlerFunc func(GetGCParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetGCHandlerFunc) Handle(params GetGCParams, principal interface{}) middleware.Responder {
+func (fn GetGCHandlerFunc) Handle(params GetGCParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetGCHandler interface for that can handle valid get GC params
 type GetGCHandler interface {
-	Handle(GetGCParams, interface{}) middleware.Responder
+	Handle(GetGCParams, any) middleware.Responder
 }
 
 // NewGetGC creates a new http.Handler for the get GC operation
@@ -55,9 +55,9 @@ func (o *GetGC) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetGC) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

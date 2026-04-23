@@ -12,16 +12,16 @@ import (
 )
 
 // GetScanAllScheduleHandlerFunc turns a function with the right signature into a get scan all schedule handler
-type GetScanAllScheduleHandlerFunc func(GetScanAllScheduleParams, interface{}) middleware.Responder
+type GetScanAllScheduleHandlerFunc func(GetScanAllScheduleParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetScanAllScheduleHandlerFunc) Handle(params GetScanAllScheduleParams, principal interface{}) middleware.Responder {
+func (fn GetScanAllScheduleHandlerFunc) Handle(params GetScanAllScheduleParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetScanAllScheduleHandler interface for that can handle valid get scan all schedule params
 type GetScanAllScheduleHandler interface {
-	Handle(GetScanAllScheduleParams, interface{}) middleware.Responder
+	Handle(GetScanAllScheduleParams, any) middleware.Responder
 }
 
 // NewGetScanAllSchedule creates a new http.Handler for the get scan all schedule operation
@@ -55,9 +55,9 @@ func (o *GetScanAllSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetScanAllSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

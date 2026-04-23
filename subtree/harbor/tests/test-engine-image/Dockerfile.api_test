@@ -1,5 +1,5 @@
 # photon based image
-FROM build-harbor.alauda.cn/ops/photon:5.0
+FROM photon:5.0
 ENV LANG C.UTF-8
 ENV HELM_EXPERIMENTAL_OCI=1
 ENV COSIGN_PASSWORD=Harbor12345
@@ -22,6 +22,7 @@ RUN tdnf makecache && tdnf update -y && tdnf install -y \
     sed \
     openssl-devel \
     tar \
+    util-linux \
     which \
     procps-ng \
     gzip && \

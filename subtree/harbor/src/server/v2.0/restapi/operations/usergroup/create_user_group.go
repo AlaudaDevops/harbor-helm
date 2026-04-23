@@ -12,16 +12,16 @@ import (
 )
 
 // CreateUserGroupHandlerFunc turns a function with the right signature into a create user group handler
-type CreateUserGroupHandlerFunc func(CreateUserGroupParams, interface{}) middleware.Responder
+type CreateUserGroupHandlerFunc func(CreateUserGroupParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateUserGroupHandlerFunc) Handle(params CreateUserGroupParams, principal interface{}) middleware.Responder {
+func (fn CreateUserGroupHandlerFunc) Handle(params CreateUserGroupParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateUserGroupHandler interface for that can handle valid create user group params
 type CreateUserGroupHandler interface {
-	Handle(CreateUserGroupParams, interface{}) middleware.Responder
+	Handle(CreateUserGroupParams, any) middleware.Responder
 }
 
 // NewCreateUserGroup creates a new http.Handler for the create user group operation
@@ -55,9 +55,9 @@ func (o *CreateUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateUserGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

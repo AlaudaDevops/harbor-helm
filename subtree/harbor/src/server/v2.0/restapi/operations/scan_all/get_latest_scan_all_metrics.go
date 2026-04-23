@@ -12,16 +12,16 @@ import (
 )
 
 // GetLatestScanAllMetricsHandlerFunc turns a function with the right signature into a get latest scan all metrics handler
-type GetLatestScanAllMetricsHandlerFunc func(GetLatestScanAllMetricsParams, interface{}) middleware.Responder
+type GetLatestScanAllMetricsHandlerFunc func(GetLatestScanAllMetricsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetLatestScanAllMetricsHandlerFunc) Handle(params GetLatestScanAllMetricsParams, principal interface{}) middleware.Responder {
+func (fn GetLatestScanAllMetricsHandlerFunc) Handle(params GetLatestScanAllMetricsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetLatestScanAllMetricsHandler interface for that can handle valid get latest scan all metrics params
 type GetLatestScanAllMetricsHandler interface {
-	Handle(GetLatestScanAllMetricsParams, interface{}) middleware.Responder
+	Handle(GetLatestScanAllMetricsParams, any) middleware.Responder
 }
 
 // NewGetLatestScanAllMetrics creates a new http.Handler for the get latest scan all metrics operation
@@ -55,9 +55,9 @@ func (o *GetLatestScanAllMetrics) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetLatestScanAllMetrics) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

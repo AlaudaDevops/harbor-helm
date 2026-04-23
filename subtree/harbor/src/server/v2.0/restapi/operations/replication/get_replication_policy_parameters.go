@@ -28,7 +28,6 @@ func NewGetReplicationPolicyParams() GetReplicationPolicyParams {
 //
 // swagger:parameters getReplicationPolicy
 type GetReplicationPolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetReplicationPolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Policy ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetReplicationPolicyParams) bindXRequestID(rawData []string, hasKey boo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetReplicationPolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

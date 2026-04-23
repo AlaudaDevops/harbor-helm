@@ -27,7 +27,6 @@ func NewGetCurrentUserInfoParams() GetCurrentUserInfoParams {
 //
 // swagger:parameters getCurrentUserInfo
 type GetCurrentUserInfoParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *GetCurrentUserInfoParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetCurrentUserInfoParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -12,16 +12,16 @@ import (
 )
 
 // ListAuditLogExtsHandlerFunc turns a function with the right signature into a list audit log exts handler
-type ListAuditLogExtsHandlerFunc func(ListAuditLogExtsParams, interface{}) middleware.Responder
+type ListAuditLogExtsHandlerFunc func(ListAuditLogExtsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListAuditLogExtsHandlerFunc) Handle(params ListAuditLogExtsParams, principal interface{}) middleware.Responder {
+func (fn ListAuditLogExtsHandlerFunc) Handle(params ListAuditLogExtsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListAuditLogExtsHandler interface for that can handle valid list audit log exts params
 type ListAuditLogExtsHandler interface {
-	Handle(ListAuditLogExtsParams, interface{}) middleware.Responder
+	Handle(ListAuditLogExtsParams, any) middleware.Responder
 }
 
 // NewListAuditLogExts creates a new http.Handler for the list audit log exts operation
@@ -55,9 +55,9 @@ func (o *ListAuditLogExts) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListAuditLogExts) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

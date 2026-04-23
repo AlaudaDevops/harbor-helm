@@ -6,6 +6,7 @@ package purge
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewUpdatePurgeScheduleParams() UpdatePurgeScheduleParams {
 //
 // swagger:parameters updatePurgeSchedule
 type UpdatePurgeScheduleParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type UpdatePurgeScheduleParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The purge job's schedule, it is a json object. |
 	The sample format is |
 	{"parameters":{"audit_retention_hour":168,"dry_run":true,"include_event_types":"create_artifact,delete_artifact,pull_artifact"},"schedule":{"type":"Hourly","cron":"0 0 * * * *"}} |
@@ -65,10 +66,12 @@ func (o *UpdatePurgeScheduleParams) BindRequest(r *http.Request, route *middlewa
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.Schedule
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("schedule", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("schedule", "body", "", err))
@@ -118,7 +121,7 @@ func (o *UpdatePurgeScheduleParams) bindXRequestID(rawData []string, hasKey bool
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdatePurgeScheduleParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -35,7 +35,6 @@ func NewGetLogsOfWebhookTaskParams() GetLogsOfWebhookTaskParams {
 //
 // swagger:parameters GetLogsOfWebhookTask
 type GetLogsOfWebhookTaskParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,26 +43,31 @@ type GetLogsOfWebhookTaskParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Execution ID
 	  Required: true
 	  In: path
 	*/
 	ExecutionID int64
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectNameOrID string
+
 	/*Task ID
 	  Required: true
 	  In: path
 	*/
 	TaskID int64
+
 	/*The ID of the webhook policy
 	  Required: true
 	  In: path
@@ -157,7 +161,7 @@ func (o *GetLogsOfWebhookTaskParams) bindXRequestID(rawData []string, hasKey boo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetLogsOfWebhookTaskParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -6,6 +6,7 @@ package replication
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewStartReplicationParams() StartReplicationParams {
 //
 // swagger:parameters startReplication
 type StartReplicationParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type StartReplicationParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of policy that the execution belongs to
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *StartReplicationParams) BindRequest(r *http.Request, route *middleware.
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.StartReplicationExecution
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("execution", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("execution", "body", "", err))
@@ -114,7 +117,7 @@ func (o *StartReplicationParams) bindXRequestID(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *StartReplicationParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

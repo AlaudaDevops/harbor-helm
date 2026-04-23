@@ -28,7 +28,6 @@ func NewGetPurgeJobParams() GetPurgeJobParams {
 //
 // swagger:parameters getPurgeJob
 type GetPurgeJobParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetPurgeJobParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the purge log
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetPurgeJobParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetPurgeJobParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

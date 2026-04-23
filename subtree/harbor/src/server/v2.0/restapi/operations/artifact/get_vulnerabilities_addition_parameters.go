@@ -34,7 +34,6 @@ func NewGetVulnerabilitiesAdditionParams() GetVulnerabilitiesAdditionParams {
 //
 // swagger:parameters getVulnerabilitiesAddition
 type GetVulnerabilitiesAdditionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,21 +43,25 @@ type GetVulnerabilitiesAdditionParams struct {
 	  Default: "application/vnd.security.vulnerability.report; version=1.1, application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"
 	*/
 	XAcceptVulnerabilities *string
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
@@ -142,7 +145,7 @@ func (o *GetVulnerabilitiesAdditionParams) bindXRequestID(rawData []string, hasK
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetVulnerabilitiesAdditionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

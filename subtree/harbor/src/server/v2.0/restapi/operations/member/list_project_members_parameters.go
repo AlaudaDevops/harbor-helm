@@ -43,7 +43,6 @@ func NewListProjectMembersParams() ListProjectMembersParams {
 //
 // swagger:parameters listProjectMembers
 type ListProjectMembersParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -52,26 +51,31 @@ type ListProjectMembersParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The entity name to search.
 	  In: query
 	*/
 	Entityname *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
 	  Default: 10
 	*/
 	PageSize *int64
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -87,7 +91,6 @@ func (o *ListProjectMembersParams) BindRequest(r *http.Request, route *middlewar
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXIsResourceName(r.Header[http.CanonicalHeaderKey("X-Is-Resource-Name")], true, route.Formats); err != nil {
@@ -167,7 +170,7 @@ func (o *ListProjectMembersParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListProjectMembersParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -247,7 +250,7 @@ func (o *ListProjectMembersParams) bindPageSize(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *ListProjectMembersParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

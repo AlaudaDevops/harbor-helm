@@ -12,16 +12,16 @@ import (
 )
 
 // ListLabelsHandlerFunc turns a function with the right signature into a list labels handler
-type ListLabelsHandlerFunc func(ListLabelsParams, interface{}) middleware.Responder
+type ListLabelsHandlerFunc func(ListLabelsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListLabelsHandlerFunc) Handle(params ListLabelsParams, principal interface{}) middleware.Responder {
+func (fn ListLabelsHandlerFunc) Handle(params ListLabelsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListLabelsHandler interface for that can handle valid list labels params
 type ListLabelsHandler interface {
-	Handle(ListLabelsParams, interface{}) middleware.Responder
+	Handle(ListLabelsParams, any) middleware.Responder
 }
 
 // NewListLabels creates a new http.Handler for the list labels operation
@@ -55,9 +55,9 @@ func (o *ListLabels) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListLabels) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

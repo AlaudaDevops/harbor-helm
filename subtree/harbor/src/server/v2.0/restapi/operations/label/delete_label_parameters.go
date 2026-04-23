@@ -28,7 +28,6 @@ func NewDeleteLabelParams() DeleteLabelParams {
 //
 // swagger:parameters DeleteLabel
 type DeleteLabelParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type DeleteLabelParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Label ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *DeleteLabelParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteLabelParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

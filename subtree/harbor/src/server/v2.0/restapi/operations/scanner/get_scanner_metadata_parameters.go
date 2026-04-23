@@ -27,7 +27,6 @@ func NewGetScannerMetadataParams() GetScannerMetadataParams {
 //
 // swagger:parameters getScannerMetadata
 type GetScannerMetadataParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,6 +35,7 @@ type GetScannerMetadataParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The scanner registration identifier.
 	  Required: true
 	  In: path
@@ -87,7 +87,7 @@ func (o *GetScannerMetadataParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetScannerMetadataParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

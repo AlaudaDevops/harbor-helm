@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateRetentionHandlerFunc turns a function with the right signature into a update retention handler
-type UpdateRetentionHandlerFunc func(UpdateRetentionParams, interface{}) middleware.Responder
+type UpdateRetentionHandlerFunc func(UpdateRetentionParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateRetentionHandlerFunc) Handle(params UpdateRetentionParams, principal interface{}) middleware.Responder {
+func (fn UpdateRetentionHandlerFunc) Handle(params UpdateRetentionParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateRetentionHandler interface for that can handle valid update retention params
 type UpdateRetentionHandler interface {
-	Handle(UpdateRetentionParams, interface{}) middleware.Responder
+	Handle(UpdateRetentionParams, any) middleware.Responder
 }
 
 // NewUpdateRetention creates a new http.Handler for the update retention operation
@@ -55,9 +55,9 @@ func (o *UpdateRetention) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateRetention) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

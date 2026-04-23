@@ -12,16 +12,16 @@ import (
 )
 
 // GetPurgeHistoryHandlerFunc turns a function with the right signature into a get purge history handler
-type GetPurgeHistoryHandlerFunc func(GetPurgeHistoryParams, interface{}) middleware.Responder
+type GetPurgeHistoryHandlerFunc func(GetPurgeHistoryParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetPurgeHistoryHandlerFunc) Handle(params GetPurgeHistoryParams, principal interface{}) middleware.Responder {
+func (fn GetPurgeHistoryHandlerFunc) Handle(params GetPurgeHistoryParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetPurgeHistoryHandler interface for that can handle valid get purge history params
 type GetPurgeHistoryHandler interface {
-	Handle(GetPurgeHistoryParams, interface{}) middleware.Responder
+	Handle(GetPurgeHistoryParams, any) middleware.Responder
 }
 
 // NewGetPurgeHistory creates a new http.Handler for the get purge history operation
@@ -55,9 +55,9 @@ func (o *GetPurgeHistory) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetPurgeHistory) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

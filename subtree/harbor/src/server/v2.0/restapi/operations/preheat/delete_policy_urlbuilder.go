@@ -45,14 +45,14 @@ func (o *DeletePolicyURL) Build() (*url.URL, error) {
 
 	preheatPolicyName := o.PreheatPolicyName
 	if preheatPolicyName != "" {
-		_path = strings.Replace(_path, "{preheat_policy_name}", preheatPolicyName, -1)
+		_path = strings.ReplaceAll(_path, "{preheat_policy_name}", preheatPolicyName)
 	} else {
 		return nil, errors.New("preheatPolicyName is required on DeletePolicyURL")
 	}
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on DeletePolicyURL")
 	}

@@ -12,16 +12,16 @@ import (
 )
 
 // CreateUserHandlerFunc turns a function with the right signature into a create user handler
-type CreateUserHandlerFunc func(CreateUserParams, interface{}) middleware.Responder
+type CreateUserHandlerFunc func(CreateUserParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateUserHandlerFunc) Handle(params CreateUserParams, principal interface{}) middleware.Responder {
+func (fn CreateUserHandlerFunc) Handle(params CreateUserParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateUserHandler interface for that can handle valid create user params
 type CreateUserHandler interface {
-	Handle(CreateUserParams, interface{}) middleware.Responder
+	Handle(CreateUserParams, any) middleware.Responder
 }
 
 // NewCreateUser creates a new http.Handler for the create user operation
@@ -55,9 +55,9 @@ func (o *CreateUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

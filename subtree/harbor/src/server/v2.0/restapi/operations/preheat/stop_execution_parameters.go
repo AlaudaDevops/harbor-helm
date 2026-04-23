@@ -6,6 +6,7 @@ package preheat
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewStopExecutionParams() StopExecutionParams {
 //
 // swagger:parameters StopExecution
 type StopExecutionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,21 +41,25 @@ type StopExecutionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The data of execution
 	  Required: true
 	  In: body
 	*/
 	Execution *models.Execution
+
 	/*Execution ID
 	  Required: true
 	  In: path
 	*/
 	ExecutionID int64
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -77,10 +81,12 @@ func (o *StopExecutionParams) BindRequest(r *http.Request, route *middleware.Mat
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.Execution
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("execution", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("execution", "body", "", err))
@@ -145,7 +151,7 @@ func (o *StopExecutionParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *StopExecutionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

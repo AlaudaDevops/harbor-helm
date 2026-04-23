@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -59,11 +60,15 @@ func (m *SupportedWebhookEventTypes) validateEventType(formats strfmt.Registry) 
 	for i := 0; i < len(m.EventType); i++ {
 
 		if err := m.EventType[i].Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("event_type" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("event_type" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -80,11 +85,15 @@ func (m *SupportedWebhookEventTypes) validateNotifyType(formats strfmt.Registry)
 	for i := 0; i < len(m.NotifyType); i++ {
 
 		if err := m.NotifyType[i].Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("notify_type" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("notify_type" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -105,11 +114,15 @@ func (m *SupportedWebhookEventTypes) validatePayloadFormats(formats strfmt.Regis
 
 		if m.PayloadFormats[i] != nil {
 			if err := m.PayloadFormats[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("payload_formats" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("payload_formats" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -150,11 +163,15 @@ func (m *SupportedWebhookEventTypes) contextValidateEventType(ctx context.Contex
 		}
 
 		if err := m.EventType[i].ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("event_type" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("event_type" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -172,11 +189,15 @@ func (m *SupportedWebhookEventTypes) contextValidateNotifyType(ctx context.Conte
 		}
 
 		if err := m.NotifyType[i].ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("notify_type" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("notify_type" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -196,11 +217,15 @@ func (m *SupportedWebhookEventTypes) contextValidatePayloadFormats(ctx context.C
 			}
 
 			if err := m.PayloadFormats[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("payload_formats" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("payload_formats" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

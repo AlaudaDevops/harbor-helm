@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -60,11 +61,15 @@ func (m *ScannerAdapterMetadata) validateCapabilities(formats strfmt.Registry) e
 
 		if m.Capabilities[i] != nil {
 			if err := m.Capabilities[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("capabilities" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("capabilities" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -81,11 +86,15 @@ func (m *ScannerAdapterMetadata) validateScanner(formats strfmt.Registry) error 
 
 	if m.Scanner != nil {
 		if err := m.Scanner.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner")
 			}
+
 			return err
 		}
 	}
@@ -122,11 +131,15 @@ func (m *ScannerAdapterMetadata) contextValidateCapabilities(ctx context.Context
 			}
 
 			if err := m.Capabilities[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("capabilities" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("capabilities" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -145,11 +158,15 @@ func (m *ScannerAdapterMetadata) contextValidateScanner(ctx context.Context, for
 		}
 
 		if err := m.Scanner.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner")
 			}
+
 			return err
 		}
 	}

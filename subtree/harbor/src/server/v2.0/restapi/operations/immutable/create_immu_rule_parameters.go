@@ -6,6 +6,7 @@ package immutable
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -39,7 +40,6 @@ func NewCreateImmuRuleParams() CreateImmuRuleParams {
 //
 // swagger:parameters CreateImmuRule
 type CreateImmuRuleParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,16 +48,19 @@ type CreateImmuRuleParams struct {
 	  In: body
 	*/
 	ImmutableRule *models.ImmutableRule
+
 	/*The flag to indicate whether the parameter which supports both name and id in the path is the name of the resource. When the X-Is-Resource-Name is false and the parameter can be converted to an integer, the parameter will be as an id, otherwise, it will be as a name.
 	  In: header
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -75,10 +78,12 @@ func (o *CreateImmuRuleParams) BindRequest(r *http.Request, route *middleware.Ma
 	o.HTTPRequest = r
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ImmutableRule
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("immutableRule", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("immutableRule", "body", "", err))
@@ -164,7 +169,7 @@ func (o *CreateImmuRuleParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreateImmuRuleParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

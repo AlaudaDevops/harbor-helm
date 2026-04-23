@@ -6,6 +6,7 @@ package scanner
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewSetScannerAsDefaultParams() SetScannerAsDefaultParams {
 //
 // swagger:parameters setScannerAsDefault
 type SetScannerAsDefaultParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +40,13 @@ type SetScannerAsDefaultParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*
 	  Required: true
 	  In: body
 	*/
 	Payload *models.IsDefault
+
 	/*The scanner registration identifier.
 	  Required: true
 	  In: path
@@ -66,10 +68,12 @@ func (o *SetScannerAsDefaultParams) BindRequest(r *http.Request, route *middlewa
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.IsDefault
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("payload", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("payload", "body", "", err))
@@ -124,7 +128,7 @@ func (o *SetScannerAsDefaultParams) bindXRequestID(rawData []string, hasKey bool
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SetScannerAsDefaultParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

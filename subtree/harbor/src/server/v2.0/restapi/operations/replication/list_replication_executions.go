@@ -12,16 +12,16 @@ import (
 )
 
 // ListReplicationExecutionsHandlerFunc turns a function with the right signature into a list replication executions handler
-type ListReplicationExecutionsHandlerFunc func(ListReplicationExecutionsParams, interface{}) middleware.Responder
+type ListReplicationExecutionsHandlerFunc func(ListReplicationExecutionsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListReplicationExecutionsHandlerFunc) Handle(params ListReplicationExecutionsParams, principal interface{}) middleware.Responder {
+func (fn ListReplicationExecutionsHandlerFunc) Handle(params ListReplicationExecutionsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListReplicationExecutionsHandler interface for that can handle valid list replication executions params
 type ListReplicationExecutionsHandler interface {
-	Handle(ListReplicationExecutionsParams, interface{}) middleware.Responder
+	Handle(ListReplicationExecutionsParams, any) middleware.Responder
 }
 
 // NewListReplicationExecutions creates a new http.Handler for the list replication executions operation
@@ -55,9 +55,9 @@ func (o *ListReplicationExecutions) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListReplicationExecutions) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

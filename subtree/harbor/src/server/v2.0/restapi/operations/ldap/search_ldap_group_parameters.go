@@ -28,7 +28,6 @@ func NewSearchLdapGroupParams() SearchLdapGroupParams {
 //
 // swagger:parameters searchLdapGroup
 type SearchLdapGroupParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,10 +36,12 @@ type SearchLdapGroupParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The LDAP group DN
 	  In: query
 	*/
 	Groupdn *string
+
 	/*Ldap group name
 	  In: query
 	*/
@@ -55,7 +56,6 @@ func (o *SearchLdapGroupParams) BindRequest(r *http.Request, route *middleware.M
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -98,7 +98,7 @@ func (o *SearchLdapGroupParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SearchLdapGroupParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

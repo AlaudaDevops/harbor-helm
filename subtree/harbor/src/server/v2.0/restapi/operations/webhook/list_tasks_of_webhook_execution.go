@@ -12,16 +12,16 @@ import (
 )
 
 // ListTasksOfWebhookExecutionHandlerFunc turns a function with the right signature into a list tasks of webhook execution handler
-type ListTasksOfWebhookExecutionHandlerFunc func(ListTasksOfWebhookExecutionParams, interface{}) middleware.Responder
+type ListTasksOfWebhookExecutionHandlerFunc func(ListTasksOfWebhookExecutionParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListTasksOfWebhookExecutionHandlerFunc) Handle(params ListTasksOfWebhookExecutionParams, principal interface{}) middleware.Responder {
+func (fn ListTasksOfWebhookExecutionHandlerFunc) Handle(params ListTasksOfWebhookExecutionParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListTasksOfWebhookExecutionHandler interface for that can handle valid list tasks of webhook execution params
 type ListTasksOfWebhookExecutionHandler interface {
-	Handle(ListTasksOfWebhookExecutionParams, interface{}) middleware.Responder
+	Handle(ListTasksOfWebhookExecutionParams, any) middleware.Responder
 }
 
 // NewListTasksOfWebhookExecution creates a new http.Handler for the list tasks of webhook execution operation
@@ -55,9 +55,9 @@ func (o *ListTasksOfWebhookExecution) ServeHTTP(rw http.ResponseWriter, r *http.
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListTasksOfWebhookExecution) ServeHTTP(rw http.ResponseWriter, r *http.
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

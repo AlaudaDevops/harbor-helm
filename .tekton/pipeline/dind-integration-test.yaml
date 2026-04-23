@@ -222,7 +222,7 @@ spec:
   - name: calculate-commit-sha
     runAfter:
     - git-clone
-    timeout: 10m
+    timeout: 30m
     retries: 1
     params:
     - name: image

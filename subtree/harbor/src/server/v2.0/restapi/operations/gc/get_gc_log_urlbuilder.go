@@ -46,7 +46,7 @@ func (o *GetGCLogURL) Build() (*url.URL, error) {
 
 	gCID := swag.FormatInt64(o.GCID)
 	if gCID != "" {
-		_path = strings.Replace(_path, "{gc_id}", gCID, -1)
+		_path = strings.ReplaceAll(_path, "{gc_id}", gCID)
 	} else {
 		return nil, errors.New("gcId is required on GetGCLogURL")
 	}

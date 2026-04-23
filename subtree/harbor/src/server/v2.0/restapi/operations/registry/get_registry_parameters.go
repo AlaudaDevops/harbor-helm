@@ -28,7 +28,6 @@ func NewGetRegistryParams() GetRegistryParams {
 //
 // swagger:parameters getRegistry
 type GetRegistryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetRegistryParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Registry ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetRegistryParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetRegistryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

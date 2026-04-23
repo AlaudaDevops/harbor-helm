@@ -12,16 +12,16 @@ import (
 )
 
 // ImportLdapUserHandlerFunc turns a function with the right signature into a import ldap user handler
-type ImportLdapUserHandlerFunc func(ImportLdapUserParams, interface{}) middleware.Responder
+type ImportLdapUserHandlerFunc func(ImportLdapUserParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ImportLdapUserHandlerFunc) Handle(params ImportLdapUserParams, principal interface{}) middleware.Responder {
+func (fn ImportLdapUserHandlerFunc) Handle(params ImportLdapUserParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ImportLdapUserHandler interface for that can handle valid import ldap user params
 type ImportLdapUserHandler interface {
-	Handle(ImportLdapUserParams, interface{}) middleware.Responder
+	Handle(ImportLdapUserParams, any) middleware.Responder
 }
 
 // NewImportLdapUser creates a new http.Handler for the import ldap user operation
@@ -55,9 +55,9 @@ func (o *ImportLdapUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ImportLdapUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

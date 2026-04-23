@@ -30,7 +30,6 @@ func NewScanArtifactParams() ScanArtifactParams {
 //
 // swagger:parameters scanArtifact
 type ScanArtifactParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -39,21 +38,25 @@ type ScanArtifactParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
 	*/
 	RepositoryName string
+
 	/*
 	  In: body
 	*/
@@ -89,7 +92,9 @@ func (o *ScanArtifactParams) BindRequest(r *http.Request, route *middleware.Matc
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ScanType
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("scanType", "body", "", err))
@@ -136,7 +141,7 @@ func (o *ScanArtifactParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ScanArtifactParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

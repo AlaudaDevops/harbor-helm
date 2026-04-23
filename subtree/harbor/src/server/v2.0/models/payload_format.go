@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -52,11 +53,15 @@ func (m *PayloadFormat) validateFormats(formats strfmt.Registry) error {
 	for i := 0; i < len(m.Formats); i++ {
 
 		if err := m.Formats[i].Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("formats" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("formats" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -71,11 +76,15 @@ func (m *PayloadFormat) validateNotifyType(formats strfmt.Registry) error {
 	}
 
 	if err := m.NotifyType.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("notify_type")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("notify_type")
 		}
+
 		return err
 	}
 
@@ -109,11 +118,15 @@ func (m *PayloadFormat) contextValidateFormats(ctx context.Context, formats strf
 		}
 
 		if err := m.Formats[i].ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("formats" + "." + strconv.Itoa(i))
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("formats" + "." + strconv.Itoa(i))
 			}
+
 			return err
 		}
 
@@ -129,11 +142,15 @@ func (m *PayloadFormat) contextValidateNotifyType(ctx context.Context, formats s
 	}
 
 	if err := m.NotifyType.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("notify_type")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("notify_type")
 		}
+
 		return err
 	}
 

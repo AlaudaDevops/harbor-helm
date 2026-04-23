@@ -48,7 +48,7 @@ func (o *DownloadScanDataURL) Build() (*url.URL, error) {
 
 	executionID := swag.FormatInt64(o.ExecutionID)
 	if executionID != "" {
-		_path = strings.Replace(_path, "{execution_id}", executionID, -1)
+		_path = strings.ReplaceAll(_path, "{execution_id}", executionID)
 	} else {
 		return nil, errors.New("executionId is required on DownloadScanDataURL")
 	}

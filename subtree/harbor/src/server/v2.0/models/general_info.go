@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -92,11 +93,15 @@ func (m *GeneralInfo) validateAuthproxySettings(formats strfmt.Registry) error {
 
 	if m.AuthproxySettings != nil {
 		if err := m.AuthproxySettings.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("authproxy_settings")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("authproxy_settings")
 			}
+
 			return err
 		}
 	}
@@ -139,11 +144,15 @@ func (m *GeneralInfo) contextValidateAuthproxySettings(ctx context.Context, form
 		}
 
 		if err := m.AuthproxySettings.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("authproxy_settings")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("authproxy_settings")
 			}
+
 			return err
 		}
 	}

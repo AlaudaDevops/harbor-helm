@@ -12,16 +12,16 @@ import (
 )
 
 // GetSchedulePausedHandlerFunc turns a function with the right signature into a get schedule paused handler
-type GetSchedulePausedHandlerFunc func(GetSchedulePausedParams, interface{}) middleware.Responder
+type GetSchedulePausedHandlerFunc func(GetSchedulePausedParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetSchedulePausedHandlerFunc) Handle(params GetSchedulePausedParams, principal interface{}) middleware.Responder {
+func (fn GetSchedulePausedHandlerFunc) Handle(params GetSchedulePausedParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetSchedulePausedHandler interface for that can handle valid get schedule paused params
 type GetSchedulePausedHandler interface {
-	Handle(GetSchedulePausedParams, interface{}) middleware.Responder
+	Handle(GetSchedulePausedParams, any) middleware.Responder
 }
 
 // NewGetSchedulePaused creates a new http.Handler for the get schedule paused operation
@@ -53,9 +53,9 @@ func (o *GetSchedulePaused) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -64,6 +64,7 @@ func (o *GetSchedulePaused) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

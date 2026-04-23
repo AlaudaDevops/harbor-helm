@@ -44,7 +44,7 @@ func (o *StopRunningJobURL) Build() (*url.URL, error) {
 
 	jobID := o.JobID
 	if jobID != "" {
-		_path = strings.Replace(_path, "{job_id}", jobID, -1)
+		_path = strings.ReplaceAll(_path, "{job_id}", jobID)
 	} else {
 		return nil, errors.New("jobId is required on StopRunningJobURL")
 	}

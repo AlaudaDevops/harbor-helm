@@ -6,6 +6,7 @@ package preheat
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewCreatePolicyParams() CreatePolicyParams {
 //
 // swagger:parameters CreatePolicy
 type CreatePolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +40,13 @@ type CreatePolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The policy schema info
 	  Required: true
 	  In: body
 	*/
 	Policy *models.PreheatPolicy
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -66,10 +68,12 @@ func (o *CreatePolicyParams) BindRequest(r *http.Request, route *middleware.Matc
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.PreheatPolicy
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("policy", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("policy", "body", "", err))
@@ -124,7 +128,7 @@ func (o *CreatePolicyParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreatePolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

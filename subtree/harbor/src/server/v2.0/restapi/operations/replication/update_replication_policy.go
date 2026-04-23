@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateReplicationPolicyHandlerFunc turns a function with the right signature into a update replication policy handler
-type UpdateReplicationPolicyHandlerFunc func(UpdateReplicationPolicyParams, interface{}) middleware.Responder
+type UpdateReplicationPolicyHandlerFunc func(UpdateReplicationPolicyParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateReplicationPolicyHandlerFunc) Handle(params UpdateReplicationPolicyParams, principal interface{}) middleware.Responder {
+func (fn UpdateReplicationPolicyHandlerFunc) Handle(params UpdateReplicationPolicyParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateReplicationPolicyHandler interface for that can handle valid update replication policy params
 type UpdateReplicationPolicyHandler interface {
-	Handle(UpdateReplicationPolicyParams, interface{}) middleware.Responder
+	Handle(UpdateReplicationPolicyParams, any) middleware.Responder
 }
 
 // NewUpdateReplicationPolicy creates a new http.Handler for the update replication policy operation
@@ -55,9 +55,9 @@ func (o *UpdateReplicationPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateReplicationPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Requ
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

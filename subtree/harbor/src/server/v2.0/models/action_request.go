@@ -39,7 +39,7 @@ func (m *ActionRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var actionRequestTypeActionPropEnum []interface{}
+var actionRequestTypeActionPropEnum []any
 
 func init() {
 	var res []string

@@ -6,6 +6,7 @@ package scan_data_export
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewExportScanDataParams() ExportScanDataParams {
 //
 // swagger:parameters exportScanData
 type ExportScanDataParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +40,13 @@ type ExportScanDataParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The type of scan data to export
 	  Required: true
 	  In: header
 	*/
 	XScanDataType string
+
 	/*The criteria for the export
 	  Required: true
 	  In: body
@@ -70,10 +72,12 @@ func (o *ExportScanDataParams) BindRequest(r *http.Request, route *middleware.Ma
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ScanDataExportRequest
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("criteria", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("criteria", "body", "", err))
@@ -123,7 +127,7 @@ func (o *ExportScanDataParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ExportScanDataParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -27,7 +27,6 @@ func NewListProvidersUnderProjectParams() ListProvidersUnderProjectParams {
 //
 // swagger:parameters ListProvidersUnderProject
 type ListProvidersUnderProjectParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,6 +35,7 @@ type ListProvidersUnderProjectParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -87,7 +87,7 @@ func (o *ListProvidersUnderProjectParams) bindXRequestID(rawData []string, hasKe
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListProvidersUnderProjectParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

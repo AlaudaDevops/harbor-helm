@@ -12,16 +12,16 @@ import (
 )
 
 // DeletePolicyHandlerFunc turns a function with the right signature into a delete policy handler
-type DeletePolicyHandlerFunc func(DeletePolicyParams, interface{}) middleware.Responder
+type DeletePolicyHandlerFunc func(DeletePolicyParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeletePolicyHandlerFunc) Handle(params DeletePolicyParams, principal interface{}) middleware.Responder {
+func (fn DeletePolicyHandlerFunc) Handle(params DeletePolicyParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeletePolicyHandler interface for that can handle valid delete policy params
 type DeletePolicyHandler interface {
-	Handle(DeletePolicyParams, interface{}) middleware.Responder
+	Handle(DeletePolicyParams, any) middleware.Responder
 }
 
 // NewDeletePolicy creates a new http.Handler for the delete policy operation
@@ -55,9 +55,9 @@ func (o *DeletePolicy) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeletePolicy) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

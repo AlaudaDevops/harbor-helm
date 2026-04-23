@@ -44,7 +44,7 @@ func (o *ListProvidersUnderProjectURL) Build() (*url.URL, error) {
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on ListProvidersUnderProjectURL")
 	}

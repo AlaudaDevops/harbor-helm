@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteArtifactHandlerFunc turns a function with the right signature into a delete artifact handler
-type DeleteArtifactHandlerFunc func(DeleteArtifactParams, interface{}) middleware.Responder
+type DeleteArtifactHandlerFunc func(DeleteArtifactParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteArtifactHandlerFunc) Handle(params DeleteArtifactParams, principal interface{}) middleware.Responder {
+func (fn DeleteArtifactHandlerFunc) Handle(params DeleteArtifactParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteArtifactHandler interface for that can handle valid delete artifact params
 type DeleteArtifactHandler interface {
-	Handle(DeleteArtifactParams, interface{}) middleware.Responder
+	Handle(DeleteArtifactParams, any) middleware.Responder
 }
 
 // NewDeleteArtifact creates a new http.Handler for the delete artifact operation
@@ -55,9 +55,9 @@ func (o *DeleteArtifact) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteArtifact) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

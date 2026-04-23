@@ -6,6 +6,7 @@ package preheat
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewManualPreheatParams() ManualPreheatParams {
 //
 // swagger:parameters ManualPreheat
 type ManualPreheatParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,16 +40,19 @@ type ManualPreheatParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The policy schema info
 	  Required: true
 	  In: body
 	*/
 	Policy *models.PreheatPolicy
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -71,10 +74,12 @@ func (o *ManualPreheatParams) BindRequest(r *http.Request, route *middleware.Mat
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.PreheatPolicy
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("policy", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("policy", "body", "", err))
@@ -134,7 +139,7 @@ func (o *ManualPreheatParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ManualPreheatParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

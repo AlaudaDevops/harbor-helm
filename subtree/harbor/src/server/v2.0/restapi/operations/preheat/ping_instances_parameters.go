@@ -6,6 +6,7 @@ package preheat
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewPingInstancesParams() PingInstancesParams {
 //
 // swagger:parameters PingInstances
 type PingInstancesParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type PingInstancesParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The JSON object of instance.
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *PingInstancesParams) BindRequest(r *http.Request, route *middleware.Mat
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.Instance
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("instance", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("instance", "body", "", err))
@@ -114,7 +117,7 @@ func (o *PingInstancesParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PingInstancesParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -12,16 +12,16 @@ import (
 )
 
 // ListTasksHandlerFunc turns a function with the right signature into a list tasks handler
-type ListTasksHandlerFunc func(ListTasksParams, interface{}) middleware.Responder
+type ListTasksHandlerFunc func(ListTasksParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListTasksHandlerFunc) Handle(params ListTasksParams, principal interface{}) middleware.Responder {
+func (fn ListTasksHandlerFunc) Handle(params ListTasksParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListTasksHandler interface for that can handle valid list tasks params
 type ListTasksHandler interface {
-	Handle(ListTasksParams, interface{}) middleware.Responder
+	Handle(ListTasksParams, any) middleware.Responder
 }
 
 // NewListTasks creates a new http.Handler for the list tasks operation
@@ -55,9 +55,9 @@ func (o *ListTasks) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListTasks) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

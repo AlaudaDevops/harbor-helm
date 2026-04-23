@@ -12,16 +12,16 @@ import (
 )
 
 // ExportScanDataHandlerFunc turns a function with the right signature into a export scan data handler
-type ExportScanDataHandlerFunc func(ExportScanDataParams, interface{}) middleware.Responder
+type ExportScanDataHandlerFunc func(ExportScanDataParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ExportScanDataHandlerFunc) Handle(params ExportScanDataParams, principal interface{}) middleware.Responder {
+func (fn ExportScanDataHandlerFunc) Handle(params ExportScanDataParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ExportScanDataHandler interface for that can handle valid export scan data params
 type ExportScanDataHandler interface {
-	Handle(ExportScanDataParams, interface{}) middleware.Responder
+	Handle(ExportScanDataParams, any) middleware.Responder
 }
 
 // NewExportScanData creates a new http.Handler for the export scan data operation
@@ -55,9 +55,9 @@ func (o *ExportScanData) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ExportScanData) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

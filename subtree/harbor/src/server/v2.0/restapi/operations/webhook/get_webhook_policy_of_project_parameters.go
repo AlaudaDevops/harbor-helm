@@ -35,7 +35,6 @@ func NewGetWebhookPolicyOfProjectParams() GetWebhookPolicyOfProjectParams {
 //
 // swagger:parameters GetWebhookPolicyOfProject
 type GetWebhookPolicyOfProjectParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,16 +43,19 @@ type GetWebhookPolicyOfProjectParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectNameOrID string
+
 	/*The ID of the webhook policy
 	  Required: true
 	  In: path
@@ -137,7 +139,7 @@ func (o *GetWebhookPolicyOfProjectParams) bindXRequestID(rawData []string, hasKe
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetWebhookPolicyOfProjectParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

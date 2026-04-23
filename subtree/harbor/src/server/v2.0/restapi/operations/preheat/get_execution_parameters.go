@@ -28,7 +28,6 @@ func NewGetExecutionParams() GetExecutionParams {
 //
 // swagger:parameters GetExecution
 type GetExecutionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,16 +36,19 @@ type GetExecutionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Execution ID
 	  Required: true
 	  In: path
 	*/
 	ExecutionID int64
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -108,7 +110,7 @@ func (o *GetExecutionParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetExecutionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

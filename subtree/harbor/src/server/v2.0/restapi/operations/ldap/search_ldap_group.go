@@ -12,16 +12,16 @@ import (
 )
 
 // SearchLdapGroupHandlerFunc turns a function with the right signature into a search ldap group handler
-type SearchLdapGroupHandlerFunc func(SearchLdapGroupParams, interface{}) middleware.Responder
+type SearchLdapGroupHandlerFunc func(SearchLdapGroupParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn SearchLdapGroupHandlerFunc) Handle(params SearchLdapGroupParams, principal interface{}) middleware.Responder {
+func (fn SearchLdapGroupHandlerFunc) Handle(params SearchLdapGroupParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // SearchLdapGroupHandler interface for that can handle valid search ldap group params
 type SearchLdapGroupHandler interface {
-	Handle(SearchLdapGroupParams, interface{}) middleware.Responder
+	Handle(SearchLdapGroupParams, any) middleware.Responder
 }
 
 // NewSearchLdapGroup creates a new http.Handler for the search ldap group operation
@@ -55,9 +55,9 @@ func (o *SearchLdapGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *SearchLdapGroup) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

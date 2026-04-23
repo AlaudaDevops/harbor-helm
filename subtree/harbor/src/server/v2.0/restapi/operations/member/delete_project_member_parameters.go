@@ -35,7 +35,6 @@ func NewDeleteProjectMemberParams() DeleteProjectMemberParams {
 //
 // swagger:parameters deleteProjectMember
 type DeleteProjectMemberParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,16 +43,19 @@ type DeleteProjectMemberParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Member ID.
 	  Required: true
 	  In: path
 	*/
 	Mid int64
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -137,7 +139,7 @@ func (o *DeleteProjectMemberParams) bindXRequestID(rawData []string, hasKey bool
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteProjectMemberParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

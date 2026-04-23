@@ -6,6 +6,7 @@ package scan
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewStopScanArtifactParams() StopScanArtifactParams {
 //
 // swagger:parameters stopScanArtifact
 type StopScanArtifactParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,21 +40,25 @@ type StopScanArtifactParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
 	*/
 	RepositoryName string
+
 	/*The scan type: Vulnerabilities, SBOM
 	  Required: true
 	  In: body
@@ -91,10 +95,12 @@ func (o *StopScanArtifactParams) BindRequest(r *http.Request, route *middleware.
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ScanType
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("scanType", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("scanType", "body", "", err))
@@ -144,7 +150,7 @@ func (o *StopScanArtifactParams) bindXRequestID(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *StopScanArtifactParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

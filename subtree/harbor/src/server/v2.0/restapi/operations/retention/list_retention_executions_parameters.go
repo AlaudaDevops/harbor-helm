@@ -29,7 +29,6 @@ func NewListRetentionExecutionsParams() ListRetentionExecutionsParams {
 //
 // swagger:parameters listRetentionExecutions
 type ListRetentionExecutionsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -38,15 +37,18 @@ type ListRetentionExecutionsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Retention ID.
 	  Required: true
 	  In: path
 	*/
 	ID int64
+
 	/*The page number.
 	  In: query
 	*/
 	Page *int64
+
 	/*The size of per page.
 	  In: query
 	*/
@@ -61,7 +63,6 @@ func (o *ListRetentionExecutionsParams) BindRequest(r *http.Request, route *midd
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -109,7 +110,7 @@ func (o *ListRetentionExecutionsParams) bindXRequestID(rawData []string, hasKey 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListRetentionExecutionsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -6,6 +6,7 @@ package registry
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewPingRegistryParams() PingRegistryParams {
 //
 // swagger:parameters pingRegistry
 type PingRegistryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type PingRegistryParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The registry
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *PingRegistryParams) BindRequest(r *http.Request, route *middleware.Matc
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.RegistryPing
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("registry", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("registry", "body", "", err))
@@ -114,7 +117,7 @@ func (o *PingRegistryParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PingRegistryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

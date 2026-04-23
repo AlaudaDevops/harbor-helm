@@ -46,7 +46,7 @@ func (o *UpdateUserGroupURL) Build() (*url.URL, error) {
 
 	groupID := swag.FormatInt64(o.GroupID)
 	if groupID != "" {
-		_path = strings.Replace(_path, "{group_id}", groupID, -1)
+		_path = strings.ReplaceAll(_path, "{group_id}", groupID)
 	} else {
 		return nil, errors.New("groupId is required on UpdateUserGroupURL")
 	}

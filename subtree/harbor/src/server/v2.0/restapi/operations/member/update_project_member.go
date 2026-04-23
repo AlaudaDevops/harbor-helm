@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateProjectMemberHandlerFunc turns a function with the right signature into a update project member handler
-type UpdateProjectMemberHandlerFunc func(UpdateProjectMemberParams, interface{}) middleware.Responder
+type UpdateProjectMemberHandlerFunc func(UpdateProjectMemberParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateProjectMemberHandlerFunc) Handle(params UpdateProjectMemberParams, principal interface{}) middleware.Responder {
+func (fn UpdateProjectMemberHandlerFunc) Handle(params UpdateProjectMemberParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateProjectMemberHandler interface for that can handle valid update project member params
 type UpdateProjectMemberHandler interface {
-	Handle(UpdateProjectMemberParams, interface{}) middleware.Responder
+	Handle(UpdateProjectMemberParams, any) middleware.Responder
 }
 
 // NewUpdateProjectMember creates a new http.Handler for the update project member operation
@@ -55,9 +55,9 @@ func (o *UpdateProjectMember) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateProjectMember) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

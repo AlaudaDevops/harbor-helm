@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateInstanceHandlerFunc turns a function with the right signature into a update instance handler
-type UpdateInstanceHandlerFunc func(UpdateInstanceParams, interface{}) middleware.Responder
+type UpdateInstanceHandlerFunc func(UpdateInstanceParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateInstanceHandlerFunc) Handle(params UpdateInstanceParams, principal interface{}) middleware.Responder {
+func (fn UpdateInstanceHandlerFunc) Handle(params UpdateInstanceParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateInstanceHandler interface for that can handle valid update instance params
 type UpdateInstanceHandler interface {
-	Handle(UpdateInstanceParams, interface{}) middleware.Responder
+	Handle(UpdateInstanceParams, any) middleware.Responder
 }
 
 // NewUpdateInstance creates a new http.Handler for the update instance operation
@@ -55,9 +55,9 @@ func (o *UpdateInstance) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateInstance) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

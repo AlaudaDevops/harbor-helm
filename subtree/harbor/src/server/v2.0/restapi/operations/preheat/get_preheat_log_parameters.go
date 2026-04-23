@@ -28,7 +28,6 @@ func NewGetPreheatLogParams() GetPreheatLogParams {
 //
 // swagger:parameters GetPreheatLog
 type GetPreheatLogParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,21 +36,25 @@ type GetPreheatLogParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Execution ID
 	  Required: true
 	  In: path
 	*/
 	ExecutionID int64
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*Task ID
 	  Required: true
 	  In: path
@@ -118,7 +121,7 @@ func (o *GetPreheatLogParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetPreheatLogParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

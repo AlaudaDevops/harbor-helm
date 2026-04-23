@@ -6,6 +6,7 @@ package jobservice
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewActionPendingJobsParams() ActionPendingJobsParams {
 //
 // swagger:parameters actionPendingJobs
 type ActionPendingJobsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +40,13 @@ type ActionPendingJobsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*
 	  Required: true
 	  In: body
 	*/
 	ActionRequest *models.ActionRequest
+
 	/*The type of the job. 'all' stands for all job types
 	  Required: true
 	  In: path
@@ -66,10 +68,12 @@ func (o *ActionPendingJobsParams) BindRequest(r *http.Request, route *middleware
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ActionRequest
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("actionRequest", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("actionRequest", "body", "", err))
@@ -124,7 +128,7 @@ func (o *ActionPendingJobsParams) bindXRequestID(rawData []string, hasKey bool, 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ActionPendingJobsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

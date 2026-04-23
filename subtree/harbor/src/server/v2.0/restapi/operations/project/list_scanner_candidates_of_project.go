@@ -12,16 +12,16 @@ import (
 )
 
 // ListScannerCandidatesOfProjectHandlerFunc turns a function with the right signature into a list scanner candidates of project handler
-type ListScannerCandidatesOfProjectHandlerFunc func(ListScannerCandidatesOfProjectParams, interface{}) middleware.Responder
+type ListScannerCandidatesOfProjectHandlerFunc func(ListScannerCandidatesOfProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListScannerCandidatesOfProjectHandlerFunc) Handle(params ListScannerCandidatesOfProjectParams, principal interface{}) middleware.Responder {
+func (fn ListScannerCandidatesOfProjectHandlerFunc) Handle(params ListScannerCandidatesOfProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListScannerCandidatesOfProjectHandler interface for that can handle valid list scanner candidates of project params
 type ListScannerCandidatesOfProjectHandler interface {
-	Handle(ListScannerCandidatesOfProjectParams, interface{}) middleware.Responder
+	Handle(ListScannerCandidatesOfProjectParams, any) middleware.Responder
 }
 
 // NewListScannerCandidatesOfProject creates a new http.Handler for the list scanner candidates of project operation
@@ -55,9 +55,9 @@ func (o *ListScannerCandidatesOfProject) ServeHTTP(rw http.ResponseWriter, r *ht
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListScannerCandidatesOfProject) ServeHTTP(rw http.ResponseWriter, r *ht
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

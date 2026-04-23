@@ -12,16 +12,16 @@ import (
 )
 
 // ListWebhookJobsHandlerFunc turns a function with the right signature into a list webhook jobs handler
-type ListWebhookJobsHandlerFunc func(ListWebhookJobsParams, interface{}) middleware.Responder
+type ListWebhookJobsHandlerFunc func(ListWebhookJobsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListWebhookJobsHandlerFunc) Handle(params ListWebhookJobsParams, principal interface{}) middleware.Responder {
+func (fn ListWebhookJobsHandlerFunc) Handle(params ListWebhookJobsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListWebhookJobsHandler interface for that can handle valid list webhook jobs params
 type ListWebhookJobsHandler interface {
-	Handle(ListWebhookJobsParams, interface{}) middleware.Responder
+	Handle(ListWebhookJobsParams, any) middleware.Responder
 }
 
 // NewListWebhookJobs creates a new http.Handler for the list webhook jobs operation
@@ -55,9 +55,9 @@ func (o *ListWebhookJobs) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListWebhookJobs) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

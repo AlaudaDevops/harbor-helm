@@ -6,6 +6,7 @@ package robot
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewRefreshSecParams() RefreshSecParams {
 //
 // swagger:parameters RefreshSec
 type RefreshSecParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type RefreshSecParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The JSON object of a robot account.
 	  Required: true
 	  In: body
 	*/
 	RobotSec *models.RobotSec
+
 	/*Robot ID
 	  Required: true
 	  In: path
@@ -67,10 +69,12 @@ func (o *RefreshSecParams) BindRequest(r *http.Request, route *middleware.Matche
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.RobotSec
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("robotSec", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("robotSec", "body", "", err))
@@ -125,7 +129,7 @@ func (o *RefreshSecParams) bindXRequestID(rawData []string, hasKey bool, formats
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *RefreshSecParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

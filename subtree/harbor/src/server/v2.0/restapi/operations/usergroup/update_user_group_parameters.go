@@ -31,7 +31,6 @@ func NewUpdateUserGroupParams() UpdateUserGroupParams {
 //
 // swagger:parameters updateUserGroup
 type UpdateUserGroupParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +39,13 @@ type UpdateUserGroupParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Group ID
 	  Required: true
 	  In: path
 	*/
 	GroupID int64
+
 	/*
 	  In: body
 	*/
@@ -70,7 +71,9 @@ func (o *UpdateUserGroupParams) BindRequest(r *http.Request, route *middleware.M
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.UserGroup
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("usergroup", "body", "", err))
@@ -117,7 +120,7 @@ func (o *UpdateUserGroupParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateUserGroupParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

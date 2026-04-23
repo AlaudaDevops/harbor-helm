@@ -12,16 +12,16 @@ import (
 )
 
 // ListRetentionTasksHandlerFunc turns a function with the right signature into a list retention tasks handler
-type ListRetentionTasksHandlerFunc func(ListRetentionTasksParams, interface{}) middleware.Responder
+type ListRetentionTasksHandlerFunc func(ListRetentionTasksParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListRetentionTasksHandlerFunc) Handle(params ListRetentionTasksParams, principal interface{}) middleware.Responder {
+func (fn ListRetentionTasksHandlerFunc) Handle(params ListRetentionTasksParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListRetentionTasksHandler interface for that can handle valid list retention tasks params
 type ListRetentionTasksHandler interface {
-	Handle(ListRetentionTasksParams, interface{}) middleware.Responder
+	Handle(ListRetentionTasksParams, any) middleware.Responder
 }
 
 // NewListRetentionTasks creates a new http.Handler for the list retention tasks operation
@@ -55,9 +55,9 @@ func (o *ListRetentionTasks) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListRetentionTasks) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

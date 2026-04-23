@@ -6,6 +6,7 @@ package scanner
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewUpdateScannerParams() UpdateScannerParams {
 //
 // swagger:parameters updateScanner
 type UpdateScannerParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,11 +40,13 @@ type UpdateScannerParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*A scanner registraiton to be updated.
 	  Required: true
 	  In: body
 	*/
 	Registration *models.ScannerRegistrationReq
+
 	/*The scanner registration identifier.
 	  Required: true
 	  In: path
@@ -66,10 +68,12 @@ func (o *UpdateScannerParams) BindRequest(r *http.Request, route *middleware.Mat
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ScannerRegistrationReq
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("registration", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("registration", "body", "", err))
@@ -124,7 +128,7 @@ func (o *UpdateScannerParams) bindXRequestID(rawData []string, hasKey bool, form
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateScannerParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

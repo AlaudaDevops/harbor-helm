@@ -12,16 +12,16 @@ import (
 )
 
 // GetScannerHandlerFunc turns a function with the right signature into a get scanner handler
-type GetScannerHandlerFunc func(GetScannerParams, interface{}) middleware.Responder
+type GetScannerHandlerFunc func(GetScannerParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetScannerHandlerFunc) Handle(params GetScannerParams, principal interface{}) middleware.Responder {
+func (fn GetScannerHandlerFunc) Handle(params GetScannerParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetScannerHandler interface for that can handle valid get scanner params
 type GetScannerHandler interface {
-	Handle(GetScannerParams, interface{}) middleware.Responder
+	Handle(GetScannerParams, any) middleware.Responder
 }
 
 // NewGetScanner creates a new http.Handler for the get scanner operation
@@ -55,9 +55,9 @@ func (o *GetScanner) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetScanner) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

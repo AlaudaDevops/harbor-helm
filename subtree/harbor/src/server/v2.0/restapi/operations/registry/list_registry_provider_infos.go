@@ -12,16 +12,16 @@ import (
 )
 
 // ListRegistryProviderInfosHandlerFunc turns a function with the right signature into a list registry provider infos handler
-type ListRegistryProviderInfosHandlerFunc func(ListRegistryProviderInfosParams, interface{}) middleware.Responder
+type ListRegistryProviderInfosHandlerFunc func(ListRegistryProviderInfosParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListRegistryProviderInfosHandlerFunc) Handle(params ListRegistryProviderInfosParams, principal interface{}) middleware.Responder {
+func (fn ListRegistryProviderInfosHandlerFunc) Handle(params ListRegistryProviderInfosParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListRegistryProviderInfosHandler interface for that can handle valid list registry provider infos params
 type ListRegistryProviderInfosHandler interface {
-	Handle(ListRegistryProviderInfosParams, interface{}) middleware.Responder
+	Handle(ListRegistryProviderInfosParams, any) middleware.Responder
 }
 
 // NewListRegistryProviderInfos creates a new http.Handler for the list registry provider infos operation
@@ -55,9 +55,9 @@ func (o *ListRegistryProviderInfos) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListRegistryProviderInfos) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

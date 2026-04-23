@@ -12,16 +12,16 @@ import (
 )
 
 // GetCertHandlerFunc turns a function with the right signature into a get cert handler
-type GetCertHandlerFunc func(GetCertParams, interface{}) middleware.Responder
+type GetCertHandlerFunc func(GetCertParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetCertHandlerFunc) Handle(params GetCertParams, principal interface{}) middleware.Responder {
+func (fn GetCertHandlerFunc) Handle(params GetCertParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetCertHandler interface for that can handle valid get cert params
 type GetCertHandler interface {
-	Handle(GetCertParams, interface{}) middleware.Responder
+	Handle(GetCertParams, any) middleware.Responder
 }
 
 // NewGetCert creates a new http.Handler for the get cert operation
@@ -55,9 +55,9 @@ func (o *GetCert) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetCert) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

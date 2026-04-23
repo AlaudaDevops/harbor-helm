@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -63,11 +64,15 @@ func (m *RetentionMetadata) validateScopeSelectors(formats strfmt.Registry) erro
 
 		if m.ScopeSelectors[i] != nil {
 			if err := m.ScopeSelectors[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("scope_selectors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("scope_selectors" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -89,11 +94,15 @@ func (m *RetentionMetadata) validateTagSelectors(formats strfmt.Registry) error 
 
 		if m.TagSelectors[i] != nil {
 			if err := m.TagSelectors[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("tag_selectors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("tag_selectors" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -115,11 +124,15 @@ func (m *RetentionMetadata) validateTemplates(formats strfmt.Registry) error {
 
 		if m.Templates[i] != nil {
 			if err := m.Templates[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("templates" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("templates" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -162,11 +175,15 @@ func (m *RetentionMetadata) contextValidateScopeSelectors(ctx context.Context, f
 			}
 
 			if err := m.ScopeSelectors[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("scope_selectors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("scope_selectors" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -187,11 +204,15 @@ func (m *RetentionMetadata) contextValidateTagSelectors(ctx context.Context, for
 			}
 
 			if err := m.TagSelectors[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("tag_selectors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("tag_selectors" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -212,11 +233,15 @@ func (m *RetentionMetadata) contextValidateTemplates(ctx context.Context, format
 			}
 
 			if err := m.Templates[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("templates" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("templates" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

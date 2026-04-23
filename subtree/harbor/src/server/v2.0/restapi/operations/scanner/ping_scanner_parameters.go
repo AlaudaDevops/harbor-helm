@@ -6,6 +6,7 @@ package scanner
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewPingScannerParams() PingScannerParams {
 //
 // swagger:parameters pingScanner
 type PingScannerParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type PingScannerParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*A scanner registration settings to be tested.
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *PingScannerParams) BindRequest(r *http.Request, route *middleware.Match
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ScannerRegistrationSettings
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("settings", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("settings", "body", "", err))
@@ -114,7 +117,7 @@ func (o *PingScannerParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *PingScannerParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

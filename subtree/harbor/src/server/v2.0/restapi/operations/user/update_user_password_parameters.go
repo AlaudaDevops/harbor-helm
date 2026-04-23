@@ -6,6 +6,7 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewUpdateUserPasswordParams() UpdateUserPasswordParams {
 //
 // swagger:parameters updateUserPassword
 type UpdateUserPasswordParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type UpdateUserPasswordParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Password to be updated, the attribute 'old_password' is optional when the API is called by the system administrator.
 	  Required: true
 	  In: body
 	*/
 	Password *models.PasswordReq
+
 	/*
 	  Required: true
 	  In: path
@@ -67,10 +69,12 @@ func (o *UpdateUserPasswordParams) BindRequest(r *http.Request, route *middlewar
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.PasswordReq
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("password", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("password", "body", "", err))
@@ -125,7 +129,7 @@ func (o *UpdateUserPasswordParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateUserPasswordParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -14,7 +14,7 @@ import (
 // QuotaRefObject quota ref object
 //
 // swagger:model QuotaRefObject
-type QuotaRefObject map[string]interface{}
+type QuotaRefObject map[string]any
 
 // Validate validates this quota ref object
 func (m QuotaRefObject) Validate(formats strfmt.Registry) error {

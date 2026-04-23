@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -62,11 +63,15 @@ func (m *Reference) validateAnnotations(formats strfmt.Registry) error {
 
 	if m.Annotations != nil {
 		if err := m.Annotations.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("annotations")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("annotations")
 			}
+
 			return err
 		}
 	}
@@ -81,11 +86,15 @@ func (m *Reference) validatePlatform(formats strfmt.Registry) error {
 
 	if m.Platform != nil {
 		if err := m.Platform.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("platform")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("platform")
 			}
+
 			return err
 		}
 	}
@@ -118,11 +127,15 @@ func (m *Reference) contextValidateAnnotations(ctx context.Context, formats strf
 	}
 
 	if err := m.Annotations.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("annotations")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("annotations")
 		}
+
 		return err
 	}
 
@@ -138,11 +151,15 @@ func (m *Reference) contextValidatePlatform(ctx context.Context, formats strfmt.
 		}
 
 		if err := m.Platform.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("platform")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("platform")
 			}
+
 			return err
 		}
 	}

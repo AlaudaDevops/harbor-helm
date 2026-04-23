@@ -44,7 +44,7 @@ func (o *GetSchedulePausedURL) Build() (*url.URL, error) {
 
 	jobType := o.JobType
 	if jobType != "" {
-		_path = strings.Replace(_path, "{job_type}", jobType, -1)
+		_path = strings.ReplaceAll(_path, "{job_type}", jobType)
 	} else {
 		return nil, errors.New("jobType is required on GetSchedulePausedURL")
 	}

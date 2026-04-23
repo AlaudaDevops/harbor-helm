@@ -12,16 +12,16 @@ import (
 )
 
 // GetRentenitionMetadataHandlerFunc turns a function with the right signature into a get rentenition metadata handler
-type GetRentenitionMetadataHandlerFunc func(GetRentenitionMetadataParams, interface{}) middleware.Responder
+type GetRentenitionMetadataHandlerFunc func(GetRentenitionMetadataParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetRentenitionMetadataHandlerFunc) Handle(params GetRentenitionMetadataParams, principal interface{}) middleware.Responder {
+func (fn GetRentenitionMetadataHandlerFunc) Handle(params GetRentenitionMetadataParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetRentenitionMetadataHandler interface for that can handle valid get rentenition metadata params
 type GetRentenitionMetadataHandler interface {
-	Handle(GetRentenitionMetadataParams, interface{}) middleware.Responder
+	Handle(GetRentenitionMetadataParams, any) middleware.Responder
 }
 
 // NewGetRentenitionMetadata creates a new http.Handler for the get rentenition metadata operation
@@ -55,9 +55,9 @@ func (o *GetRentenitionMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetRentenitionMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -28,7 +28,6 @@ func NewSearchParams() SearchParams {
 //
 // swagger:parameters search
 type SearchParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type SearchParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Search parameter for project and repository name.
 	  Required: true
 	  In: query
@@ -52,7 +52,6 @@ func (o *SearchParams) BindRequest(r *http.Request, route *middleware.MatchedRou
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -90,7 +89,7 @@ func (o *SearchParams) bindXRequestID(rawData []string, hasKey bool, formats str
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *SearchParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

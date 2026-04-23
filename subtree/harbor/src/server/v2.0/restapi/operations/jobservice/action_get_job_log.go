@@ -12,16 +12,16 @@ import (
 )
 
 // ActionGetJobLogHandlerFunc turns a function with the right signature into a action get job log handler
-type ActionGetJobLogHandlerFunc func(ActionGetJobLogParams, interface{}) middleware.Responder
+type ActionGetJobLogHandlerFunc func(ActionGetJobLogParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ActionGetJobLogHandlerFunc) Handle(params ActionGetJobLogParams, principal interface{}) middleware.Responder {
+func (fn ActionGetJobLogHandlerFunc) Handle(params ActionGetJobLogParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ActionGetJobLogHandler interface for that can handle valid action get job log params
 type ActionGetJobLogHandler interface {
-	Handle(ActionGetJobLogParams, interface{}) middleware.Responder
+	Handle(ActionGetJobLogParams, any) middleware.Responder
 }
 
 // NewActionGetJobLog creates a new http.Handler for the action get job log operation
@@ -55,9 +55,9 @@ func (o *ActionGetJobLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ActionGetJobLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -44,7 +44,7 @@ func (o *GetWorkersURL) Build() (*url.URL, error) {
 
 	poolID := o.PoolID
 	if poolID != "" {
-		_path = strings.Replace(_path, "{pool_id}", poolID, -1)
+		_path = strings.ReplaceAll(_path, "{pool_id}", poolID)
 	} else {
 		return nil, errors.New("poolId is required on GetWorkersURL")
 	}

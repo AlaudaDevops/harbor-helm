@@ -39,7 +39,6 @@ func NewListUserGroupsParams() ListUserGroupsParams {
 //
 // swagger:parameters listUserGroups
 type ListUserGroupsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,19 +47,23 @@ type ListUserGroupsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*group name need to search, fuzzy matches
 	  In: query
 	*/
 	GroupName *string
+
 	/*search with ldap group DN
 	  In: query
 	*/
 	LdapGroupDn *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
@@ -77,7 +80,6 @@ func (o *ListUserGroupsParams) BindRequest(r *http.Request, route *middleware.Ma
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -130,7 +132,7 @@ func (o *ListUserGroupsParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListUserGroupsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -228,7 +230,7 @@ func (o *ListUserGroupsParams) bindPageSize(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *ListUserGroupsParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

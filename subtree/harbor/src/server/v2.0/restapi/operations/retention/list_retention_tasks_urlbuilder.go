@@ -50,14 +50,14 @@ func (o *ListRetentionTasksURL) Build() (*url.URL, error) {
 
 	eid := swag.FormatInt64(o.Eid)
 	if eid != "" {
-		_path = strings.Replace(_path, "{eid}", eid, -1)
+		_path = strings.ReplaceAll(_path, "{eid}", eid)
 	} else {
 		return nil, errors.New("eid is required on ListRetentionTasksURL")
 	}
 
 	id := swag.FormatInt64(o.ID)
 	if id != "" {
-		_path = strings.Replace(_path, "{id}", id, -1)
+		_path = strings.ReplaceAll(_path, "{id}", id)
 	} else {
 		return nil, errors.New("id is required on ListRetentionTasksURL")
 	}

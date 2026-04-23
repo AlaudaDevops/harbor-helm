@@ -46,21 +46,21 @@ func (o *CreateTagURL) Build() (*url.URL, error) {
 
 	projectName := o.ProjectName
 	if projectName != "" {
-		_path = strings.Replace(_path, "{project_name}", projectName, -1)
+		_path = strings.ReplaceAll(_path, "{project_name}", projectName)
 	} else {
 		return nil, errors.New("projectName is required on CreateTagURL")
 	}
 
 	reference := o.Reference
 	if reference != "" {
-		_path = strings.Replace(_path, "{reference}", reference, -1)
+		_path = strings.ReplaceAll(_path, "{reference}", reference)
 	} else {
 		return nil, errors.New("reference is required on CreateTagURL")
 	}
 
 	repositoryName := o.RepositoryName
 	if repositoryName != "" {
-		_path = strings.Replace(_path, "{repository_name}", repositoryName, -1)
+		_path = strings.ReplaceAll(_path, "{repository_name}", repositoryName)
 	} else {
 		return nil, errors.New("repositoryName is required on CreateTagURL")
 	}

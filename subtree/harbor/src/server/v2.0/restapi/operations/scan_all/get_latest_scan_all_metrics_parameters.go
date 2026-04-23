@@ -27,7 +27,6 @@ func NewGetLatestScanAllMetricsParams() GetLatestScanAllMetricsParams {
 //
 // swagger:parameters getLatestScanAllMetrics
 type GetLatestScanAllMetricsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -77,7 +76,7 @@ func (o *GetLatestScanAllMetricsParams) bindXRequestID(rawData []string, hasKey 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetLatestScanAllMetricsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

@@ -12,16 +12,16 @@ import (
 )
 
 // StopReplicationHandlerFunc turns a function with the right signature into a stop replication handler
-type StopReplicationHandlerFunc func(StopReplicationParams, interface{}) middleware.Responder
+type StopReplicationHandlerFunc func(StopReplicationParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn StopReplicationHandlerFunc) Handle(params StopReplicationParams, principal interface{}) middleware.Responder {
+func (fn StopReplicationHandlerFunc) Handle(params StopReplicationParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // StopReplicationHandler interface for that can handle valid stop replication params
 type StopReplicationHandler interface {
-	Handle(StopReplicationParams, interface{}) middleware.Responder
+	Handle(StopReplicationParams, any) middleware.Responder
 }
 
 // NewStopReplication creates a new http.Handler for the stop replication operation
@@ -55,9 +55,9 @@ func (o *StopReplication) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *StopReplication) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

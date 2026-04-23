@@ -12,16 +12,16 @@ import (
 )
 
 // GetScanDataExportExecutionListHandlerFunc turns a function with the right signature into a get scan data export execution list handler
-type GetScanDataExportExecutionListHandlerFunc func(GetScanDataExportExecutionListParams, interface{}) middleware.Responder
+type GetScanDataExportExecutionListHandlerFunc func(GetScanDataExportExecutionListParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetScanDataExportExecutionListHandlerFunc) Handle(params GetScanDataExportExecutionListParams, principal interface{}) middleware.Responder {
+func (fn GetScanDataExportExecutionListHandlerFunc) Handle(params GetScanDataExportExecutionListParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetScanDataExportExecutionListHandler interface for that can handle valid get scan data export execution list params
 type GetScanDataExportExecutionListHandler interface {
-	Handle(GetScanDataExportExecutionListParams, interface{}) middleware.Responder
+	Handle(GetScanDataExportExecutionListParams, any) middleware.Responder
 }
 
 // NewGetScanDataExportExecutionList creates a new http.Handler for the get scan data export execution list operation
@@ -55,9 +55,9 @@ func (o *GetScanDataExportExecutionList) ServeHTTP(rw http.ResponseWriter, r *ht
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetScanDataExportExecutionList) ServeHTTP(rw http.ResponseWriter, r *ht
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

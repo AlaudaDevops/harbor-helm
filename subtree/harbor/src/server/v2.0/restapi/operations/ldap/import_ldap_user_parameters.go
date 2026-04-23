@@ -6,6 +6,7 @@ package ldap
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewImportLdapUserParams() ImportLdapUserParams {
 //
 // swagger:parameters importLdapUser
 type ImportLdapUserParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type ImportLdapUserParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The uid listed for importing. This list will check users validity of ldap service based on configuration from the system.
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *ImportLdapUserParams) BindRequest(r *http.Request, route *middleware.Ma
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.LdapImportUsers
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("uidList", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("uidList", "body", "", err))
@@ -114,7 +117,7 @@ func (o *ImportLdapUserParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ImportLdapUserParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

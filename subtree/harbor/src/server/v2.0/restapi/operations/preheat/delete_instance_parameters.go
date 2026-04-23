@@ -27,7 +27,6 @@ func NewDeleteInstanceParams() DeleteInstanceParams {
 //
 // swagger:parameters DeleteInstance
 type DeleteInstanceParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,6 +35,7 @@ type DeleteInstanceParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Instance Name
 	  Required: true
 	  In: path
@@ -87,7 +87,7 @@ func (o *DeleteInstanceParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteInstanceParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

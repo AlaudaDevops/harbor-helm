@@ -12,16 +12,16 @@ import (
 )
 
 // GetScannerOfProjectHandlerFunc turns a function with the right signature into a get scanner of project handler
-type GetScannerOfProjectHandlerFunc func(GetScannerOfProjectParams, interface{}) middleware.Responder
+type GetScannerOfProjectHandlerFunc func(GetScannerOfProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetScannerOfProjectHandlerFunc) Handle(params GetScannerOfProjectParams, principal interface{}) middleware.Responder {
+func (fn GetScannerOfProjectHandlerFunc) Handle(params GetScannerOfProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetScannerOfProjectHandler interface for that can handle valid get scanner of project params
 type GetScannerOfProjectHandler interface {
-	Handle(GetScannerOfProjectParams, interface{}) middleware.Responder
+	Handle(GetScannerOfProjectParams, any) middleware.Responder
 }
 
 // NewGetScannerOfProject creates a new http.Handler for the get scanner of project operation
@@ -55,9 +55,9 @@ func (o *GetScannerOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetScannerOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

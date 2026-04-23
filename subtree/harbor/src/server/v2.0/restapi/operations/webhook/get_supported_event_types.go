@@ -12,16 +12,16 @@ import (
 )
 
 // GetSupportedEventTypesHandlerFunc turns a function with the right signature into a get supported event types handler
-type GetSupportedEventTypesHandlerFunc func(GetSupportedEventTypesParams, interface{}) middleware.Responder
+type GetSupportedEventTypesHandlerFunc func(GetSupportedEventTypesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetSupportedEventTypesHandlerFunc) Handle(params GetSupportedEventTypesParams, principal interface{}) middleware.Responder {
+func (fn GetSupportedEventTypesHandlerFunc) Handle(params GetSupportedEventTypesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetSupportedEventTypesHandler interface for that can handle valid get supported event types params
 type GetSupportedEventTypesHandler interface {
-	Handle(GetSupportedEventTypesParams, interface{}) middleware.Responder
+	Handle(GetSupportedEventTypesParams, any) middleware.Responder
 }
 
 // NewGetSupportedEventTypes creates a new http.Handler for the get supported event types operation
@@ -55,9 +55,9 @@ func (o *GetSupportedEventTypes) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetSupportedEventTypes) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

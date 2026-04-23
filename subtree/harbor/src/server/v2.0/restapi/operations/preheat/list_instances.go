@@ -12,16 +12,16 @@ import (
 )
 
 // ListInstancesHandlerFunc turns a function with the right signature into a list instances handler
-type ListInstancesHandlerFunc func(ListInstancesParams, interface{}) middleware.Responder
+type ListInstancesHandlerFunc func(ListInstancesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListInstancesHandlerFunc) Handle(params ListInstancesParams, principal interface{}) middleware.Responder {
+func (fn ListInstancesHandlerFunc) Handle(params ListInstancesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListInstancesHandler interface for that can handle valid list instances params
 type ListInstancesHandler interface {
-	Handle(ListInstancesParams, interface{}) middleware.Responder
+	Handle(ListInstancesParams, any) middleware.Responder
 }
 
 // NewListInstances creates a new http.Handler for the list instances operation
@@ -55,9 +55,9 @@ func (o *ListInstances) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListInstances) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

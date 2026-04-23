@@ -44,7 +44,7 @@ func (o *DeleteInstanceURL) Build() (*url.URL, error) {
 
 	preheatInstanceName := o.PreheatInstanceName
 	if preheatInstanceName != "" {
-		_path = strings.Replace(_path, "{preheat_instance_name}", preheatInstanceName, -1)
+		_path = strings.ReplaceAll(_path, "{preheat_instance_name}", preheatInstanceName)
 	} else {
 		return nil, errors.New("preheatInstanceName is required on DeleteInstanceURL")
 	}

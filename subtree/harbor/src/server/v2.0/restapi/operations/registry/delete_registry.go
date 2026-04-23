@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteRegistryHandlerFunc turns a function with the right signature into a delete registry handler
-type DeleteRegistryHandlerFunc func(DeleteRegistryParams, interface{}) middleware.Responder
+type DeleteRegistryHandlerFunc func(DeleteRegistryParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteRegistryHandlerFunc) Handle(params DeleteRegistryParams, principal interface{}) middleware.Responder {
+func (fn DeleteRegistryHandlerFunc) Handle(params DeleteRegistryParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteRegistryHandler interface for that can handle valid delete registry params
 type DeleteRegistryHandler interface {
-	Handle(DeleteRegistryParams, interface{}) middleware.Responder
+	Handle(DeleteRegistryParams, any) middleware.Responder
 }
 
 // NewDeleteRegistry creates a new http.Handler for the delete registry operation
@@ -55,9 +55,9 @@ func (o *DeleteRegistry) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteRegistry) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

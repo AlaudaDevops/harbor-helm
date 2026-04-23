@@ -12,16 +12,16 @@ import (
 )
 
 // CreateGCScheduleHandlerFunc turns a function with the right signature into a create GC schedule handler
-type CreateGCScheduleHandlerFunc func(CreateGCScheduleParams, interface{}) middleware.Responder
+type CreateGCScheduleHandlerFunc func(CreateGCScheduleParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateGCScheduleHandlerFunc) Handle(params CreateGCScheduleParams, principal interface{}) middleware.Responder {
+func (fn CreateGCScheduleHandlerFunc) Handle(params CreateGCScheduleParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateGCScheduleHandler interface for that can handle valid create GC schedule params
 type CreateGCScheduleHandler interface {
-	Handle(CreateGCScheduleParams, interface{}) middleware.Responder
+	Handle(CreateGCScheduleParams, any) middleware.Responder
 }
 
 // NewCreateGCSchedule creates a new http.Handler for the create GC schedule operation
@@ -55,9 +55,9 @@ func (o *CreateGCSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateGCSchedule) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -53,11 +54,15 @@ func (m *ProjectMember) validateMemberGroup(formats strfmt.Registry) error {
 
 	if m.MemberGroup != nil {
 		if err := m.MemberGroup.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("member_group")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("member_group")
 			}
+
 			return err
 		}
 	}
@@ -72,11 +77,15 @@ func (m *ProjectMember) validateMemberUser(formats strfmt.Registry) error {
 
 	if m.MemberUser != nil {
 		if err := m.MemberUser.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("member_user")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("member_user")
 			}
+
 			return err
 		}
 	}
@@ -111,11 +120,15 @@ func (m *ProjectMember) contextValidateMemberGroup(ctx context.Context, formats 
 		}
 
 		if err := m.MemberGroup.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("member_group")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("member_group")
 			}
+
 			return err
 		}
 	}
@@ -132,11 +145,15 @@ func (m *ProjectMember) contextValidateMemberUser(ctx context.Context, formats s
 		}
 
 		if err := m.MemberUser.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("member_user")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("member_user")
 			}
+
 			return err
 		}
 	}

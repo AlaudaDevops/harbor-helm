@@ -28,7 +28,6 @@ func NewDeleteRetentionParams() DeleteRetentionParams {
 //
 // swagger:parameters deleteRetention
 type DeleteRetentionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type DeleteRetentionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Retention ID.
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *DeleteRetentionParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeleteRetentionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

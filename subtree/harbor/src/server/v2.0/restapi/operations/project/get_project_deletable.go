@@ -12,16 +12,16 @@ import (
 )
 
 // GetProjectDeletableHandlerFunc turns a function with the right signature into a get project deletable handler
-type GetProjectDeletableHandlerFunc func(GetProjectDeletableParams, interface{}) middleware.Responder
+type GetProjectDeletableHandlerFunc func(GetProjectDeletableParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetProjectDeletableHandlerFunc) Handle(params GetProjectDeletableParams, principal interface{}) middleware.Responder {
+func (fn GetProjectDeletableHandlerFunc) Handle(params GetProjectDeletableParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetProjectDeletableHandler interface for that can handle valid get project deletable params
 type GetProjectDeletableHandler interface {
-	Handle(GetProjectDeletableParams, interface{}) middleware.Responder
+	Handle(GetProjectDeletableParams, any) middleware.Responder
 }
 
 // NewGetProjectDeletable creates a new http.Handler for the get project deletable operation
@@ -55,9 +55,9 @@ func (o *GetProjectDeletable) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetProjectDeletable) ServeHTTP(rw http.ResponseWriter, r *http.Request)
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

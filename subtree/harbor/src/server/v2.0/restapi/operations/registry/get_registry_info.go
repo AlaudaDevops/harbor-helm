@@ -12,16 +12,16 @@ import (
 )
 
 // GetRegistryInfoHandlerFunc turns a function with the right signature into a get registry info handler
-type GetRegistryInfoHandlerFunc func(GetRegistryInfoParams, interface{}) middleware.Responder
+type GetRegistryInfoHandlerFunc func(GetRegistryInfoParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetRegistryInfoHandlerFunc) Handle(params GetRegistryInfoParams, principal interface{}) middleware.Responder {
+func (fn GetRegistryInfoHandlerFunc) Handle(params GetRegistryInfoParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetRegistryInfoHandler interface for that can handle valid get registry info params
 type GetRegistryInfoHandler interface {
-	Handle(GetRegistryInfoParams, interface{}) middleware.Responder
+	Handle(GetRegistryInfoParams, any) middleware.Responder
 }
 
 // NewGetRegistryInfo creates a new http.Handler for the get registry info operation
@@ -55,9 +55,9 @@ func (o *GetRegistryInfo) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetRegistryInfo) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

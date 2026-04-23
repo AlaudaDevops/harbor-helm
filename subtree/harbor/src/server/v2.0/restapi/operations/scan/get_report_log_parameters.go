@@ -27,7 +27,6 @@ func NewGetReportLogParams() GetReportLogParams {
 //
 // swagger:parameters getReportLog
 type GetReportLogParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,21 +35,25 @@ type GetReportLogParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The report id to get the log
 	  Required: true
 	  In: path
 	*/
 	ReportID string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
@@ -117,7 +120,7 @@ func (o *GetReportLogParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetReportLogParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

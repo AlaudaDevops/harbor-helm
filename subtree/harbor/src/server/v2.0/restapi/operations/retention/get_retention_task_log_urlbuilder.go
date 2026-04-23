@@ -48,21 +48,21 @@ func (o *GetRetentionTaskLogURL) Build() (*url.URL, error) {
 
 	eid := swag.FormatInt64(o.Eid)
 	if eid != "" {
-		_path = strings.Replace(_path, "{eid}", eid, -1)
+		_path = strings.ReplaceAll(_path, "{eid}", eid)
 	} else {
 		return nil, errors.New("eid is required on GetRetentionTaskLogURL")
 	}
 
 	id := swag.FormatInt64(o.ID)
 	if id != "" {
-		_path = strings.Replace(_path, "{id}", id, -1)
+		_path = strings.ReplaceAll(_path, "{id}", id)
 	} else {
 		return nil, errors.New("id is required on GetRetentionTaskLogURL")
 	}
 
 	tid := swag.FormatInt64(o.Tid)
 	if tid != "" {
-		_path = strings.Replace(_path, "{tid}", tid, -1)
+		_path = strings.ReplaceAll(_path, "{tid}", tid)
 	} else {
 		return nil, errors.New("tid is required on GetRetentionTaskLogURL")
 	}

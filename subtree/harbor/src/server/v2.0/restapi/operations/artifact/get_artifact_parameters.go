@@ -65,7 +65,6 @@ func NewGetArtifactParams() GetArtifactParams {
 //
 // swagger:parameters getArtifact
 type GetArtifactParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -75,67 +74,80 @@ type GetArtifactParams struct {
 	  Default: "application/vnd.security.vulnerability.report; version=1.1, application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"
 	*/
 	XAcceptVulnerabilities *string
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
 	  Default: 10
 	*/
 	PageSize *int64
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
 	*/
 	RepositoryName string
+
 	/*Specify whether the accessories are included of the returning artifacts.
 	  In: query
 	  Default: false
 	*/
 	WithAccessory *bool
+
 	/*Specify whether the immutable status is inclued inside the tags of the returning artifacts.
 	  In: query
 	  Default: false
 	*/
 	WithImmutableStatus *bool
+
 	/*Specify whether the labels are inclued inside the returning artifacts
 	  In: query
 	  Default: false
 	*/
 	WithLabel *bool
+
 	/*Specify whether the SBOM overview is included in returning artifact, when this option is true, the SBOM overview will be included in the response
 	  In: query
 	  Default: false
 	*/
 	WithSbomOverview *bool
+
 	/*Specify whether the scan overview is inclued inside the returning artifacts
 	  In: query
 	  Default: false
 	*/
 	WithScanOverview *bool
+
 	/*Specify whether the signature is inclued inside the returning artifacts
 	  In: query
 	  Default: false
 	*/
 	WithSignature *bool
+
 	/*Specify whether the tags are inclued inside the returning artifacts
 	  In: query
 	  Default: true
@@ -151,7 +163,6 @@ func (o *GetArtifactParams) BindRequest(r *http.Request, route *middleware.Match
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXAcceptVulnerabilities(r.Header[http.CanonicalHeaderKey("X-Accept-Vulnerabilities")], true, route.Formats); err != nil {
@@ -266,7 +277,7 @@ func (o *GetArtifactParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetArtifactParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -328,7 +339,7 @@ func (o *GetArtifactParams) bindPageSize(rawData []string, hasKey bool, formats 
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *GetArtifactParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

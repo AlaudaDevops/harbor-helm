@@ -12,16 +12,16 @@ import (
 )
 
 // PingInstancesHandlerFunc turns a function with the right signature into a ping instances handler
-type PingInstancesHandlerFunc func(PingInstancesParams, interface{}) middleware.Responder
+type PingInstancesHandlerFunc func(PingInstancesParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn PingInstancesHandlerFunc) Handle(params PingInstancesParams, principal interface{}) middleware.Responder {
+func (fn PingInstancesHandlerFunc) Handle(params PingInstancesParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // PingInstancesHandler interface for that can handle valid ping instances params
 type PingInstancesHandler interface {
-	Handle(PingInstancesParams, interface{}) middleware.Responder
+	Handle(PingInstancesParams, any) middleware.Responder
 }
 
 // NewPingInstances creates a new http.Handler for the ping instances operation
@@ -55,9 +55,9 @@ func (o *PingInstances) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *PingInstances) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

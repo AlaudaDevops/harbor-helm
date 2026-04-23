@@ -35,7 +35,6 @@ func NewListProjectMetadatasParams() ListProjectMetadatasParams {
 //
 // swagger:parameters listProjectMetadatas
 type ListProjectMetadatasParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -44,11 +43,13 @@ type ListProjectMetadatasParams struct {
 	  Default: false
 	*/
 	XIsResourceName *bool
+
 	/*An unique ID for the request
 	  Min Length: 1
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The name or id of the project
 	  Required: true
 	  In: path
@@ -127,7 +128,7 @@ func (o *ListProjectMetadatasParams) bindXRequestID(rawData []string, hasKey boo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListProjectMetadatasParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

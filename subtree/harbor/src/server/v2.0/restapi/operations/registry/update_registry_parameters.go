@@ -6,6 +6,7 @@ package registry
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewUpdateRegistryParams() UpdateRegistryParams {
 //
 // swagger:parameters updateRegistry
 type UpdateRegistryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type UpdateRegistryParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The registry ID
 	  Required: true
 	  In: path
 	*/
 	ID int64
+
 	/*The registry
 	  Required: true
 	  In: body
@@ -72,10 +74,12 @@ func (o *UpdateRegistryParams) BindRequest(r *http.Request, route *middleware.Ma
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.RegistryUpdate
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("registry", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("registry", "body", "", err))
@@ -125,7 +129,7 @@ func (o *UpdateRegistryParams) bindXRequestID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateRegistryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

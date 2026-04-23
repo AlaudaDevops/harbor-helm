@@ -12,16 +12,16 @@ import (
 )
 
 // CreateLabelHandlerFunc turns a function with the right signature into a create label handler
-type CreateLabelHandlerFunc func(CreateLabelParams, interface{}) middleware.Responder
+type CreateLabelHandlerFunc func(CreateLabelParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn CreateLabelHandlerFunc) Handle(params CreateLabelParams, principal interface{}) middleware.Responder {
+func (fn CreateLabelHandlerFunc) Handle(params CreateLabelParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // CreateLabelHandler interface for that can handle valid create label params
 type CreateLabelHandler interface {
-	Handle(CreateLabelParams, interface{}) middleware.Responder
+	Handle(CreateLabelParams, any) middleware.Responder
 }
 
 // NewCreateLabel creates a new http.Handler for the create label operation
@@ -55,9 +55,9 @@ func (o *CreateLabel) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *CreateLabel) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateProjectMetadataHandlerFunc turns a function with the right signature into a update project metadata handler
-type UpdateProjectMetadataHandlerFunc func(UpdateProjectMetadataParams, interface{}) middleware.Responder
+type UpdateProjectMetadataHandlerFunc func(UpdateProjectMetadataParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateProjectMetadataHandlerFunc) Handle(params UpdateProjectMetadataParams, principal interface{}) middleware.Responder {
+func (fn UpdateProjectMetadataHandlerFunc) Handle(params UpdateProjectMetadataParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateProjectMetadataHandler interface for that can handle valid update project metadata params
 type UpdateProjectMetadataHandler interface {
-	Handle(UpdateProjectMetadataParams, interface{}) middleware.Responder
+	Handle(UpdateProjectMetadataParams, any) middleware.Responder
 }
 
 // NewUpdateProjectMetadata creates a new http.Handler for the update project metadata operation
@@ -55,9 +55,9 @@ func (o *UpdateProjectMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateProjectMetadata) ServeHTTP(rw http.ResponseWriter, r *http.Reques
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

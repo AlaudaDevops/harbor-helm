@@ -12,16 +12,16 @@ import (
 )
 
 // GetPolicyHandlerFunc turns a function with the right signature into a get policy handler
-type GetPolicyHandlerFunc func(GetPolicyParams, interface{}) middleware.Responder
+type GetPolicyHandlerFunc func(GetPolicyParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetPolicyHandlerFunc) Handle(params GetPolicyParams, principal interface{}) middleware.Responder {
+func (fn GetPolicyHandlerFunc) Handle(params GetPolicyParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetPolicyHandler interface for that can handle valid get policy params
 type GetPolicyHandler interface {
-	Handle(GetPolicyParams, interface{}) middleware.Responder
+	Handle(GetPolicyParams, any) middleware.Responder
 }
 
 // NewGetPolicy creates a new http.Handler for the get policy operation
@@ -55,9 +55,9 @@ func (o *GetPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetPolicy) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

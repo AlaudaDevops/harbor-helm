@@ -12,16 +12,16 @@ import (
 )
 
 // DeleteUserHandlerFunc turns a function with the right signature into a delete user handler
-type DeleteUserHandlerFunc func(DeleteUserParams, interface{}) middleware.Responder
+type DeleteUserHandlerFunc func(DeleteUserParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteUserHandlerFunc) Handle(params DeleteUserParams, principal interface{}) middleware.Responder {
+func (fn DeleteUserHandlerFunc) Handle(params DeleteUserParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DeleteUserHandler interface for that can handle valid delete user params
 type DeleteUserHandler interface {
-	Handle(DeleteUserParams, interface{}) middleware.Responder
+	Handle(DeleteUserParams, any) middleware.Responder
 }
 
 // NewDeleteUser creates a new http.Handler for the delete user operation
@@ -55,9 +55,9 @@ func (o *DeleteUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DeleteUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

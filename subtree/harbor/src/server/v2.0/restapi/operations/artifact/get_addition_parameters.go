@@ -27,7 +27,6 @@ func NewGetAdditionParams() GetAdditionParams {
 //
 // swagger:parameters getAddition
 type GetAdditionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,21 +35,25 @@ type GetAdditionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The type of addition.
 	  Required: true
 	  In: path
 	*/
 	Addition string
+
 	/*The name of the project
 	  Required: true
 	  In: path
 	*/
 	ProjectName string
+
 	/*The reference of the artifact, can be digest or tag
 	  Required: true
 	  In: path
 	*/
 	Reference string
+
 	/*The name of the repository. If it contains slash, encode it twice over with URL encoding. e.g. a/b -> a%2Fb -> a%252Fb
 	  Required: true
 	  In: path
@@ -117,7 +120,7 @@ func (o *GetAdditionParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetAdditionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -145,10 +148,10 @@ func (o *GetAdditionParams) bindAddition(rawData []string, hasKey bool, formats 
 	return nil
 }
 
-// validateAddition carries on validations for parameter Addition
+// validateAddition carries out validations for parameter Addition
 func (o *GetAdditionParams) validateAddition(formats strfmt.Registry) error {
 
-	if err := validate.EnumCase("addition", "path", o.Addition, []interface{}{"build_history", "values.yaml", "readme.md", "dependencies", "sbom", "license", "files"}, true); err != nil {
+	if err := validate.EnumCase("addition", "path", o.Addition, []any{"build_history", "values.yaml", "readme.md", "dependencies", "sbom", "license", "files"}, true); err != nil {
 		return err
 	}
 

@@ -12,16 +12,16 @@ import (
 )
 
 // GetWebhookPolicyOfProjectHandlerFunc turns a function with the right signature into a get webhook policy of project handler
-type GetWebhookPolicyOfProjectHandlerFunc func(GetWebhookPolicyOfProjectParams, interface{}) middleware.Responder
+type GetWebhookPolicyOfProjectHandlerFunc func(GetWebhookPolicyOfProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetWebhookPolicyOfProjectHandlerFunc) Handle(params GetWebhookPolicyOfProjectParams, principal interface{}) middleware.Responder {
+func (fn GetWebhookPolicyOfProjectHandlerFunc) Handle(params GetWebhookPolicyOfProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetWebhookPolicyOfProjectHandler interface for that can handle valid get webhook policy of project params
 type GetWebhookPolicyOfProjectHandler interface {
-	Handle(GetWebhookPolicyOfProjectParams, interface{}) middleware.Responder
+	Handle(GetWebhookPolicyOfProjectParams, any) middleware.Responder
 }
 
 // NewGetWebhookPolicyOfProject creates a new http.Handler for the get webhook policy of project operation
@@ -55,9 +55,9 @@ func (o *GetWebhookPolicyOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetWebhookPolicyOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -47,14 +47,14 @@ func (o *UpdateProjectMemberURL) Build() (*url.URL, error) {
 
 	mid := swag.FormatInt64(o.Mid)
 	if mid != "" {
-		_path = strings.Replace(_path, "{mid}", mid, -1)
+		_path = strings.ReplaceAll(_path, "{mid}", mid)
 	} else {
 		return nil, errors.New("mid is required on UpdateProjectMemberURL")
 	}
 
 	projectNameOrID := o.ProjectNameOrID
 	if projectNameOrID != "" {
-		_path = strings.Replace(_path, "{project_name_or_id}", projectNameOrID, -1)
+		_path = strings.ReplaceAll(_path, "{project_name_or_id}", projectNameOrID)
 	} else {
 		return nil, errors.New("projectNameOrId is required on UpdateProjectMemberURL")
 	}

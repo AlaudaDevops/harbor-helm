@@ -52,14 +52,14 @@ func (o *ListExecutionsOfWebhookPolicyURL) Build() (*url.URL, error) {
 
 	projectNameOrID := o.ProjectNameOrID
 	if projectNameOrID != "" {
-		_path = strings.Replace(_path, "{project_name_or_id}", projectNameOrID, -1)
+		_path = strings.ReplaceAll(_path, "{project_name_or_id}", projectNameOrID)
 	} else {
 		return nil, errors.New("projectNameOrId is required on ListExecutionsOfWebhookPolicyURL")
 	}
 
 	webhookPolicyID := swag.FormatInt64(o.WebhookPolicyID)
 	if webhookPolicyID != "" {
-		_path = strings.Replace(_path, "{webhook_policy_id}", webhookPolicyID, -1)
+		_path = strings.ReplaceAll(_path, "{webhook_policy_id}", webhookPolicyID)
 	} else {
 		return nil, errors.New("webhookPolicyId is required on ListExecutionsOfWebhookPolicyURL")
 	}

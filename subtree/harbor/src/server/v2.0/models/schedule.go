@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -29,7 +30,7 @@ type Schedule struct {
 	ID int64 `json:"id,omitempty"`
 
 	// The parameters of schedule job
-	Parameters map[string]interface{} `json:"parameters,omitempty"`
+	Parameters map[string]any `json:"parameters,omitempty"`
 
 	// schedule
 	Schedule *ScheduleObj `json:"schedule,omitempty"`
@@ -85,11 +86,15 @@ func (m *Schedule) validateSchedule(formats strfmt.Registry) error {
 
 	if m.Schedule != nil {
 		if err := m.Schedule.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("schedule")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("schedule")
 			}
+
 			return err
 		}
 	}
@@ -141,7 +146,7 @@ func (m *Schedule) ContextValidate(ctx context.Context, formats strfmt.Registry)
 
 func (m *Schedule) contextValidateCreationTime(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "creation_time", "body", strfmt.DateTime(m.CreationTime)); err != nil {
+	if err := validate.ReadOnly(ctx, "creation_time", "body", m.CreationTime); err != nil {
 		return err
 	}
 
@@ -150,7 +155,7 @@ func (m *Schedule) contextValidateCreationTime(ctx context.Context, formats strf
 
 func (m *Schedule) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "id", "body", int64(m.ID)); err != nil {
+	if err := validate.ReadOnly(ctx, "id", "body", m.ID); err != nil {
 		return err
 	}
 
@@ -166,11 +171,15 @@ func (m *Schedule) contextValidateSchedule(ctx context.Context, formats strfmt.R
 		}
 
 		if err := m.Schedule.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("schedule")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("schedule")
 			}
+
 			return err
 		}
 	}
@@ -180,7 +189,7 @@ func (m *Schedule) contextValidateSchedule(ctx context.Context, formats strfmt.R
 
 func (m *Schedule) contextValidateStatus(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "status", "body", string(m.Status)); err != nil {
+	if err := validate.ReadOnly(ctx, "status", "body", m.Status); err != nil {
 		return err
 	}
 
@@ -189,7 +198,7 @@ func (m *Schedule) contextValidateStatus(ctx context.Context, formats strfmt.Reg
 
 func (m *Schedule) contextValidateUpdateTime(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "update_time", "body", strfmt.DateTime(m.UpdateTime)); err != nil {
+	if err := validate.ReadOnly(ctx, "update_time", "body", m.UpdateTime); err != nil {
 		return err
 	}
 

@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -101,11 +102,15 @@ func (m *NativeReportSummary) validateScanner(formats strfmt.Registry) error {
 
 	if m.Scanner != nil {
 		if err := m.Scanner.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner")
 			}
+
 			return err
 		}
 	}
@@ -132,11 +137,15 @@ func (m *NativeReportSummary) validateSummary(formats strfmt.Registry) error {
 
 	if m.Summary != nil {
 		if err := m.Summary.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("summary")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("summary")
 			}
+
 			return err
 		}
 	}
@@ -171,11 +180,15 @@ func (m *NativeReportSummary) contextValidateScanner(ctx context.Context, format
 		}
 
 		if err := m.Scanner.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scanner")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scanner")
 			}
+
 			return err
 		}
 	}
@@ -192,11 +205,15 @@ func (m *NativeReportSummary) contextValidateSummary(ctx context.Context, format
 		}
 
 		if err := m.Summary.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("summary")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("summary")
 			}
+
 			return err
 		}
 	}

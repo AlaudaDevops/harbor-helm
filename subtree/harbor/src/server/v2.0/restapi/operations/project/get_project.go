@@ -12,16 +12,16 @@ import (
 )
 
 // GetProjectHandlerFunc turns a function with the right signature into a get project handler
-type GetProjectHandlerFunc func(GetProjectParams, interface{}) middleware.Responder
+type GetProjectHandlerFunc func(GetProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetProjectHandlerFunc) Handle(params GetProjectParams, principal interface{}) middleware.Responder {
+func (fn GetProjectHandlerFunc) Handle(params GetProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetProjectHandler interface for that can handle valid get project params
 type GetProjectHandler interface {
-	Handle(GetProjectParams, interface{}) middleware.Responder
+	Handle(GetProjectParams, any) middleware.Responder
 }
 
 // NewGetProject creates a new http.Handler for the get project operation
@@ -55,9 +55,9 @@ func (o *GetProject) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetProject) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -28,7 +28,6 @@ func NewStopGCParams() StopGCParams {
 //
 // swagger:parameters stopGC
 type StopGCParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type StopGCParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The ID of the gc log
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *StopGCParams) bindXRequestID(rawData []string, hasKey bool, formats str
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *StopGCParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

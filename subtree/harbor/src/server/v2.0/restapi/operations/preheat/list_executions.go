@@ -12,16 +12,16 @@ import (
 )
 
 // ListExecutionsHandlerFunc turns a function with the right signature into a list executions handler
-type ListExecutionsHandlerFunc func(ListExecutionsParams, interface{}) middleware.Responder
+type ListExecutionsHandlerFunc func(ListExecutionsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListExecutionsHandlerFunc) Handle(params ListExecutionsParams, principal interface{}) middleware.Responder {
+func (fn ListExecutionsHandlerFunc) Handle(params ListExecutionsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListExecutionsHandler interface for that can handle valid list executions params
 type ListExecutionsHandler interface {
-	Handle(ListExecutionsParams, interface{}) middleware.Responder
+	Handle(ListExecutionsParams, any) middleware.Responder
 }
 
 // NewListExecutions creates a new http.Handler for the list executions operation
@@ -55,9 +55,9 @@ func (o *ListExecutions) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListExecutions) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

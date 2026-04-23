@@ -27,7 +27,6 @@ func NewDeletePolicyParams() DeletePolicyParams {
 //
 // swagger:parameters DeletePolicy
 type DeletePolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,11 +35,13 @@ type DeletePolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -97,7 +98,7 @@ func (o *DeletePolicyParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DeletePolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

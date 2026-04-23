@@ -12,16 +12,16 @@ import (
 )
 
 // DownloadScanDataHandlerFunc turns a function with the right signature into a download scan data handler
-type DownloadScanDataHandlerFunc func(DownloadScanDataParams, interface{}) middleware.Responder
+type DownloadScanDataHandlerFunc func(DownloadScanDataParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DownloadScanDataHandlerFunc) Handle(params DownloadScanDataParams, principal interface{}) middleware.Responder {
+func (fn DownloadScanDataHandlerFunc) Handle(params DownloadScanDataParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // DownloadScanDataHandler interface for that can handle valid download scan data params
 type DownloadScanDataHandler interface {
-	Handle(DownloadScanDataParams, interface{}) middleware.Responder
+	Handle(DownloadScanDataParams, any) middleware.Responder
 }
 
 // NewDownloadScanData creates a new http.Handler for the download scan data operation
@@ -55,9 +55,9 @@ func (o *DownloadScanData) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *DownloadScanData) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

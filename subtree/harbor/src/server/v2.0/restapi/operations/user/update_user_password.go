@@ -12,16 +12,16 @@ import (
 )
 
 // UpdateUserPasswordHandlerFunc turns a function with the right signature into a update user password handler
-type UpdateUserPasswordHandlerFunc func(UpdateUserPasswordParams, interface{}) middleware.Responder
+type UpdateUserPasswordHandlerFunc func(UpdateUserPasswordParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn UpdateUserPasswordHandlerFunc) Handle(params UpdateUserPasswordParams, principal interface{}) middleware.Responder {
+func (fn UpdateUserPasswordHandlerFunc) Handle(params UpdateUserPasswordParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // UpdateUserPasswordHandler interface for that can handle valid update user password params
 type UpdateUserPasswordHandler interface {
-	Handle(UpdateUserPasswordParams, interface{}) middleware.Responder
+	Handle(UpdateUserPasswordParams, any) middleware.Responder
 }
 
 // NewUpdateUserPassword creates a new http.Handler for the update user password operation
@@ -55,9 +55,9 @@ func (o *UpdateUserPassword) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *UpdateUserPassword) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

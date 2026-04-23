@@ -12,16 +12,16 @@ import (
 )
 
 // StartReplicationHandlerFunc turns a function with the right signature into a start replication handler
-type StartReplicationHandlerFunc func(StartReplicationParams, interface{}) middleware.Responder
+type StartReplicationHandlerFunc func(StartReplicationParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn StartReplicationHandlerFunc) Handle(params StartReplicationParams, principal interface{}) middleware.Responder {
+func (fn StartReplicationHandlerFunc) Handle(params StartReplicationParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // StartReplicationHandler interface for that can handle valid start replication params
 type StartReplicationHandler interface {
-	Handle(StartReplicationParams, interface{}) middleware.Responder
+	Handle(StartReplicationParams, any) middleware.Responder
 }
 
 // NewStartReplication creates a new http.Handler for the start replication operation
@@ -55,9 +55,9 @@ func (o *StartReplication) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *StartReplication) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

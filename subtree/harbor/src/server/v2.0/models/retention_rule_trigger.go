@@ -21,10 +21,10 @@ type RetentionRuleTrigger struct {
 	Kind string `json:"kind,omitempty"`
 
 	// references
-	References interface{} `json:"references,omitempty"`
+	References any `json:"references,omitempty"`
 
 	// settings
-	Settings interface{} `json:"settings,omitempty"`
+	Settings any `json:"settings,omitempty"`
 }
 
 // Validate validates this retention rule trigger

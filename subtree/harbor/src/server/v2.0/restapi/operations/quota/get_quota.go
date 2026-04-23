@@ -12,16 +12,16 @@ import (
 )
 
 // GetQuotaHandlerFunc turns a function with the right signature into a get quota handler
-type GetQuotaHandlerFunc func(GetQuotaParams, interface{}) middleware.Responder
+type GetQuotaHandlerFunc func(GetQuotaParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetQuotaHandlerFunc) Handle(params GetQuotaParams, principal interface{}) middleware.Responder {
+func (fn GetQuotaHandlerFunc) Handle(params GetQuotaParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetQuotaHandler interface for that can handle valid get quota params
 type GetQuotaHandler interface {
-	Handle(GetQuotaParams, interface{}) middleware.Responder
+	Handle(GetQuotaParams, any) middleware.Responder
 }
 
 // NewGetQuota creates a new http.Handler for the get quota operation
@@ -55,9 +55,9 @@ func (o *GetQuota) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetQuota) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -46,7 +46,7 @@ func (o *DeleteLabelURL) Build() (*url.URL, error) {
 
 	labelID := swag.FormatInt64(o.LabelID)
 	if labelID != "" {
-		_path = strings.Replace(_path, "{label_id}", labelID, -1)
+		_path = strings.ReplaceAll(_path, "{label_id}", labelID)
 	} else {
 		return nil, errors.New("labelId is required on DeleteLabelURL")
 	}

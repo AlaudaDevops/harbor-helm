@@ -27,7 +27,6 @@ func NewGetPolicyParams() GetPolicyParams {
 //
 // swagger:parameters GetPolicy
 type GetPolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -36,11 +35,13 @@ type GetPolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Preheat Policy Name
 	  Required: true
 	  In: path
 	*/
 	PreheatPolicyName string
+
 	/*The name of the project
 	  Required: true
 	  In: path
@@ -97,7 +98,7 @@ func (o *GetPolicyParams) bindXRequestID(rawData []string, hasKey bool, formats 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetPolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

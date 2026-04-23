@@ -39,7 +39,6 @@ func NewListQuotasParams() ListQuotasParams {
 //
 // swagger:parameters listQuotas
 type ListQuotasParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,25 +47,30 @@ type ListQuotasParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The page number
 	  In: query
 	  Default: 1
 	*/
 	Page *int64
+
 	/*The size of per page
 	  Maximum: 100
 	  In: query
 	  Default: 10
 	*/
 	PageSize *int64
+
 	/*The reference type of quota.
 	  In: query
 	*/
 	Reference *string
+
 	/*The reference id of quota.
 	  In: query
 	*/
 	ReferenceID *string
+
 	/*Sort method, valid values include:
 	'hard.resource_name', '-hard.resource_name', 'used.resource_name', '-used.resource_name'.
 	Here '-' stands for descending order, resource_name should be the real resource name of the quota.
@@ -84,7 +88,6 @@ func (o *ListQuotasParams) BindRequest(r *http.Request, route *middleware.Matche
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -142,7 +145,7 @@ func (o *ListQuotasParams) bindXRequestID(rawData []string, hasKey bool, formats
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *ListQuotasParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {
@@ -204,7 +207,7 @@ func (o *ListQuotasParams) bindPageSize(rawData []string, hasKey bool, formats s
 	return nil
 }
 
-// validatePageSize carries on validations for parameter PageSize
+// validatePageSize carries out validations for parameter PageSize
 func (o *ListQuotasParams) validatePageSize(formats strfmt.Registry) error {
 
 	if err := validate.MaximumInt("page_size", "query", *o.PageSize, 100, false); err != nil {

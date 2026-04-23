@@ -47,14 +47,14 @@ func (o *DeleteImmuRuleURL) Build() (*url.URL, error) {
 
 	immutableRuleID := swag.FormatInt64(o.ImmutableRuleID)
 	if immutableRuleID != "" {
-		_path = strings.Replace(_path, "{immutable_rule_id}", immutableRuleID, -1)
+		_path = strings.ReplaceAll(_path, "{immutable_rule_id}", immutableRuleID)
 	} else {
 		return nil, errors.New("immutableRuleId is required on DeleteImmuRuleURL")
 	}
 
 	projectNameOrID := o.ProjectNameOrID
 	if projectNameOrID != "" {
-		_path = strings.Replace(_path, "{project_name_or_id}", projectNameOrID, -1)
+		_path = strings.ReplaceAll(_path, "{project_name_or_id}", projectNameOrID)
 	} else {
 		return nil, errors.New("projectNameOrId is required on DeleteImmuRuleURL")
 	}

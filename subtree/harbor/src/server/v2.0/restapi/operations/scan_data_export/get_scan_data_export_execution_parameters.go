@@ -28,7 +28,6 @@ func NewGetScanDataExportExecutionParams() GetScanDataExportExecutionParams {
 //
 // swagger:parameters getScanDataExportExecution
 type GetScanDataExportExecutionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetScanDataExportExecutionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Execution ID
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetScanDataExportExecutionParams) bindXRequestID(rawData []string, hasK
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetScanDataExportExecutionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

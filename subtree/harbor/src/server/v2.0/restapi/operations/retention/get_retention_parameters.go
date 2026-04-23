@@ -28,7 +28,6 @@ func NewGetRetentionParams() GetRetentionParams {
 //
 // swagger:parameters getRetention
 type GetRetentionParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -37,6 +36,7 @@ type GetRetentionParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Retention ID.
 	  Required: true
 	  In: path
@@ -88,7 +88,7 @@ func (o *GetRetentionParams) bindXRequestID(rawData []string, hasKey bool, forma
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetRetentionParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

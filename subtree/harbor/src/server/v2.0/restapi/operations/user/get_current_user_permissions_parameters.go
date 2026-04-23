@@ -29,7 +29,6 @@ func NewGetCurrentUserPermissionsParams() GetCurrentUserPermissionsParams {
 //
 // swagger:parameters getCurrentUserPermissions
 type GetCurrentUserPermissionsParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -38,12 +37,14 @@ type GetCurrentUserPermissionsParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*If true, the resources in the response are relative to the scope,
 	eg for resource '/project/1/repository' if relative is 'true' then the resource in response will be 'repository'.
 
 	  In: query
 	*/
 	Relative *bool
+
 	/*The scope for the permission
 	  In: query
 	*/
@@ -58,7 +59,6 @@ func (o *GetCurrentUserPermissionsParams) BindRequest(r *http.Request, route *mi
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -101,7 +101,7 @@ func (o *GetCurrentUserPermissionsParams) bindXRequestID(rawData []string, hasKe
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetCurrentUserPermissionsParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

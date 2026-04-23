@@ -6,6 +6,7 @@ package label
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewUpdateLabelParams() UpdateLabelParams {
 //
 // swagger:parameters UpdateLabel
 type UpdateLabelParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type UpdateLabelParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The updated label json object.
 	  Required: true
 	  In: body
 	*/
 	Label *models.Label
+
 	/*Label ID
 	  Required: true
 	  In: path
@@ -67,10 +69,12 @@ func (o *UpdateLabelParams) BindRequest(r *http.Request, route *middleware.Match
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.Label
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("label", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("label", "body", "", err))
@@ -125,7 +129,7 @@ func (o *UpdateLabelParams) bindXRequestID(rawData []string, hasKey bool, format
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateLabelParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

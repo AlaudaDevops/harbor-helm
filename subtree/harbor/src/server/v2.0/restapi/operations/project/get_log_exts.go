@@ -12,16 +12,16 @@ import (
 )
 
 // GetLogExtsHandlerFunc turns a function with the right signature into a get log exts handler
-type GetLogExtsHandlerFunc func(GetLogExtsParams, interface{}) middleware.Responder
+type GetLogExtsHandlerFunc func(GetLogExtsParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetLogExtsHandlerFunc) Handle(params GetLogExtsParams, principal interface{}) middleware.Responder {
+func (fn GetLogExtsHandlerFunc) Handle(params GetLogExtsParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetLogExtsHandler interface for that can handle valid get log exts params
 type GetLogExtsHandler interface {
-	Handle(GetLogExtsParams, interface{}) middleware.Responder
+	Handle(GetLogExtsParams, any) middleware.Responder
 }
 
 // NewGetLogExts creates a new http.Handler for the get log exts operation
@@ -55,9 +55,9 @@ func (o *GetLogExts) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetLogExts) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

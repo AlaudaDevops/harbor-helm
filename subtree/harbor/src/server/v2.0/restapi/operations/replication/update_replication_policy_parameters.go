@@ -6,6 +6,7 @@ package replication
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -32,7 +33,6 @@ func NewUpdateReplicationPolicyParams() UpdateReplicationPolicyParams {
 //
 // swagger:parameters updateReplicationPolicy
 type UpdateReplicationPolicyParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -41,11 +41,13 @@ type UpdateReplicationPolicyParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*The policy ID
 	  Required: true
 	  In: path
 	*/
 	ID int64
+
 	/*The replication policy
 	  Required: true
 	  In: body
@@ -72,10 +74,12 @@ func (o *UpdateReplicationPolicyParams) BindRequest(r *http.Request, route *midd
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.ReplicationPolicy
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("policy", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("policy", "body", "", err))
@@ -125,7 +129,7 @@ func (o *UpdateReplicationPolicyParams) bindXRequestID(rawData []string, hasKey 
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateReplicationPolicyParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

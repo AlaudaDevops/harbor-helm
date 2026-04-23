@@ -29,7 +29,6 @@ func NewDownloadScanDataParams() DownloadScanDataParams {
 //
 // swagger:parameters downloadScanData
 type DownloadScanDataParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -38,11 +37,13 @@ type DownloadScanDataParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Execution ID
 	  Required: true
 	  In: path
 	*/
 	ExecutionID int64
+
 	/*The format of the data to be exported. e.g. CSV or PDF
 	  In: query
 	*/
@@ -57,7 +58,6 @@ func (o *DownloadScanDataParams) BindRequest(r *http.Request, route *middleware.
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -100,7 +100,7 @@ func (o *DownloadScanDataParams) bindXRequestID(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *DownloadScanDataParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

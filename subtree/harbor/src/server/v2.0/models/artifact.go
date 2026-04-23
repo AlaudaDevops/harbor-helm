@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	stderrors "errors"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -155,11 +156,15 @@ func (m *Artifact) validateAccessories(formats strfmt.Registry) error {
 
 		if m.Accessories[i] != nil {
 			if err := m.Accessories[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("accessories" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("accessories" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -176,11 +181,15 @@ func (m *Artifact) validateAdditionLinks(formats strfmt.Registry) error {
 
 	if m.AdditionLinks != nil {
 		if err := m.AdditionLinks.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("addition_links")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("addition_links")
 			}
+
 			return err
 		}
 	}
@@ -195,11 +204,15 @@ func (m *Artifact) validateAnnotations(formats strfmt.Registry) error {
 
 	if m.Annotations != nil {
 		if err := m.Annotations.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("annotations")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("annotations")
 			}
+
 			return err
 		}
 	}
@@ -214,11 +227,15 @@ func (m *Artifact) validateExtraAttrs(formats strfmt.Registry) error {
 
 	if m.ExtraAttrs != nil {
 		if err := m.ExtraAttrs.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("extra_attrs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("extra_attrs")
 			}
+
 			return err
 		}
 	}
@@ -238,11 +255,15 @@ func (m *Artifact) validateLabels(formats strfmt.Registry) error {
 
 		if m.Labels[i] != nil {
 			if err := m.Labels[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("labels" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("labels" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -288,11 +309,15 @@ func (m *Artifact) validateReferences(formats strfmt.Registry) error {
 
 		if m.References[i] != nil {
 			if err := m.References[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("references" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("references" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -309,11 +334,15 @@ func (m *Artifact) validateSbomOverview(formats strfmt.Registry) error {
 
 	if m.SbomOverview != nil {
 		if err := m.SbomOverview.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("sbom_overview")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("sbom_overview")
 			}
+
 			return err
 		}
 	}
@@ -328,11 +357,15 @@ func (m *Artifact) validateScanOverview(formats strfmt.Registry) error {
 
 	if m.ScanOverview != nil {
 		if err := m.ScanOverview.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("scan_overview")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("scan_overview")
 			}
+
 			return err
 		}
 	}
@@ -352,11 +385,15 @@ func (m *Artifact) validateTags(formats strfmt.Registry) error {
 
 		if m.Tags[i] != nil {
 			if err := m.Tags[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("tags" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("tags" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -423,11 +460,15 @@ func (m *Artifact) contextValidateAccessories(ctx context.Context, formats strfm
 			}
 
 			if err := m.Accessories[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("accessories" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("accessories" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -444,11 +485,15 @@ func (m *Artifact) contextValidateAdditionLinks(ctx context.Context, formats str
 	}
 
 	if err := m.AdditionLinks.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("addition_links")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("addition_links")
 		}
+
 		return err
 	}
 
@@ -462,11 +507,15 @@ func (m *Artifact) contextValidateAnnotations(ctx context.Context, formats strfm
 	}
 
 	if err := m.Annotations.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("annotations")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("annotations")
 		}
+
 		return err
 	}
 
@@ -480,11 +529,15 @@ func (m *Artifact) contextValidateExtraAttrs(ctx context.Context, formats strfmt
 	}
 
 	if err := m.ExtraAttrs.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("extra_attrs")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("extra_attrs")
 		}
+
 		return err
 	}
 
@@ -502,11 +555,15 @@ func (m *Artifact) contextValidateLabels(ctx context.Context, formats strfmt.Reg
 			}
 
 			if err := m.Labels[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("labels" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("labels" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -527,11 +584,15 @@ func (m *Artifact) contextValidateReferences(ctx context.Context, formats strfmt
 			}
 
 			if err := m.References[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("references" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("references" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -550,11 +611,15 @@ func (m *Artifact) contextValidateSbomOverview(ctx context.Context, formats strf
 		}
 
 		if err := m.SbomOverview.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("sbom_overview")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("sbom_overview")
 			}
+
 			return err
 		}
 	}
@@ -569,11 +634,15 @@ func (m *Artifact) contextValidateScanOverview(ctx context.Context, formats strf
 	}
 
 	if err := m.ScanOverview.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
+		ve := new(errors.Validation)
+		if stderrors.As(err, &ve) {
 			return ve.ValidateName("scan_overview")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
+		}
+		ce := new(errors.CompositeError)
+		if stderrors.As(err, &ce) {
 			return ce.ValidateName("scan_overview")
 		}
+
 		return err
 	}
 
@@ -591,11 +660,15 @@ func (m *Artifact) contextValidateTags(ctx context.Context, formats strfmt.Regis
 			}
 
 			if err := m.Tags[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("tags" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("tags" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

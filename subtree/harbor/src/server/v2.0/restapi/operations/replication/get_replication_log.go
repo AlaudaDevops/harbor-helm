@@ -12,16 +12,16 @@ import (
 )
 
 // GetReplicationLogHandlerFunc turns a function with the right signature into a get replication log handler
-type GetReplicationLogHandlerFunc func(GetReplicationLogParams, interface{}) middleware.Responder
+type GetReplicationLogHandlerFunc func(GetReplicationLogParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetReplicationLogHandlerFunc) Handle(params GetReplicationLogParams, principal interface{}) middleware.Responder {
+func (fn GetReplicationLogHandlerFunc) Handle(params GetReplicationLogParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetReplicationLogHandler interface for that can handle valid get replication log params
 type GetReplicationLogHandler interface {
-	Handle(GetReplicationLogParams, interface{}) middleware.Responder
+	Handle(GetReplicationLogParams, any) middleware.Responder
 }
 
 // NewGetReplicationLog creates a new http.Handler for the get replication log operation
@@ -55,9 +55,9 @@ func (o *GetReplicationLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetReplicationLog) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

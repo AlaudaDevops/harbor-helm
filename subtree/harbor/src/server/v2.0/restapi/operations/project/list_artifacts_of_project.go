@@ -12,16 +12,16 @@ import (
 )
 
 // ListArtifactsOfProjectHandlerFunc turns a function with the right signature into a list artifacts of project handler
-type ListArtifactsOfProjectHandlerFunc func(ListArtifactsOfProjectParams, interface{}) middleware.Responder
+type ListArtifactsOfProjectHandlerFunc func(ListArtifactsOfProjectParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn ListArtifactsOfProjectHandlerFunc) Handle(params ListArtifactsOfProjectParams, principal interface{}) middleware.Responder {
+func (fn ListArtifactsOfProjectHandlerFunc) Handle(params ListArtifactsOfProjectParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // ListArtifactsOfProjectHandler interface for that can handle valid list artifacts of project params
 type ListArtifactsOfProjectHandler interface {
-	Handle(ListArtifactsOfProjectParams, interface{}) middleware.Responder
+	Handle(ListArtifactsOfProjectParams, any) middleware.Responder
 }
 
 // NewListArtifactsOfProject creates a new http.Handler for the list artifacts of project operation
@@ -55,9 +55,9 @@ func (o *ListArtifactsOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *ListArtifactsOfProject) ServeHTTP(rw http.ResponseWriter, r *http.Reque
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

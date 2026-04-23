@@ -39,7 +39,6 @@ func NewGetSecuritySummaryParams() GetSecuritySummaryParams {
 //
 // swagger:parameters getSecuritySummary
 type GetSecuritySummaryParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -48,11 +47,13 @@ type GetSecuritySummaryParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Specify whether the dangerous Artifact are included inside summary information
 	  In: query
 	  Default: false
 	*/
 	WithDangerousArtifact *bool
+
 	/*Specify whether the dangerous CVEs are included inside summary information
 	  In: query
 	  Default: false
@@ -68,7 +69,6 @@ func (o *GetSecuritySummaryParams) BindRequest(r *http.Request, route *middlewar
 	var res []error
 
 	o.HTTPRequest = r
-
 	qs := runtime.Values(r.URL.Query())
 
 	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-Id")], true, route.Formats); err != nil {
@@ -111,7 +111,7 @@ func (o *GetSecuritySummaryParams) bindXRequestID(rawData []string, hasKey bool,
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *GetSecuritySummaryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

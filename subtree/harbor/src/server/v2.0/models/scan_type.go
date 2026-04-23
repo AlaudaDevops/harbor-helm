@@ -39,7 +39,7 @@ func (m *ScanType) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var scanTypeTypeScanTypePropEnum []interface{}
+var scanTypeTypeScanTypePropEnum []any
 
 func init() {
 	var res []string

@@ -6,6 +6,7 @@ package gc
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	stderrors "errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,6 @@ func NewUpdateGCScheduleParams() UpdateGCScheduleParams {
 //
 // swagger:parameters updateGCSchedule
 type UpdateGCScheduleParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -40,6 +40,7 @@ type UpdateGCScheduleParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*Updates of gc's schedule.
 	  Required: true
 	  In: body
@@ -61,10 +62,12 @@ func (o *UpdateGCScheduleParams) BindRequest(r *http.Request, route *middleware.
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.Schedule
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
+			if stderrors.Is(err, io.EOF) {
 				res = append(res, errors.Required("schedule", "body", ""))
 			} else {
 				res = append(res, errors.NewParseError("schedule", "body", "", err))
@@ -114,7 +117,7 @@ func (o *UpdateGCScheduleParams) bindXRequestID(rawData []string, hasKey bool, f
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *UpdateGCScheduleParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

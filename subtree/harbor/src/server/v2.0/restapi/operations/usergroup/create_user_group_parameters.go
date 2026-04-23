@@ -30,7 +30,6 @@ func NewCreateUserGroupParams() CreateUserGroupParams {
 //
 // swagger:parameters createUserGroup
 type CreateUserGroupParams struct {
-
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
@@ -39,6 +38,7 @@ type CreateUserGroupParams struct {
 	  In: header
 	*/
 	XRequestID *string
+
 	/*
 	  In: body
 	*/
@@ -59,7 +59,9 @@ func (o *CreateUserGroupParams) BindRequest(r *http.Request, route *middleware.M
 	}
 
 	if runtime.HasBody(r) {
-		defer r.Body.Close()
+		defer func() {
+			_ = r.Body.Close()
+		}()
 		var body models.UserGroup
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("usergroup", "body", "", err))
@@ -106,7 +108,7 @@ func (o *CreateUserGroupParams) bindXRequestID(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateXRequestID carries on validations for parameter XRequestID
+// validateXRequestID carries out validations for parameter XRequestID
 func (o *CreateUserGroupParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", *o.XRequestID, 1); err != nil {

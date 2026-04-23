@@ -12,16 +12,16 @@ import (
 )
 
 // GetStatisticHandlerFunc turns a function with the right signature into a get statistic handler
-type GetStatisticHandlerFunc func(GetStatisticParams, interface{}) middleware.Responder
+type GetStatisticHandlerFunc func(GetStatisticParams, any) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetStatisticHandlerFunc) Handle(params GetStatisticParams, principal interface{}) middleware.Responder {
+func (fn GetStatisticHandlerFunc) Handle(params GetStatisticParams, principal any) middleware.Responder {
 	return fn(params, principal)
 }
 
 // GetStatisticHandler interface for that can handle valid get statistic params
 type GetStatisticHandler interface {
-	Handle(GetStatisticParams, interface{}) middleware.Responder
+	Handle(GetStatisticParams, any) middleware.Responder
 }
 
 // NewGetStatistic creates a new http.Handler for the get statistic operation
@@ -55,9 +55,9 @@ func (o *GetStatistic) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if aCtx != nil {
 		*r = *aCtx
 	}
-	var principal interface{}
+	var principal any
 	if uprinc != nil {
-		principal = uprinc.(interface{}) // this is really a interface{}, I promise
+		principal = uprinc
 	}
 
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
@@ -66,6 +66,7 @@ func (o *GetStatistic) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
+
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }
