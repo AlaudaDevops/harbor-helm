@@ -866,6 +866,13 @@ trivy:
     limits:
       cpu: 1
       memory: 1Gi
+  offlineDBInitResources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 2Gi
   extraEnvVars: []
   nodeSelector: {}
   tolerations: []

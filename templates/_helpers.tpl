@@ -738,8 +738,10 @@ app: "{{ template "harbor.name" . }}"
 {{ $subPath := .Values.persistence.persistentVolumeClaim.trivy.subPath }}
 {{- if .Values.trivy.offlineScan }}
 - name: "init-offline-db"
+  {{- if .Values.trivy.offlineDBInitResources }}
   resources:
-    {{ toYaml .Values.trivy.resources | nindent 4 }}
+    {{ toYaml .Values.trivy.offlineDBInitResources | nindent 4 }}
+  {{- end }}
   image: {{ include "harbor.image" (dict "values" .Values "image" "trivyOfflineDB") }}
   imagePullPolicy: Always
   command: [ "/bin/sh" ]
