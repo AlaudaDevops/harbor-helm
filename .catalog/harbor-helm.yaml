@@ -1,0 +1,30 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: harbor-helm
+  title: Harbor Helm
+  description: Helm chart for deploying Harbor container registry, including core, portal, registry, job service, database, Redis, Nginx, Trivy scanner, and exporter components.
+  annotations:
+    # github plugin
+    github.com/project-slug: AlaudaDevops/harbor-helm
+    acp.cpaas.io/instance: edge.alauda.cn
+    # harbor plugin
+    goharbor.io/repository-slug: devops/goharbor-harbor-core,devops/goharbor-harbor-jobservice,devops/goharbor-harbor-portal,devops/goharbor-harbor-registryctl,devops/goharbor-harbor-exporter,devops/goharbor-registry-photon,devops/goharbor-nginx-photon,devops/goharbor-trivy-adapter-photon,devops/goharbor-harbor-db,devops/goharbor-redis-photon
+    # 开源组件代码仓库地址，格式：${url}/${project}/${repo}
+    acp.cpaas.io/open-source-component-repo: https://github.com/goharbor/harbor-helm
+    # 开源组件的版本信息，只适用于开源组件，自研组件默认不收集版本信息,格式 ${version}
+    acp.cpaas.io/open-source-component-version: alauda-1.18
+    # 开源组件的license信息,格式 ${license}
+    acp.cpaas.io/open-source-component-license: Apache-2.0
+    # 开源组件的license地址,格式 ${url}/${project}/${repo}/${license-path}
+    acp.cpaas.io/open-source-component-license_url: https://github.com/goharbor/harbor-helm/blob/main/LICENSE
+    acp.cpaas.io/owner: jtcheng@alauda.io
+
+    # 组件属性，区别是否部署时必带的核心组件,可选值为 core 和 plugin。
+    acp.cpaas.io/functional-attributes: plugin
+
+spec:
+  type: service
+  system: system:devops-tools
+  lifecycle: production
+  owner: devops
