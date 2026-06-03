@@ -25,7 +25,7 @@ change_base_image "tests/test-engine-image"
 # swagger
 
 # renovate: datasource=golang-version depName=go
-export GOLANG_IMAGE_VERSION=1.26.2
+export GOLANG_IMAGE_VERSION=1.26.3
 
 sed -i 's/node:16.18.0/docker-mirrors.alauda.cn\/library\/node:16.18.0/' "Makefile"
 sed -i 's/registry.npmjs.org/internal-mirrors.alauda.cn\/repository\/npm\//g' "Makefile"
@@ -67,7 +67,6 @@ cat make/photon/trivy-adapter/Dockerfile.binary
 sed -i "s/golang:1.24.6/docker-mirrors.alauda.cn\/library\/golang:${GOLANG_IMAGE_VERSION} /g" "make/photon/registry/Dockerfile.binary"
 echo "AMD64 after change the make/photon/registry/Dockerfile.binary "
 cat make/photon/registry/Dockerfile.binary
-
 
 
 
