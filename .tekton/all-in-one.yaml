@@ -200,13 +200,13 @@ spec:
           # download trivy and scanner-trivy
           
           # renovate: datasource=github-releases depName=trivy packageName=AlaudaDevops/trivy
-          TRIVY_VERSION=v0.68.3-alauda-7
+          TRIVY_VERSION=v0.68.3-alauda-9
           
           # renovate: datasource=github-releases depName=harbor-scanner-trivy packageName=AlaudaDevops/harbor-scanner-trivy
-          TRIVY_ADAPTER_VERSION=v0.34.3-alauda-2
+          TRIVY_ADAPTER_VERSION=v0.34.3-alauda-5
           
           # renovate: datasource=golang-version depName=go
-          export GOLANG_IMAGE_VERSION=1.26.3
+          export GOLANG_IMAGE_VERSION=1.26.4
           
           TRIVY_DOWNLOAD_URL=https://github.com/AlaudaDevops/trivy/releases/download/${TRIVY_VERSION}/trivy_Linux_${ARCH}.tar.gz
           TRIVY_ADAPTER_DOWNLOAD_URL=https://github.com/AlaudaDevops/harbor-scanner-trivy/releases/download/${TRIVY_ADAPTER_VERSION}/harbor-scanner-trivy_${TRIVY_ADAPTER_VERSION#v}_Linux_${ARCH}.tar.gz
@@ -224,7 +224,7 @@ spec:
           
           # download registry binary from AlaudaDevops/goharbor-distribution release
           # renovate: datasource=github-releases depName=goharbor-distribution packageName=AlaudaDevops/goharbor-distribution
-          REGISTRY_VERSION=v2.8.4-alauda-7
+          REGISTRY_VERSION=v2.8.4-alauda-8
 
           # distribution release assets use amd64/arm64 naming
           REGISTRY_ARCH=${ARCH}
@@ -246,6 +246,12 @@ spec:
           # REGISTRY_SRC_TAG=release/2.8
           # DOCKERNETWORK=default
           # cd ${BUILDPATH}/make/photon/registry && ./builder ${REGISTRY_SRC_TAG} ${REGISTRY_SRC} docker-mirrors.alauda.cn/library/golang:${GOLANG_IMAGE_VERSION} ${DOCKERNETWORK} && cd -
+      # trivy-scan gate ignores CVEs that have no upstream fix (re-check when a fix ships):
+      #   CVE-2026-34040 / CVE-2026-33997 - Moby AuthZ; fix only on moby/moby/v2 >=29.3.1 path,
+      #     28.x HEAD already carries the backport (existing exemption).
+      #   CVE-2026-50163 - oras-go tar-extraction hardlink escape; no fixed release (v2.6.1 still
+      #     affected); embedded via the trivy binary in the trivy-adapter image.
+      #   CVE-2026-41889 - jackc/pgx v4 LOW SQL-injection; no fix for the v4 line (exporter image).
       - name: trivy-args
         type: string
         default: >-
@@ -255,7 +261,7 @@ spec:
           --skip-java-db-update=false
           --java-db-repository=registry.alauda.cn:60070/ops/aquasecurity/trivy-java-db
           --exit-code=1
-          --ignorefile <(printf '%s\n' CVE-2026-34040 CVE-2026-33997)
+          --ignorefile <(printf '%s\n' CVE-2026-34040 CVE-2026-33997 CVE-2026-50163 CVE-2026-41889)
       - name: skip-e2e
         description: Skip e2e test, default is false.
         default: "false"
