@@ -32,7 +32,7 @@ COPY testing /app
 # 安装 playwright
 ENV GOPROXY='https://build-nexus.alauda.cn/repository/golang/,direct'
 RUN PWGO_VER=$(grep -oE "playwright-go v\S+" /app/go.mod | sed 's/playwright-go //g') \
-    && go install github.com/playwright-community/playwright-go/cmd/playwright@${PWGO_VER}
+    && go install github.com/mxschmitt/playwright-go/cmd/playwright@${PWGO_VER}
 RUN set -eux; \
     cd /app && \
     CGO_ENABLED=0 go test -c -o /tools/bin/harbor.test ./
