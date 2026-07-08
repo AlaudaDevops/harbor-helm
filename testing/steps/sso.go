@@ -11,7 +11,7 @@ import (
 
 	"github.com/AlaudaDevops/bdd/logger"
 	"github.com/cucumber/godog"
-	"github.com/playwright-community/playwright-go"
+	"github.com/mxschmitt/playwright-go"
 	"go.uber.org/zap"
 )
 
@@ -70,7 +70,7 @@ func checkSSo(ctx context.Context, params *godog.DocString) (ctx2 context.Contex
 		IgnoreHttpsErrors: playwright.Bool(true),
 		Locale:            playwright.String("zh-CN"),
 
-		RecordVideo: &playwright.RecordVideo{Dir: outDir},
+		RecordVideo: &playwright.RecordVideo{Dir: playwright.String(outDir)},
 	})
 	if err != nil {
 		log.Error("创建浏览器上下文失败", zap.Error(err))
